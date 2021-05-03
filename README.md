@@ -6,6 +6,7 @@
 3. Reddit authentication
 4. Frontend
 
+---
 ## Rough timeline
 - 10 May: Wireframing
 - 11 - 21 May: NFT Backend
@@ -18,14 +19,23 @@
 
 Dont think we want anymore features. Keep it clean and simple. Focus on core value proposition.
 
+---
 ## Description of Final Product
 
 Reference: Valuables by Cent
 
-It will be a web application that allows the users to request NFT to be minted based on reddit posts.
+It will be a web application that allows the users to request NFT to be minted based on reddit posts. User accounts are logged in with reddit.
 
 First, the customer goes to our website and indicates interest in purchasing a post and names a price. Then, we send a message to the owner of the post that someone is interested in purchasing their post for that specific price. If the terms are agreeable, the post owner creates an account on our website and agrees to the transaction. Then, the buyer transfers moeny to our account, where we redirect 90% to the seller, keeping 10% as our cut.
 
+---
+## Tech Stack
+- Reactjs
+- Nodejs
+- Firebase database
+- Firebase hosting
+- Ethereum Blockchain
+
+---
 ## Possible Future Developments
 - Money held in escrow
-- 
