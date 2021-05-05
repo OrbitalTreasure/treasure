@@ -8,11 +8,11 @@ async function main() {
     const nonce = await web3.eth.getTransactionCount(myAddress, 'latest'); // nonce starts counting from 0
 
     const transaction = {
-     'to': '0x31B98D14007bDEe637298086988A0bBd31184523', // faucet address to return eth
+     'to': '0xd1D328498cD990EEeF2a3a76302ba35EBc350115', // faucet address to return eth
      'value': 1000000000000000000, // 1 ETH
      'gas': 30000, 
      'nonce': nonce,
-     // optional data field to send message or execute smart contract
+     'data': web3.utils.toHex('hi richard')
     };
    
     const signedTx = await web3.eth.accounts.signTransaction(transaction, PRIVATE_KEY);
