@@ -35,7 +35,20 @@ First, the customer goes to our website and indicates interest in purchasing a p
 - Firebase database
 - Firebase hosting
 - Ethereum Blockchain
+- Metamask
+- ERC721
+- Reddit Scraper
+
+---
+## Metadata contents
+
+1. Title of post
+2. Username of original poster
+3. Contents of post
+4. Number of upvotes at time of mint
+5. Number of comments at time of mint
+6. Datetime of post creation
+7. Datetime of minting
 
 ---
 ## Possible Future Developments
-- Money held in escrow
