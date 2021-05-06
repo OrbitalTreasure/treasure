@@ -23,8 +23,11 @@ First, the customer goes to our website and indicates interest in purchasing a p
 - [User Guide](https://docs.google.com/document/d/1Uv4b5P0XU0p6pyrmNQryOdOmk3umGN1gPUSqrYcgvEw/edit?usp=sharing)
 - [Developer Guide](https://docs.google.com/document/d/1pavSDgQQ8-IqODq3uCqrH2fiQcH7th7ed6mMI__XMfY/edit)
 - [Prototype](https://www.figma.com/file/3uAK9OBYtfcZh5VE0n8Cy5/Treasure-Prototype?node-id=0%3A1)
+- [Presentation Slides](https://docs.google.com/presentation/d/1_R4KbGTiTzMBCQaURmsPT4y1a9eKvz_eCTMVDJTGqwI/edit?usp=sharing)
 
 ---
 ## Project Log
 | Task Done      | Description | Hours spent by Joel | Hours spent by Richard | Remarks |
-| ----------- | ----------- | ----------- | ----------- | ----------- |
+| - | - | - | - | - |
+| Create wireframe prototype | | 2 | 0 |
+| User Guide | | 3 | 3 |
