@@ -43,12 +43,13 @@ First, the customer goes to our website and indicates interest in purchasing a p
 ## Metadata contents
 
 1. Title of post
-2. Username of original poster
-3. Contents of post
-4. Number of upvotes at time of mint
-5. Number of comments at time of mint
-6. Datetime of post creation
-7. Datetime of minting
+2. PostId
+3. Username of original poster
+4. Contents of post
+5. Number of upvotes at time of mint
+6. Number of comments at time of mint
+7. Datetime of post creation
+8. Datetime of minting
 
 ---
 ## Possible Future Developments
