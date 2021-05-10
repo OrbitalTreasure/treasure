@@ -5,8 +5,6 @@ Reference: Valuables by Cent
 
 It will be a web application that allows the users to request NFT to be minted based on reddit posts. User accounts are logged in with reddit.
 
-First, the customer goes to our website and indicates interest in purchasing a post and names a price. Then, we send a message to the owner of the post that someone is interested in purchasing their post for that specific price. If the terms are agreeable, the post owner creates an account on our website and agrees to the transaction. Then, the buyer transfers moeny to our account, where we redirect 90% to the seller, keeping 10% as our cut.
-
 ---
 ## Time Period
 - 10 May: Wireframing
@@ -27,7 +25,10 @@ First, the customer goes to our website and indicates interest in purchasing a p
 
 ---
 ## Project Log
-| Task Done      | Description | Hours spent by Joel | Hours spent by Richard | Remarks |
-| - | - | - | - | - |
-| Create wireframe prototype | | 2 | 0 |
-| User Guide | | 3 | 3 |
+| Task Done      | Hours spent by Joel | Hours spent by Richard | Remarks |
+| - | - | - | - |
+| Prototype | 5 | 3 |
+| User Guide | 3 | 3 |
+| Developers Guide | 4 | 4 |
+| Poster and Video | 10 | 0 |
+| Minting of NFT | 10 | 10 |
