@@ -1,0 +1,10 @@
+.card {
+    margin: auto;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+#post {
+    width: 70%;
+}
