@@ -2,13 +2,13 @@ import { useState } from 'react';
 import Login from './Login'
 
 function Homepage() {
-  // const postTextInput = document.querySelector("#post");
   const [ userTextInput, setTextInput ] = useState("");
 
 
   const getRedditPostData = (e) => {
     e.preventDefault();
 
+    console.log(userTextInput);
     if (!isURL(userTextInput)) {
       fetchRedditPostInfo(userTextInput);
     } else {
@@ -21,7 +21,7 @@ function Homepage() {
     const url = `https://api.reddit.com/api/info/?id=t3_${postID}`;
     fetch(url, { mode: "cors" })
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((data) => console.log(data.data.children[0].data))
       .catch((e) => console.log(e));
   };
 
@@ -38,8 +38,7 @@ function Homepage() {
     return !!pattern.test(str);
   }
 
-  const insertExample = (e) =>
-    setTextInput("https://www.reddit.com/r/news/comments/ndyvkx/now_is_not_the_time_nurses_union_condemns_cdc_for/?utm_source=share&utm_medium=web2x&context=3");
+  const insertExample = (e) => fetchRedditPostInfo("nduv6b");
 
   return (
     <div className="card">
