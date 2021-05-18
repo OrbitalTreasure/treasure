@@ -21,7 +21,7 @@ function Homepage() {
     const url = `https://api.reddit.com/api/info/?id=t3_${postID}`;
     fetch(url, { mode: "cors" })
       .then((response) => response.json())
-      .then((data) => console.log(data.data.children[0].data))
+      .then((body) => console.log(body.data.children[0].data))
       .catch((e) => console.log(e));
   };
 
