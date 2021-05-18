@@ -1,16 +1,18 @@
+import { useState } from 'react';
 import Login from './Login'
 
 function Homepage() {
-  const postTextInput = document.querySelector("#post");
+  // const postTextInput = document.querySelector("#post");
+  const [ userTextInput, setTextInput ] = useState("");
+
 
   const getRedditPostData = (e) => {
     e.preventDefault();
-    const textInput = postTextInput.value;
 
-    if (!isURL(textInput)) {
-      fetchRedditPostInfo(textInput);
+    if (!isURL(userTextInput)) {
+      fetchRedditPostInfo(userTextInput);
     } else {
-      const urlObject = new URL(textInput);
+      const urlObject = new URL(userTextInput);
       fetchRedditPostInfo(urlObject.pathname.split("/")[4]);
     }
   };
@@ -37,8 +39,7 @@ function Homepage() {
   }
 
   const insertExample = (e) =>
-    (postTextInput.value =
-      "https://www.reddit.com/r/news/comments/ndyvkx/now_is_not_the_time_nurses_union_condemns_cdc_for/?utm_source=share&utm_medium=web2x&context=3");
+    setTextInput("https://www.reddit.com/r/news/comments/ndyvkx/now_is_not_the_time_nurses_union_condemns_cdc_for/?utm_source=share&utm_medium=web2x&context=3");
 
   return (
     <div className="card">
@@ -48,6 +49,7 @@ function Homepage() {
           type="text"
           id="post"
           placeholder="Insert Reddit Post ID or URL"
+          onChange = { (e) => setTextInput(e.target.value)}
         />
         <input type="submit" value="Get Post Details" id="submitButton" />
       </form>
