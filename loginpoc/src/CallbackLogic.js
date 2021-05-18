@@ -1,3 +1,5 @@
+import { useEffect } from "react";
+import { Redirect } from "react-router";
 import snoowrap from "snoowrap";
 
 function CallbackLogic(props) {
@@ -15,13 +17,16 @@ function CallbackLogic(props) {
         redirectUri: "http://localhost:3000/auth-callback",
       })
       .then((e) => {
-        return;
+        console.log("hihihih");
       })
       .catch((e) => console.log(e));
   }
-  getAccessToken();
 
-  return <h1>hi</h1>;
+  useEffect(() => getAccessToken());
+
+  return (
+      <Redirect to="/"/>
+  );
 }
 
 export default CallbackLogic;
