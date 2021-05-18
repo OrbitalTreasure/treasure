@@ -12,27 +12,14 @@ function Login(props) {
     });
     window.open(url);
   }
-
-  function getUser() {
-    console.log(props.instance);
-    props.instance
-      .getMe()
-      .then(console.log)
-      .catch((e) => console.log(e));
-    return "hi";
-  }
-
-  const output = props.instance ? (
-    <h1>{getUser()}</h1>
-  ) : (
+  
+  return (
     <input
       type="button"
       value="Login in Using Reddit"
       onClick={redirectToLogin}
     ></input>
   );
-
-  return <div>{output}</div>;
 }
 
 export default Login;

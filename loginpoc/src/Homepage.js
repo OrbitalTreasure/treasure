@@ -60,7 +60,7 @@ function Homepage(props) {
       />
       <br />
       <br />
-      <Login instance={props.instance}/>
+      <Login instance={props.tokens} />
     </div>
   );
 }
