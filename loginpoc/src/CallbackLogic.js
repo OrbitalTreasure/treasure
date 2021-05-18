@@ -16,7 +16,6 @@ function CallbackLogic(props) {
         redirectUri: "http://localhost:3000/auth-callback",
       })
       .then((e) => {
-        console.log(window.location.hostname)
         props.setInstance(e);
       })
       .catch((r) => console.log(r));

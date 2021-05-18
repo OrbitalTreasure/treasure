@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import Login from './Login'
+import { useState } from "react";
+import Login from "./Login";
 
-function Homepage() {
-  const [ userTextInput, setTextInput ] = useState("");
-
+function Homepage(props) {
+  const [userTextInput, setTextInput] = useState("");
 
   const getRedditPostData = (e) => {
     e.preventDefault();
@@ -42,13 +41,14 @@ function Homepage() {
 
   return (
     <div className="card">
+      {console.log(props.instance)}
       <h1>Reddit Login Test Page</h1>
       <form onSubmit={getRedditPostData}>
         <input
           type="text"
           id="post"
           placeholder="Insert Reddit Post ID or URL"
-          onChange = { (e) => setTextInput(e.target.value)}
+          onChange={(e) => setTextInput(e.target.value)}
         />
         <input type="submit" value="Get Post Details" id="submitButton" />
       </form>
@@ -60,7 +60,7 @@ function Homepage() {
       />
       <br />
       <br />
-      <Login />
+      <Login instance={props.instance}/>
     </div>
   );
 }
