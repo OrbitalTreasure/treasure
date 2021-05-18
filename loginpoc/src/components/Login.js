@@ -12,7 +12,7 @@ function Login(props) {
     });
     window.open(url);
   }
-  
+
   return (
     <input
       type="button"

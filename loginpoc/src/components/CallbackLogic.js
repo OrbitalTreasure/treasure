@@ -1,8 +1,11 @@
-import { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import { Redirect } from "react-router";
 import snoowrap from "snoowrap";
+import { TokenContext } from "../contexts/TokenContext";
 
 function CallbackLogic(props) {
+  const { setTokens } = useContext(TokenContext);
+
   const url = new URLSearchParams(window.location.search);
   //   const state = url.get("state");
   const code = url.get("code");
@@ -17,16 +20,14 @@ function CallbackLogic(props) {
         redirectUri: "http://localhost:3000/auth-callback",
       })
       .then((e) => {
-        console.log("hihihih");
+        setTokens({ accessToken: e.accessToken, refreshToken: e.refreshToken });
       })
       .catch((e) => console.log(e));
   }
 
   useEffect(() => getAccessToken());
 
-  return (
-      <Redirect to="/"/>
-  );
+  return <Redirect to="/" />;
 }
 
 export default CallbackLogic;

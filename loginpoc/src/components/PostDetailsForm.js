@@ -1,9 +1,7 @@
 import { useState } from "react";
-import Login from "./Login";
 
-function Homepage(props) {
+function PostDetailsForm() {
   const [userTextInput, setTextInput] = useState("");
-
   const getRedditPostData = (e) => {
     e.preventDefault();
 
@@ -37,11 +35,12 @@ function Homepage(props) {
     return !!pattern.test(str);
   }
 
-  const insertExample = (e) => fetchRedditPostInfo("nduv6b");
+  function insertExample() {
+    setTextInput("nduv6b");
+  }
 
   return (
-    <div className="card">
-      {console.log(props.instance)}
+    <div>
       <h1>Reddit Login Test Page</h1>
       <form onSubmit={getRedditPostData}>
         <input
@@ -49,6 +48,7 @@ function Homepage(props) {
           id="post"
           placeholder="Insert Reddit Post ID or URL"
           onChange={(e) => setTextInput(e.target.value)}
+          value={userTextInput}
         />
         <input type="submit" value="Get Post Details" id="submitButton" />
       </form>
@@ -56,13 +56,10 @@ function Homepage(props) {
         type="button"
         value="Insert example url"
         id="exampleButton"
-        onSubmit={insertExample}
+        onClick={insertExample}
       />
-      <br />
-      <br />
-      <Login instance={props.tokens} />
     </div>
   );
 }
 
-export default Homepage;
+export default PostDetailsForm;
