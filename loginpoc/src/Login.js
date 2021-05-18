@@ -6,7 +6,7 @@ function Login() {
         const url = snoowrap.getAuthUrl({
             clientId: "DzfZOF3d3768Yw",
             scope: ["identity"],
-            redirectUri: "http://localhost:3000/",
+            redirectUri: "http://localhost:3000/auth-callback",
             permanant: true,
             state: "123"
         })
