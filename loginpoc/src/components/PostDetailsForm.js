@@ -2,6 +2,7 @@ import { useState } from "react";
 
 function PostDetailsForm() {
   const [userTextInput, setTextInput] = useState("");
+  const [redditPost, setRedditPost] = useState({});
   const getRedditPostData = (e) => {
     e.preventDefault();
 
@@ -18,7 +19,10 @@ function PostDetailsForm() {
     const url = `https://api.reddit.com/api/info/?id=t3_${postID}`;
     fetch(url, { mode: "cors" })
       .then((response) => response.json())
-      .then((body) => console.log(body.data.children[0].data))
+      .then((body) => {
+        console.log(body.data.children[0].data);
+        setRedditPost(body.data.children[0].data);
+      })
       .catch((e) => console.log(e));
   };
 
@@ -58,6 +62,14 @@ function PostDetailsForm() {
         id="exampleButton"
         onClick={insertExample}
       />
+      <ul>
+        <li>Original Poster: {redditPost.author}</li>
+        <li>Score: {redditPost.score}</li>
+        <li>Subreddit: {redditPost.subreddit_name_prefixed}</li>
+        <li>Title: {redditPost.title}</li>
+        <li>Body: {redditPost.selftext}</li>
+        <li>External Link: {redditPost.url}</li>
+      </ul>
     </div>
   );
 }
