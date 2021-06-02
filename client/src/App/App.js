@@ -6,7 +6,8 @@ function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/hello" component={Dashboard}></Route>
+        <Route path="/" component={Dashboard}/>
+        <Route path="/tools/loadDb"></Route>
       </Switch>
     </Router>
   );

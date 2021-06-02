@@ -1,1 +1,3 @@
-export default () => <h1>hi</h1>
+const Dashboard = () => <h1>This is a dashboard</h1>;
+
+export default Dashboard;
