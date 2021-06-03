@@ -24,6 +24,45 @@ contract TreasureTokenFactory is ERC721, Ownable {
         bool isCompleted;
     }
 
+    event OfferCreated(
+        string buyerId,
+        string sellerId,
+        string postId,
+        uint256 bidAmount
+    );
+
+    event UserLinked(string userId, address userAddress);
+
+    function mapUser(string memory _userId, address payable _userAddress)
+        public
+        onlyOwner
+    {
+        require(
+            userIdToAddress[_userId] == address(0),
+            "Username already is already linked!"
+        );
+        userIdToAddress[_userId] = _userAddress;
+        emit UserLinked(_userId, _userAddress);
+    }
+
+    function createOffer(
+        string memory _buyerId,
+        string memory _sellerId,
+        string memory _postId,
+        uint256 _bidAmount
+    ) external {
+        require(
+            msg.sender == userIdToAddress[_buyerId],
+            "You can only create offers from yourself"
+        );
+
+        postOffers.push(
+            RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false, false)
+        );
+        uint256 offerId = postOffers.length - 1;
+        emit OfferCreated(_buyerId, _sellerId, _postId, _bidAmount);
+    }
+
     function mintNFT(address recipient, string memory tokenURI)
         public
         onlyOwner
