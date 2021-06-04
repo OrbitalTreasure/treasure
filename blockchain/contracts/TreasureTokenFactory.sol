@@ -25,6 +25,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     }
 
     event OfferCreated(
+        uint256 offerId,
         string buyerId,
         string sellerId,
         string postId,
@@ -45,12 +46,20 @@ contract TreasureTokenFactory is ERC721, Ownable {
         emit UserLinked(_userId, _userAddress);
     }
 
+    function getUser(string memory _userId) public onlyOwner returns (address payable) {
+        require(
+            userIdToAddress[_userId] == address(0),
+            "This user does not exists"
+        );
+        return userIdToAddress[_userId];
+    }
+
     function createOffer(
         string memory _buyerId,
         string memory _sellerId,
         string memory _postId,
         uint256 _bidAmount
-    ) external {
+    ) public {
         require(
             msg.sender == userIdToAddress[_buyerId],
             "You can only create offers from yourself"
@@ -60,7 +69,12 @@ contract TreasureTokenFactory is ERC721, Ownable {
             RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false, false)
         );
         uint256 offerId = postOffers.length - 1;
-        emit OfferCreated(_buyerId, _sellerId, _postId, _bidAmount);
+        emit OfferCreated(offerId, _buyerId, _sellerId, _postId, _bidAmount);
+    }
+
+    function fundContract(uint256 _contractId) public onlyOwner {
+        RedditOffer storage currOffer = postOffers[_contractId];
+        currOffer.isFunded = true;
     }
 
     function mintNFT(address recipient, string memory tokenURI)
@@ -77,26 +91,3 @@ contract TreasureTokenFactory is ERC721, Ownable {
         return newItemId;
     }
 }
-
-// //Emitted when update function is called
-// //Smart contract events are a way for your contract to communicate that something happened on the blockchain to your app front-end, which can be 'listening' for certain events and take action when they happen.
-// event UpdatedMessages(string oldStr, string newStr);
-
-// // Declares a state variable `message` of type `string`.
-// // State variables are variables whose values are permanently stored in contract storage. The keyword `public` makes variables accessible from outside a contract and creates a function that other contracts or clients can call to access the value.
-// string public message;
-
-// // Similar to many class-based object-oriented languages, a constructor is a special function that is only executed upon contract creation.
-// // Constructors are used to initialize the contract's data. Learn more:https://solidity.readthedocs.io/en/v0.5.10/contracts.html#constructors
-// constructor(string memory initMessage) {
-
-//    // Accepts a string argument `initMessage` and sets the value into the contract's `message` storage variable).
-//    message = initMessage;
-// }
-
-// // A public function that accepts a string argument and updates the `message` storage variable.
-// function change(string memory newMessage) public {
-//    string memory oldMsg = message;
-//    message = newMessage;
-//    emit UpdatedMessages(oldMsg, newMessage);
-// }
