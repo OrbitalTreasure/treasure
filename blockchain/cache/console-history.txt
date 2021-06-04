@@ -1,0 +1,54 @@
+owner()
+actual
+box
+ethers.provider.getLogs()
+ethers.provider.getBalance
+ethers.provider
+eth_getLogs()
+provider3
+provider3.eth_getLogs()
+provider3.getLogs()
+provider3
+const provider3 = network.provider
+network.provider
+const provider2 = new ethers.provider.JsonRpcProvider(url)
+const provider = new ethers.provider.JsonRpcProvider(url)
+url
+const url = "http://localhost:8545";
+provider
+const provider1 = ethers.provider
+const provider = ethers.provider
+provider
+const provider = ethers.provider.Provider
+actual
+provider
+t.logs
+t
+const t = await hello.wait()
+hello
+hello.logs
+const hello = await actual.mapUser("2", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c")
+const hello = await actual.mapUser("2", "0x1")
+await actual.mapUser("1", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c")
+await actual.mapUser("1", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c", (err, result) => {console.log(err, result)})
+await actual.mapUser("1", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c")
+await actual.getUser("1")
+address(t.data)
+t.data
+t.events
+t
+await t.wait()
+t.wait()
+const t = await actual.getUser("1")
+await actual.getUser("1")
+actual.getUser("1")
+const actual = await Box.attach("0x998abeb3E57409262aE5b751f60747921B33613E")
+const Box = await ethers.getContractFactory("TreasureTokenFactory")
+await actual.mapUser("0x1", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c")
+await actual.owner()
+actual.owner()
+const actual = await contract.attach("0xf5059a5D33d5853360D16C683c16e67980206f36")
+const contract = await ethers.getContractFactory("TreasureTokenFactory")
+const actual = await contract.attach("0x689af8efa8c651a91ad287602527f3af2fe9f6501a7ac4b061667b5a93e037fd")
+const contract = await ethers.getContractFactory("TreasureTokenFactory")
+config
