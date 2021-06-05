@@ -48,6 +48,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     function getUser(string memory _userId)
         public
+        view
         onlyOwner
         returns (address payable)
     {
@@ -76,27 +77,28 @@ contract TreasureTokenFactory is ERC721, Ownable {
         emit OfferCreated(offerId, _buyerId, _sellerId, _postId, _bidAmount);
     }
 
-    function fundContract(uint256 _contractId) public onlyOwner {
-        RedditOffer storage Offer = postOffers[_contractId];
-        Offer.isFunded = true;
+    function fundOffer(uint256 _offerId) public onlyOwner {
+        RedditOffer storage offer = postOffers[_offerId];
+        offer.isFunded = true;
     }
 
-    function completeContract(uint256 _contractId) private onlyOwner {
-        RedditOffer storage Offer = postOffers[_contractId];
-        Offer.isCompleted = true;
+    function _completeOffer(uint256 _offerId) private onlyOwner {
+        RedditOffer storage offer = postOffers[_offerId];
+        offer.isCompleted = true;
     }
 
-    function success(uint256 _contractId) public {
-        RedditOffer storage offer = postOffers[_contractId];
+    function success(uint256 _offerId) public {
+        RedditOffer storage offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         require(
             msg.sender == sellerAddress,
             "Only the seller can accept an offer."
         );
-        completeContract(_contractId);
+        require(offer.isCompleted == false, "This offer has ended.");
         (bool sent, bytes memory data) =
             sellerAddress.call{value: offer.bidAmount}("");
         require(sent, "Failed to send ether");
+        _completeOffer(_offerId);
     }
 
     function failure(RedditOffer storage _offer, address payable buyerAddress)
@@ -106,16 +108,16 @@ contract TreasureTokenFactory is ERC721, Ownable {
             buyerAddress.call{value: _offer.bidAmount}("");
         require(sent, "Failed to send ether");
     }
-    
-    function reject(uint256 _contractId) public {
-        RedditOffer storage offer = postOffers[_contractId];
+
+    function reject(uint256 _offerId) public {
+        RedditOffer storage offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         address payable buyerAddress = userIdToAddress[offer.buyerId];
         require(
             msg.sender == sellerAddress,
             "Only the seller can accept an offer."
         );
-        completeContract(_contractId);
+        _completeOffer(_offerId);
     }
 
     function mintNFT(address recipient, string memory tokenURI)

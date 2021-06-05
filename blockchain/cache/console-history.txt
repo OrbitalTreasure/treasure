@@ -1,3 +1,67 @@
+contract
+)
+const contract = require('../artifacts/contracts/TreasureTokenFactory.sol/TreasureTokenFactory.json'
+contract
+contract.abi
+contract
+ls
+dir
+const abi1 = require("./artifacts/contracts/TreasureTokenFactory.json")
+const abi = require("./artifacts/contracts/TreasureTokenFactory.json")
+const abi = require("artifacts/contracts/TreasureTokenFactory.json")
+}
+    return [fromAddresses, toAddresses, amounts]
+    const amounts = decodedEvents.map(event => event["values"]["value"]);
+    const fromAddresses = decodedEvents.map(event => event["values"]["from"]);
+    const toAddresses = decodedEvents.map(event => event["values"]["to"]);
+    });
+        iface.decodeEventLog("Transfer", log.data)
+    const decodedEvents = logs.map(log => {
+    });
+        address: contractAddress
+    const logs = _provider.getLogs({
+    const iface = new ethers.utils.Interface(erc20abi.abi);
+const eventFilterv5 = (contractAddress, erc20abi, _provider) => {
+logs1
+logs
+logs1
+const logs1 = await ethers.provider.getLogs({topics:["0xbd24583d1f34ebaec5bacc0cb3d29df1ac91e8fc13018ebc80e3f29e3d49ce16"]})
+logs
+const logs = ethers.provider.getLogs({topics:["0xbd24583d1f34ebaec5bacc0cb3d29df1ac91e8fc13018ebc80e3f29e3d49ce16"]})
+ethers.provider.getLogs
+ethers.provider
+ethers.provider()
+data1.logs[0].topics
+data1.logs[0]
+data1.logs
+data1
+data2.logs
+const data1 = await map.wait()
+const data = await map.wait()
+data.logs
+wait.logs
+data
+const data = map.wait()
+map
+const map = await box.mapUser("2", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c")
+const map = await box.mapUser("1", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c")
+await box.mapUser("1", "0x6448Eb33AF3AB4FB556168495dBA8F1BeeF7EC8c")
+box
+await box.owner()
+box.owner()
+await box.deployed()
+const box = contract.attach("0x198c46853A9050A236bD0990bCeb99FD72D69F39")
+contract.attach("0x198c46853A9050A236bD0990bCeb99FD72D69F39")
+const contract = await ethers.getContractFactory("TreasureTokenFactory")
+treasure.deployed()
+const treasure = contract.attach("0x198c46853A9050A236bD0990bCeb99FD72D69F39")
+contract.attach("0x198c46853A9050A236bD0990bCeb99FD72D69F39")
+await actual.deployed()
+await actual.owner()
+actual.owner()
+actual
+const actual = contract.attach("0x2bC4bda66711B1CEC35AC6492eC2d8d90A17D6e5")
+const contract = await ethers.getContractFactory("TreasureTokenFactory")
 owner()
 actual
 box
