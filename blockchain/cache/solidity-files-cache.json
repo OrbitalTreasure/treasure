@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\contracts\\TreasureTokenFactory.sol": {
-      "lastModificationDate": 1622794660679,
-      "contentHash": "b197c1318a7938b0330058921c1ccd52",
+      "lastModificationDate": 1622878280575,
+      "contentHash": "77f4c2a8c9c5693933a4657059697b67",
       "sourceName": "contracts/TreasureTokenFactory.sol",
       "solcConfig": {
         "version": "0.7.3",

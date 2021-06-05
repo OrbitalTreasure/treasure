@@ -46,7 +46,11 @@ contract TreasureTokenFactory is ERC721, Ownable {
         emit UserLinked(_userId, _userAddress);
     }
 
-    function getUser(string memory _userId) public onlyOwner returns (address payable) {
+    function getUser(string memory _userId)
+        public
+        onlyOwner
+        returns (address payable)
+    {
         require(
             userIdToAddress[_userId] == address(0),
             "This user does not exists"
@@ -73,8 +77,45 @@ contract TreasureTokenFactory is ERC721, Ownable {
     }
 
     function fundContract(uint256 _contractId) public onlyOwner {
-        RedditOffer storage currOffer = postOffers[_contractId];
-        currOffer.isFunded = true;
+        RedditOffer storage Offer = postOffers[_contractId];
+        Offer.isFunded = true;
+    }
+
+    function completeContract(uint256 _contractId) private onlyOwner {
+        RedditOffer storage Offer = postOffers[_contractId];
+        Offer.isCompleted = true;
+    }
+
+    function success(uint256 _contractId) public {
+        RedditOffer storage offer = postOffers[_contractId];
+        address payable sellerAddress = userIdToAddress[offer.sellerId];
+        require(
+            msg.sender == sellerAddress,
+            "Only the seller can accept an offer."
+        );
+        completeContract(_contractId);
+        (bool sent, bytes memory data) =
+            sellerAddress.call{value: offer.bidAmount}("");
+        require(sent, "Failed to send ether");
+    }
+
+    function failure(RedditOffer storage _offer, address payable buyerAddress)
+        private
+    {
+        (bool sent, bytes memory data) =
+            buyerAddress.call{value: _offer.bidAmount}("");
+        require(sent, "Failed to send ether");
+    }
+    
+    function reject(uint256 _contractId) public {
+        RedditOffer storage offer = postOffers[_contractId];
+        address payable sellerAddress = userIdToAddress[offer.sellerId];
+        address payable buyerAddress = userIdToAddress[offer.buyerId];
+        require(
+            msg.sender == sellerAddress,
+            "Only the seller can accept an offer."
+        );
+        completeContract(_contractId);
     }
 
     function mintNFT(address recipient, string memory tokenURI)
