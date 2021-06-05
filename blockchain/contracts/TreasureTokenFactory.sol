@@ -34,6 +34,32 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     event UserLinked(string userId, address userAddress);
 
+    modifier onlyBuyer(uint256 _offerId) {
+        RedditOffer storage offer = postOffers[_offerId];
+        address payable buyerAddress = userIdToAddress[offer.buyerId];
+        require(
+            msg.sender == buyerAddress,
+            "Only the buyer can call this function."
+        );
+        _;
+    }
+
+    modifier onlySeller(uint256 _offerId) {
+        RedditOffer storage offer = postOffers[_offerId];
+        address payable sellerAddress = userIdToAddress[offer.sellerId];
+        require(
+            msg.sender == sellerAddress,
+            "Only the seller can call this function."
+        );
+        _;
+    }
+
+    modifier offerIncomplete(uint256 _offerId) {
+        RedditOffer memory offer = postOffers[_offerId];
+        require(!offer.isCompleted, "Offer is already completed.");
+        _;
+    }
+
     function mapUser(string memory _userId, address payable _userAddress)
         public
         onlyOwner
@@ -82,41 +108,38 @@ contract TreasureTokenFactory is ERC721, Ownable {
         offer.isFunded = true;
     }
 
-    function _completeOffer(uint256 _offerId) private onlyOwner {
+    function _completeOffer(uint256 _offerId)
+        private
+        offerIncomplete(_offerId)
+    {
         RedditOffer storage offer = postOffers[_offerId];
         offer.isCompleted = true;
     }
 
-    function success(uint256 _offerId) public {
+    function success(uint256 _offerId)
+        public
+        onlySeller(_offerId)
+        offerIncomplete(_offerId)
+    {
         RedditOffer storage offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
-        require(
-            msg.sender == sellerAddress,
-            "Only the seller can accept an offer."
-        );
-        require(offer.isCompleted == false, "This offer has ended.");
         (bool sent, bytes memory data) =
             sellerAddress.call{value: offer.bidAmount}("");
         require(sent, "Failed to send ether");
         _completeOffer(_offerId);
     }
 
-    function failure(RedditOffer storage _offer, address payable buyerAddress)
-        private
-    {
-        (bool sent, bytes memory data) =
-            buyerAddress.call{value: _offer.bidAmount}("");
-        require(sent, "Failed to send ether");
-    }
-
-    function reject(uint256 _offerId) public {
-        RedditOffer storage offer = postOffers[_offerId];
+    function reject(uint256 _offerId) public offerIncomplete(_offerId) {
+        RedditOffer memory offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         address payable buyerAddress = userIdToAddress[offer.buyerId];
-        require(
-            msg.sender == sellerAddress,
-            "Only the seller can accept an offer."
-        );
+
+        require(msg.sender == sellerAddress || msg.sender == buyerAddress);
+
+        (bool sent, bytes memory data) =
+            buyerAddress.call{value: offer.bidAmount}("");
+        require(sent, "Failed to refund ether");
+
         _completeOffer(_offerId);
     }
 
