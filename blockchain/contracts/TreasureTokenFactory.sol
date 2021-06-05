@@ -13,6 +13,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     constructor() ERC721("TreasureOrbital", "TOR") {}
 
     mapping(string => address payable) private userIdToAddress;
+    mapping(uint256 => address) private tokenToOwner;
     RedditOffer[] postOffers;
 
     struct RedditOffer {
@@ -35,7 +36,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     event UserLinked(string userId, address userAddress);
 
     modifier onlyBuyer(uint256 _offerId) {
-        RedditOffer storage offer = postOffers[_offerId];
+        RedditOffer memory offer = postOffers[_offerId];
         address payable buyerAddress = userIdToAddress[offer.buyerId];
         require(
             msg.sender == buyerAddress,
@@ -45,7 +46,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     }
 
     modifier onlySeller(uint256 _offerId) {
-        RedditOffer storage offer = postOffers[_offerId];
+        RedditOffer memory offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         require(
             msg.sender == sellerAddress,
