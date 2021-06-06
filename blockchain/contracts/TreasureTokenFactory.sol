@@ -80,7 +80,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         returns (address payable)
     {
         require(
-            userIdToAddress[_userId] == address(0),
+            userIdToAddress[_userId] != address(0),
             "This user does not exists"
         );
         return userIdToAddress[_userId];
@@ -115,6 +115,11 @@ contract TreasureTokenFactory is ERC721, Ownable {
     {
         RedditOffer storage offer = postOffers[_offerId];
         offer.isCompleted = true;
+    }
+
+    function fundOffer(uint256 _offerId) public payable onlyBuyer(_offerId) {
+        RedditOffer memory offer = postOffers[_offerId];
+        require(msg.value == offer.bidAmount)
     }
 
     function success(uint256 _offerId)
