@@ -137,7 +137,6 @@ contract TreasureTokenFactory is ERC721, Ownable {
         (bool sent, bytes memory data) =
             sellerAddress.call{value: offer.bidAmount}("");
         require(sent, "Failed to send ether");
-        assignPost(offer.postId, offer.buyerId);
         _completeOffer(_offerId);
     }
 
