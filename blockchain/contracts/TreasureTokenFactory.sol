@@ -21,6 +21,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         string sellerId;
         string postId;
         uint256 bidAmount;
+        bool isVerified;
         bool isCompleted;
     }
 
@@ -31,6 +32,8 @@ contract TreasureTokenFactory is ERC721, Ownable {
         string postId,
         uint256 bidAmount
     );
+
+    event OfferVerified(uint256 offerId);
 
     event UserLinked(string userId, address userAddress);
 
@@ -55,9 +58,10 @@ contract TreasureTokenFactory is ERC721, Ownable {
         _;
     }
 
-    modifier offerIncomplete(uint256 _offerId) {
+    modifier offerVerifiedAndIncomplete(uint256 _offerId) {
         RedditOffer memory offer = postOffers[_offerId];
         require(!offer.isCompleted, "Offer is already completed.");
+        require(offer.isVerified, "Offer is not verified.");
         _;
     }
 
@@ -104,15 +108,20 @@ contract TreasureTokenFactory is ERC721, Ownable {
         );
 
         postOffers.push(
-            RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false)
+            RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false, false)
         );
         uint256 offerId = postOffers.length - 1;
         emit OfferCreated(offerId, _buyerId, _sellerId, _postId, _bidAmount);
     }
 
+    function verifyOffer(uint256 _offerId) external onlyOwner {
+        postOffers[_offerId].isVerified = true;
+        emit OfferVerified(_offerId);
+    }
+
     function _completeOffer(uint256 _offerId)
         private
-        offerIncomplete(_offerId)
+        offerVerifiedAndIncomplete(_offerId)
     {
         RedditOffer storage offer = postOffers[_offerId];
         offer.isCompleted = true;
@@ -121,7 +130,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     function success(uint256 _offerId)
         public
         onlySeller(_offerId)
-        offerIncomplete(_offerId)
+        offerVerifiedAndIncomplete(_offerId)
     {
         RedditOffer storage offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
@@ -132,7 +141,10 @@ contract TreasureTokenFactory is ERC721, Ownable {
         _completeOffer(_offerId);
     }
 
-    function reject(uint256 _offerId) public offerIncomplete(_offerId) {
+    function reject(uint256 _offerId)
+        public
+        offerVerifiedAndIncomplete(_offerId)
+    {
         RedditOffer memory offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         address payable buyerAddress = userIdToAddress[offer.buyerId];
