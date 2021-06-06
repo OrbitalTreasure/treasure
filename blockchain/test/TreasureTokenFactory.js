@@ -7,9 +7,26 @@ let owner;
 let addr1;
 let addr2;
 let addr3;
-let offerStub1;
-let offerStub2;
-let offerStub3;
+let offerStub1 = {
+  _buyerId: "1",
+  _sellerId: "2",
+  _postId: "1",
+  _bidAmount: 50,
+};
+
+let offerStub2 = {
+  _buyerId: "2",
+  _sellerId: "1",
+  _postId: "2",
+  _bidAmount: 60,
+};
+
+let offerStub3 = {
+  _buyerId: "3",
+  _sellerId: "2",
+  _postId: "1",
+  _bidAmount: 70,
+};
 let objectToParameters;
 
 beforeEach(async function () {
@@ -59,6 +76,93 @@ describe("mapUser() function", function () {
 
 describe("Creating Offers", function () {
   this.beforeEach(async function () {
+    await TreasureFactoryInstance.connect(owner).mapUser("1", addr1.address);
+    await TreasureFactoryInstance.connect(owner).mapUser("2", addr2.address);
+    await TreasureFactoryInstance.connect(owner).mapUser("3", addr3.address);
+  });
+
+  it("Should create offer if buyerId match transaction sender", async function () {
+    await expect(
+      TreasureFactoryInstance.connect(addr1).createOffer(
+        ...objectToParameters(offerStub1),
+        { value: offerStub1._bidAmount }
+      )
+    ).to.emit(TreasureFactoryInstance, "OfferCreated");
+
+    await expect(
+      TreasureFactoryInstance.connect(addr2).createOffer(
+        ...objectToParameters(offerStub2),
+        { value: offerStub2._bidAmount }
+      )
+    ).to.emit(TreasureFactoryInstance, "OfferCreated");
+  });
+
+  it("Should fail if buyerId does not match transaction sender", async function () {
+    await expect(
+      TreasureFactoryInstance.connect(addr2).createOffer(
+        ...objectToParameters(offerStub1),
+        { value: offerStub1._bidAmount }
+      )
+    ).to.be.revertedWith("You can only create offers from yourself");
+  });
+
+  it("Should allow if transaction value is more than the offer bid amount.", async function () {
+    await expect(
+      TreasureFactoryInstance.connect(addr1).createOffer(
+        ...objectToParameters(offerStub1),
+        { value: offerStub1._bidAmount + 1 }
+      )
+    ).to.emit(TreasureFactoryInstance, "OfferCreated");
+  });
+
+  it("Should fail if transaction value is less than the offer bid amount.", async function () {
+    await expect(
+      TreasureFactoryInstance.connect(addr1).createOffer(
+        ...objectToParameters(offerStub1),
+        { value: offerStub1._bidAmount - 1 }
+      )
+    ).to.be.revertedWith("Insufficient value, please match the bid amount.");
+  });
+
+  it("Should allow multiple concurrent offers for the same post", async function () {
+    await expect(
+      TreasureFactoryInstance.connect(addr1).createOffer(
+        ...objectToParameters(offerStub1),
+        { value: offerStub1._bidAmount }
+      )
+    ).to.emit(TreasureFactoryInstance, "OfferCreated");
+
+    await expect(
+      TreasureFactoryInstance.connect(addr3).createOffer(
+        ...objectToParameters(offerStub3),
+        { value: offerStub3._bidAmount }
+      )
+    ).to.emit(TreasureFactoryInstance, "OfferCreated");
+  });
+
+  it("Should create correct events if offer is successful", async function () {
+    await expect(
+      TreasureFactoryInstance.connect(addr1).createOffer(
+        ...objectToParameters(offerStub1),
+        { value: offerStub1._bidAmount }
+      )
+    )
+      .to.emit(TreasureFactoryInstance, "OfferCreated")
+      .withArgs("0", "1", "2", "1", 50);
+
+    await expect(
+      TreasureFactoryInstance.connect(addr2).createOffer(
+        ...objectToParameters(offerStub2),
+        { value: offerStub2._bidAmount }
+      )
+    )
+      .to.emit(TreasureFactoryInstance, "OfferCreated")
+      .withArgs("1", "2", "1", "2", 60);
+  });
+});
+
+describe("Reject Offer", function () {
+  this.beforeEach(async function () {
     offerStub1 = {
       _buyerId: "1",
       _sellerId: "2",
@@ -83,59 +187,18 @@ describe("Creating Offers", function () {
     await TreasureFactoryInstance.connect(owner).mapUser("1", addr1.address);
     await TreasureFactoryInstance.connect(owner).mapUser("2", addr2.address);
     await TreasureFactoryInstance.connect(owner).mapUser("3", addr3.address);
-  });
 
-  it("Should create offer if buyerId match transaction sender", async function () {
-    await expect(
-      TreasureFactoryInstance.connect(addr1).createOffer(
-        ...objectToParameters(offerStub1)
-      )
-    ).to.emit(TreasureFactoryInstance, "OfferCreated");
-
-    await expect(
-      TreasureFactoryInstance.connect(addr2).createOffer(
-        ...objectToParameters(offerStub2)
-      )
-    ).to.emit(TreasureFactoryInstance, "OfferCreated");
-  });
-
-  it("Should fail if buyerId does not match transaction sender", async function () {
-    await expect(
-      TreasureFactoryInstance.connect(addr2).createOffer(
-        ...objectToParameters(offerStub1)
-      )
-    ).to.be.revertedWith("You can only create offers from yourself");
-  });
-
-  it("Should allow multiple concurrent offers for the same post", async function () {
-    await expect(
-      TreasureFactoryInstance.connect(addr1).createOffer(
-        ...objectToParameters(offerStub1)
-      )
-    ).to.emit(TreasureFactoryInstance, "OfferCreated");
-
-    await expect(
-      TreasureFactoryInstance.connect(addr3).createOffer(
-        ...objectToParameters(offerStub3)
-      )
-    ).to.emit(TreasureFactoryInstance, "OfferCreated");
-  });
-
-  it("Should create correct events if offer is successful", async function () {
-    await expect(
-      TreasureFactoryInstance.connect(addr1).createOffer(
-        ...objectToParameters(offerStub1)
-      )
+    TreasureFactoryInstance.connect(addr1).createOffer(
+      ...objectToParameters(offerStub1),
+      { value: offerStub1._bidAmount }
     )
-      .to.emit(TreasureFactoryInstance, "OfferCreated")
-      .withArgs("0", "1", "2", "1", 50);
 
-    await expect(
-      TreasureFactoryInstance.connect(addr2).createOffer(
-        ...objectToParameters(offerStub2)
-      )
+    TreasureFactoryInstance.connect(addr2).createOffer(
+      ...objectToParameters(offerStub2),
+      { value: offerStub2._bidAmount }
     )
-      .to.emit(TreasureFactoryInstance, "OfferCreated")
-      .withArgs("1", "2", "1", "2", 60);
   });
+
+
+
 });
