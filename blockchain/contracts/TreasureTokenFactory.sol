@@ -158,13 +158,13 @@ contract TreasureTokenFactory is ERC721, Ownable {
     }
 
     // NFT FUNCTIONS
-    function assignPost(string memory _postId, address _recipient) private {
-        if (postIdToTokenId[_postId] == 0) {
-            mintNFT(_recipient, "something here");
-        } else {
-            tokenOwner[postIdToTokenId[_postId]] = _recipient;
-        }
-    }
+    // function assignPost(string memory _postId, address _recipient) private {
+    //     if (postIdToTokenId[_postId] == 0) {
+    //         mintNFT(_recipient, "something here");
+    //     } else {
+    //         tokenOwner[postIdToTokenId[_postId]] = _recipient;
+    //     }
+    // }
 
     function mintNFT(address _recipient, string memory _tokenURI)
         private
@@ -176,7 +176,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         uint256 newItemId = _tokenIds.current();
         _mint(_recipient, newItemId);
         _setTokenURI(newItemId, _tokenURI);
-        tokenOwner[newItemId] = _recipient;
+        // tokenOwner[newItemId] = _recipient;
         return newItemId;
     }
 }
