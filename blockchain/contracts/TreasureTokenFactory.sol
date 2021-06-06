@@ -13,7 +13,6 @@ contract TreasureTokenFactory is ERC721, Ownable {
     constructor() ERC721("TreasureOrbital", "TOR") {}
 
     mapping(string => address payable) private userIdToAddress;
-    mapping(uint256 => address) private tokenToOwner;
     mapping(string => uint256) private postIdToTokenId;
     RedditOffer[] postOffers;
 
@@ -152,7 +151,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         if (postIdToTokenId[_postId] == 0) {
             mintNFT(_recipient, "something here");
         } else {
-            tokenToOwner[postIdToTokenId[_postId]] = _recipient;
+            tokenOwner[postIdToTokenId[_postId]] = _recipient;
         }
     }
 
@@ -166,7 +165,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         uint256 newItemId = _tokenIds.current();
         _mint(_recipient, newItemId);
         _setTokenURI(newItemId, _tokenURI);
-        tokenToOwner[newItemId] = _recipient;
+        tokenOwner[newItemId] = _recipient;
         return newItemId;
     }
 }
