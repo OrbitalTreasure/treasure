@@ -98,6 +98,8 @@ contract TreasureTokenFactory is ERC721, Ownable {
         string memory _postId,
         uint256 _bidAmount
     ) public payable {
+        // IMPORTANT: Make sure post belongs to the seller if you are calling this yourself!
+        // Otherwise you have to rescind offer and incur your own gas fees.
         require(
             msg.sender == userIdToAddress[_buyerId],
             "You can only create offers from yourself"
