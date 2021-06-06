@@ -14,6 +14,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     mapping(string => address payable) private userIdToAddress;
     mapping(uint256 => address) private tokenToOwner;
+    mapping(string => uint256) private postIdToTokenId;
     RedditOffer[] postOffers;
 
     struct RedditOffer {
@@ -21,7 +22,6 @@ contract TreasureTokenFactory is ERC721, Ownable {
         string sellerId;
         string postId;
         uint256 bidAmount;
-        bool isFunded;
         bool isCompleted;
     }
 
@@ -35,6 +35,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     event UserLinked(string userId, address userAddress);
 
+    // MODIFIERS
     modifier onlyBuyer(uint256 _offerId) {
         RedditOffer memory offer = postOffers[_offerId];
         address payable buyerAddress = userIdToAddress[offer.buyerId];
@@ -61,6 +62,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         _;
     }
 
+    // USER FUNCTIONS
     function mapUser(string memory _userId, address payable _userAddress)
         public
         onlyOwner
@@ -86,27 +88,27 @@ contract TreasureTokenFactory is ERC721, Ownable {
         return userIdToAddress[_userId];
     }
 
+    // OFFER FUNCTIONS
     function createOffer(
         string memory _buyerId,
         string memory _sellerId,
         string memory _postId,
         uint256 _bidAmount
-    ) public {
+    ) public payable {
         require(
             msg.sender == userIdToAddress[_buyerId],
             "You can only create offers from yourself"
         );
+        require(
+            msg.value >= _bidAmount,
+            "Insufficient value, please match the bid amount."
+        );
 
         postOffers.push(
-            RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false, false)
+            RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false)
         );
         uint256 offerId = postOffers.length - 1;
         emit OfferCreated(offerId, _buyerId, _sellerId, _postId, _bidAmount);
-    }
-
-    function fundOffer(uint256 _offerId) public onlyOwner {
-        RedditOffer storage offer = postOffers[_offerId];
-        offer.isFunded = true;
     }
 
     function _completeOffer(uint256 _offerId)
@@ -115,11 +117,6 @@ contract TreasureTokenFactory is ERC721, Ownable {
     {
         RedditOffer storage offer = postOffers[_offerId];
         offer.isCompleted = true;
-    }
-
-    function fundOffer(uint256 _offerId) public payable onlyBuyer(_offerId) {
-        RedditOffer memory offer = postOffers[_offerId];
-        require(msg.value == offer.bidAmount)
     }
 
     function success(uint256 _offerId)
@@ -149,17 +146,26 @@ contract TreasureTokenFactory is ERC721, Ownable {
         _completeOffer(_offerId);
     }
 
-    function mintNFT(address recipient, string memory tokenURI)
-        public
+    // NFT FUNCTIONS
+    function assignPost(string memory _postId, address _recipient) private {
+        if (postIdToTokenId[_postId] == 0) {
+            mintNFT(_recipient, "something here");
+        } else {
+            tokenToOwner[postIdToTokenId[_postId]] = _recipient;
+        }
+    }
+
+    function mintNFT(address _recipient, string memory _tokenURI)
+        private
         onlyOwner
         returns (uint256)
     {
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
-        _setTokenURI(newItemId, tokenURI);
-
+        _mint(_recipient, newItemId);
+        _setTokenURI(newItemId, _tokenURI);
+        tokenToOwner[newItemId] = _recipient;
         return newItemId;
     }
 }
