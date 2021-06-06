@@ -10,10 +10,12 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 db = firebase.firestore();
 
+router.use("/redditBot", require());
+
 router.post("/users", (req, res) => {
   const data = req.body;
   data.forEach((e) => {
-    db.collection("users").doc(e.id).set({metamaskId:e.metamaskId});
+    db.collection("users").doc(e.id).set({ metamaskId: e.metamaskId });
   });
   // db.collection("users").set(r)
   res.json(["hi"]);

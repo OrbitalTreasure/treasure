@@ -13,7 +13,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     constructor() ERC721("TreasureOrbital", "TOR") {}
 
     mapping(string => address payable) private userIdToAddress;
-    mapping(string => uint256) private postIdToTokenId;
+    // mapping(string => uint256) private postIdToTokenId;
     RedditOffer[] postOffers;
 
     struct RedditOffer {
@@ -34,6 +34,8 @@ contract TreasureTokenFactory is ERC721, Ownable {
     );
 
     event OfferVerified(uint256 offerId);
+
+    event OfferCompleted(uint256 offerId);
 
     event UserLinked(string userId, address userAddress);
 
@@ -62,6 +64,11 @@ contract TreasureTokenFactory is ERC721, Ownable {
         RedditOffer memory offer = postOffers[_offerId];
         require(!offer.isCompleted, "Offer is already completed.");
         require(offer.isVerified, "Offer is not verified.");
+        _;
+    }
+
+    modifier offerValid(uint256 _offerId) {
+        require(_offerId < postOffers.length, "Offer does not exist");
         _;
     }
 
@@ -116,21 +123,32 @@ contract TreasureTokenFactory is ERC721, Ownable {
         emit OfferCreated(offerId, _buyerId, _sellerId, _postId, _bidAmount);
     }
 
-    function verifyOffer(uint256 _offerId) external onlyOwner {
+    function verifyOffer(uint256 _offerId)
+        external
+        offerValid(_offerId)
+        onlyOwner
+    {
+        require(
+            _offerId >= 0 && _offerId < postOffers.length,
+            "Offer does not exists"
+        );
         postOffers[_offerId].isVerified = true;
         emit OfferVerified(_offerId);
     }
 
     function _completeOffer(uint256 _offerId)
         private
+        offerValid(_offerId)
         offerVerifiedAndIncomplete(_offerId)
     {
         RedditOffer storage offer = postOffers[_offerId];
         offer.isCompleted = true;
+        emit OfferCompleted(_offerId);
     }
 
     function success(uint256 _offerId)
         public
+        offerValid(_offerId)
         onlySeller(_offerId)
         offerVerifiedAndIncomplete(_offerId)
     {
@@ -144,13 +162,14 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     function reject(uint256 _offerId)
         public
+        offerValid(_offerId)
         offerVerifiedAndIncomplete(_offerId)
     {
         RedditOffer memory offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         address payable buyerAddress = userIdToAddress[offer.buyerId];
 
-        require(msg.sender == sellerAddress || msg.sender == buyerAddress);
+        require(msg.sender == sellerAddress || msg.sender == buyerAddress, "You are not the buyer or the seller of this offer");
 
         (bool sent, bytes memory data) =
             buyerAddress.call{value: offer.bidAmount}("");
