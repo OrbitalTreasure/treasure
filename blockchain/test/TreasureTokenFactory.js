@@ -387,45 +387,45 @@ describe("Unit Tests", function () {
   });
 });
 
-describe("Integration Tests", function () {
-  before(async function () {
-    TreasureFactoryContract = await ethers.getContractFactory(
-      "TreasureTokenFactory"
-    );
-    [owner, adversary, addr1, addr2, addr3] = await ethers.getSigners();
-    TreasureFactoryInstance = await TreasureFactoryContract.deploy();
-    objectToParameters = (stub) => {
-      return [stub._buyerId, stub._sellerId, stub._postId, stub._bidAmount];
-    };
-    mapUser123 = async () => {
-      await TreasureFactoryInstance.connect(owner).mapUser("1", addr1.address);
-      await TreasureFactoryInstance.connect(owner).mapUser("2", addr2.address);
-      await TreasureFactoryInstance.connect(owner).mapUser("3", addr3.address);
-    };
-  });
+// describe("Integration Tests", function () {
+//   before(async function () {
+//     TreasureFactoryContract = await ethers.getContractFactory(
+//       "TreasureTokenFactory"
+//     );
+//     [owner, adversary, addr1, addr2, addr3] = await ethers.getSigners();
+//     TreasureFactoryInstance = await TreasureFactoryContract.deploy();
+//     objectToParameters = (stub) => {
+//       return [stub._buyerId, stub._sellerId, stub._postId, stub._bidAmount];
+//     };
+//     mapUser123 = async () => {
+//       await TreasureFactoryInstance.connect(owner).mapUser("1", addr1.address);
+//       await TreasureFactoryInstance.connect(owner).mapUser("2", addr2.address);
+//       await TreasureFactoryInstance.connect(owner).mapUser("3", addr3.address);
+//     };
+//   });
 
-  describe.only("Integration Test #1: Seller Accepts", function () {
-    it("Owner can map users", async function () {
-      await expect(
-        TreasureFactoryInstance.connect(owner).mapUser("1", addr1.address)
-      )
-        .to.emit(TreasureFactoryInstance, "UserLinked")
-        .withArgs("1", addr1.address);
-      await expect(
-        TreasureFactoryInstance.connect(owner).mapUser("2", addr2.address)
-      )
-        .to.emit(TreasureFactoryInstance, "UserLinked")
-        .withArgs("2", addr2.address);
-    });
+//   describe.only("Integration Test #1: Seller Accepts", function () {
+//     it("Owner can map users", async function () {
+//       await expect(
+//         TreasureFactoryInstance.connect(owner).mapUser("1", addr1.address)
+//       )
+//         .to.emit(TreasureFactoryInstance, "UserLinked")
+//         .withArgs("1", addr1.address);
+//       await expect(
+//         TreasureFactoryInstance.connect(owner).mapUser("2", addr2.address)
+//       )
+//         .to.emit(TreasureFactoryInstance, "UserLinked")
+//         .withArgs("2", addr2.address);
+//     });
 
-    it("Buyer can create an offer", async function () {
-      await expect(
-        TreasureFactoryInstance.connect(addr1).createOffer(
-          ...objectToParameters(offerStub0),
-          { value: offerStub0._bidAmount }
-        )
-      ).to.emit(TreasureFactoryInstance, "OfferCreated");
-    });
+//     it("Buyer can create an offer", async function () {
+//       await expect(
+//         TreasureFactoryInstance.connect(addr1).createOffer(
+//           ...objectToParameters(offerStub0),
+//           { value: offerStub0._bidAmount }
+//         )
+//       ).to.emit(TreasureFactoryInstance, "OfferCreated");
+//     });
 
-  });
-});
+//   });
+// });
