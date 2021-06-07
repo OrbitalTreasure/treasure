@@ -156,9 +156,11 @@ contract TreasureTokenFactory is ERC721, Ownable {
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         (bool sent, bytes memory data) =
             sellerAddress.call{value: (offer.bidAmount / 10) * 9}("");
-        (bool sentOwner, bytes memory dataOwner) = owner().call{value: offer.bidAmount/10}("");
-        require(sent, "Failed to send ether");
         _completeOffer(_offerId);
+        (bool sentOwner, bytes memory dataOwner) =
+            owner().call{value: offer.bidAmount / 10}("");
+        require(sent, "Failed to send ether to seller");
+        require(sentOwner, "Failed to send ether to owner");
     }
 
     function reject(uint256 _offerId)
@@ -174,12 +176,10 @@ contract TreasureTokenFactory is ERC721, Ownable {
             msg.sender == sellerAddress || msg.sender == buyerAddress,
             "You are not the buyer or the seller of this offer"
         );
-
+        _completeOffer(_offerId);
         (bool sent, bytes memory data) =
             buyerAddress.call{value: offer.bidAmount}("");
         require(sent, "Failed to refund ether");
-
-        _completeOffer(_offerId);
     }
 
     // NFT FUNCTIONS
@@ -191,17 +191,17 @@ contract TreasureTokenFactory is ERC721, Ownable {
     //     }
     // }
 
-    function mintNFT(address _recipient, string memory _tokenURI)
-        private
-        onlyOwner
-        returns (uint256)
-    {
-        _tokenIds.increment();
+    // function mintNFT(address _recipient, string memory _tokenURI)
+    //     private
+    //     onlyOwner
+    //     returns (uint256)
+    // {
+    //     _tokenIds.increment();
 
-        uint256 newItemId = _tokenIds.current();
-        _mint(_recipient, newItemId);
-        _setTokenURI(newItemId, _tokenURI);
-        // tokenOwner[newItemId] = _recipient;
-        return newItemId;
-    }
+    //     uint256 newItemId = _tokenIds.current();
+    //     _mint(_recipient, newItemId);
+    //     _setTokenURI(newItemId, _tokenURI);
+    //     // tokenOwner[newItemId] = _recipient;
+    //     return newItemId;
+    // }
 }
