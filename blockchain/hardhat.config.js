@@ -4,6 +4,7 @@
 
 require("dotenv").config();
 require("@nomiclabs/hardhat-waffle");
+require("hardhat-contract-sizer")
 
 const { ALCHEMY_API_URL, METAMASK_PRIVATE_KEY } = process.env;
 
@@ -18,4 +19,9 @@ module.exports = {
     },
     localhost: {},
   },
+  contractSizer: {
+    alphaSort: false,
+    runOnCompile: true,
+    diambiguatePaths: false
+  }
 };

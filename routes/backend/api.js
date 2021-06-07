@@ -10,7 +10,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 db = firebase.firestore();
 
-router.use("/redditBot", require());
 
 router.post("/users", (req, res) => {
   const data = req.body;
