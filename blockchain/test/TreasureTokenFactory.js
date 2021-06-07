@@ -46,6 +46,7 @@ describe("Unit Tests", function () {
       await TreasureFactoryInstance.connect(owner).mapUser("3", addr3.address);
     };
   });
+
   describe("Unit Test: Deployment", function () {
     it("Should set owner of the contract correctly", async function () {
       expect(await TreasureFactoryInstance.owner()).to.equal(owner.address);
@@ -54,15 +55,16 @@ describe("Unit Tests", function () {
 
   describe("mapUser() function", function () {
     it("Should allow owner to map a user", async function () {
-      await TreasureFactoryInstance.connect(owner).mapUser("1", addr2.address);
-      expect(await TreasureFactoryInstance.getUser("1")).to.equal(
-        addr2.address
-      );
+      await expect(
+        TreasureFactoryInstance.connect(owner).mapUser("1", addr1.address)
+      )
+        .to.emit(TreasureFactoryInstance, "UserLinked")
+        .withArgs("1", addr1.address);
     });
 
     it("Should not allow non-owner to map a user", async function () {
       await expect(
-        TreasureFactoryInstance.connect(addr1).mapUser("1", addr2.address)
+        TreasureFactoryInstance.connect(addr1).mapUser("1", addr1.address)
       ).to.be.revertedWith("caller is not the owner");
     });
 
@@ -195,20 +197,22 @@ describe("Unit Tests", function () {
     });
 
     it("Should allow owner to verify offer", async function () {
-      await expect(TreasureFactoryInstance.connect(owner).verifyOffer(0))
+      await expect(
+        TreasureFactoryInstance.connect(owner).verifyOffer(0, "hash0")
+      )
         .to.emit(TreasureFactoryInstance, "OfferVerified")
-        .withArgs(0);
+        .withArgs(0, "hash0");
     });
 
     it("Should not allow non-owner to verify offer", async function () {
       await expect(
-        TreasureFactoryInstance.connect(addr1).verifyOffer(0)
+        TreasureFactoryInstance.connect(addr1).verifyOffer(0, "hash0")
       ).to.be.revertedWith("caller is not the owner");
     });
 
     it("Should revert if offerId does not exist", async function () {
       await expect(
-        TreasureFactoryInstance.connect(owner).verifyOffer(1)
+        TreasureFactoryInstance.connect(owner).verifyOffer(1, "hash1")
       ).to.be.revertedWith("Offer does not exist");
     });
   });
@@ -229,43 +233,45 @@ describe("Unit Tests", function () {
     });
 
     it("Should allow buyer to rescind an offer", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await expect(TreasureFactoryInstance.verifyOffer(0, "hash0"))
+        .to.emit(TreasureFactoryInstance, "OfferVerified")
+        .withArgs("0", "hash0");
       await expect(TreasureFactoryInstance.connect(addr1).reject(0))
         .to.emit(TreasureFactoryInstance, "OfferCompleted")
         .withArgs(0);
 
-      await TreasureFactoryInstance.verifyOffer(1);
+      await TreasureFactoryInstance.verifyOffer(1, "hash1");
       await expect(TreasureFactoryInstance.connect(addr2).reject(1))
         .to.emit(TreasureFactoryInstance, "OfferCompleted")
         .withArgs(1);
     });
 
     it("Should allow seller to reject an offer", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(TreasureFactoryInstance.connect(addr2).reject(0))
         .to.emit(TreasureFactoryInstance, "OfferCompleted")
         .withArgs(0);
 
-      await TreasureFactoryInstance.verifyOffer(1);
+      await TreasureFactoryInstance.verifyOffer(1, "hash1");
       await expect(TreasureFactoryInstance.connect(addr1).reject(1))
         .to.emit(TreasureFactoryInstance, "OfferCompleted")
         .withArgs(1);
     });
 
     it("Should not allow non-seller or non-buyer to reject an offer", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(
         TreasureFactoryInstance.connect(addr3).reject(0)
       ).to.be.revertedWith("You are not the buyer or the seller of this offer");
 
-      await TreasureFactoryInstance.verifyOffer(1);
+      await TreasureFactoryInstance.verifyOffer(1, "hash1");
       await expect(
         TreasureFactoryInstance.connect(addr3).reject(1)
       ).to.be.revertedWith("You are not the buyer or the seller of this offer");
     });
 
     it("Should revert if offer does not exist", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(
         TreasureFactoryInstance.connect(addr1).reject(2)
       ).to.be.revertedWith("Offer does not exist");
@@ -278,7 +284,7 @@ describe("Unit Tests", function () {
     });
 
     it("Should revert if offer is already completed.", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(TreasureFactoryInstance.connect(addr1).reject(0)).to.emit(
         TreasureFactoryInstance,
         "OfferCompleted"
@@ -289,7 +295,7 @@ describe("Unit Tests", function () {
     });
 
     it("Should deduct bid amount from contract.", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(() =>
         TreasureFactoryInstance.connect(addr1).reject(0)
       ).to.changeEtherBalance(
@@ -299,7 +305,7 @@ describe("Unit Tests", function () {
     });
 
     it("Should deposit bid amount to buyer wallet", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(() =>
         TreasureFactoryInstance.connect(addr1).reject(0)
       ).to.changeEtherBalance(addr1, offerStub0._bidAmount);
@@ -322,14 +328,14 @@ describe("Unit Tests", function () {
     });
 
     it("Should allow seller to accept offer", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(TreasureFactoryInstance.connect(addr2).accept(0))
         .to.emit(TreasureFactoryInstance, "OfferCompleted")
         .withArgs(0);
     });
 
     it("Should not allow non-seller to accept offer", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(
         TreasureFactoryInstance.connect(addr1).accept(0)
       ).to.be.revertedWith("Only the seller can call this function.");
@@ -339,7 +345,7 @@ describe("Unit Tests", function () {
     });
 
     it("Should revert if offer does not exist", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(
         TreasureFactoryInstance.connect(addr2).accept(2)
       ).to.be.revertedWith("Offer does not exist");
@@ -352,7 +358,7 @@ describe("Unit Tests", function () {
     });
 
     it("Should revert if offer has already been completed", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(TreasureFactoryInstance.connect(addr2).accept(0))
         .to.emit(TreasureFactoryInstance, "OfferCompleted")
         .withArgs(0);
@@ -362,7 +368,7 @@ describe("Unit Tests", function () {
     });
 
     it("Should deduct bid amount from contract", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(() =>
         TreasureFactoryInstance.connect(addr2).accept(0)
       ).to.changeEtherBalance(
@@ -372,17 +378,37 @@ describe("Unit Tests", function () {
     });
 
     it("Should deposit correct amount to seller wallet", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(() =>
         TreasureFactoryInstance.connect(addr2).accept(0)
       ).to.changeEtherBalance(addr2, offerStub0._bidAmount.mul(9).div(10));
     });
 
     it("Should deposit correct amount to owner wallet", async function () {
-      await TreasureFactoryInstance.verifyOffer(0);
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
       await expect(() =>
         TreasureFactoryInstance.connect(addr2).accept(0)
       ).to.changeEtherBalance(owner, offerStub0._bidAmount.div(10));
+    });
+
+    // it.todo("Should give emit event when token is created");
+
+    it("Should give custody of NFT to owner", async function () {
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
+      await expect(TreasureFactoryInstance.connect(addr2).accept(0))
+        .to.emit(TreasureFactoryInstance, "TokenCreated")
+        .withArgs("0", offerStub0._buyerId);
+      expect(await TreasureFactoryInstance.ownerOf(0)).to.be.equals(
+        owner.address
+      );
+    });
+
+    it("Should make buyer the owner of NFT", async function () {
+      await TreasureFactoryInstance.verifyOffer(0, "hash0");
+      await expect(TreasureFactoryInstance.connect(addr2).accept(0))
+        .to.emit(TreasureFactoryInstance, "TokenCreated")
+        .withArgs("0", offerStub0._buyerId);
+      expect(await TreasureFactoryInstance.getOwner(0)).to.be.equal("1");
     });
   });
 });

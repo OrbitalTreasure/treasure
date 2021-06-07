@@ -13,9 +13,8 @@ contract TreasureTokenFactory is ERC721, Ownable {
     constructor() ERC721("TreasureOrbital", "TOR") {}
 
     mapping(string => address payable) private userIdToAddress;
-    mapping(string => string) private postIdToContentId;
     mapping(uint256 => string) private tokenIdToOwnerId;
-    // mapping(string => uint256) private postIdToTokenId;
+    mapping(string => uint256) private postIdToTokenId;
     RedditOffer[] postOffers;
 
     struct RedditOffer {
@@ -25,6 +24,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         uint256 bidAmount;
         bool isVerified;
         bool isCompleted;
+        string tokenUri;
     }
 
     event OfferCreated(
@@ -35,7 +35,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         uint256 bidAmount
     );
 
-    event OfferVerified(uint256 offerId, string contentId);
+    event OfferVerified(uint256 offerId, string tokenUri);
 
     event OfferCompleted(uint256 offerId);
 
@@ -89,18 +89,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         emit UserLinked(_userId, _userAddress);
     }
 
-    function getUser(string memory _userId)
-        public
-        view
-        onlyOwner
-        returns (address payable)
-    {
-        require(
-            userIdToAddress[_userId] != address(0),
-            "This user does not exists"
-        );
-        return userIdToAddress[_userId];
-    }
+
 
     // OFFER FUNCTIONS
     function createOffer(
@@ -121,39 +110,41 @@ contract TreasureTokenFactory is ERC721, Ownable {
         );
 
         postOffers.push(
-            RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false, false)
+            RedditOffer(_buyerId, _sellerId, _postId, _bidAmount, false, false, "")
         );
         uint256 offerId = postOffers.length - 1;
         emit OfferCreated(offerId, _buyerId, _sellerId, _postId, _bidAmount);
     }
 
-    function verifyOffer(uint256 _offerId, string memory _contentId)
+    function verifyOffer(uint256 _offerId, string memory _tokenUri)
         external
         offerValid(_offerId)
         onlyOwner
     {
-        require(
-            _offerId >= 0 && _offerId < postOffers.length,
-            "Offer does not exists"
-        );
-        RedditOffer memory offer = postOffers[_offerId];
-        postIdToContentId[offer.postId] = _contentId;
+        RedditOffer storage offer = postOffers[_offerId];
+        offer.tokenUri = _tokenUri;
         offer.isVerified = true;
-        emit OfferVerified(_offerId, _contentId);
+        emit OfferVerified(_offerId, _tokenUri);
     }
 
-    function getContentId(string memory _postId)
+    function getTokenUri(string memory _postId)
         public
         view
         returns (string memory)
     {
-        return postIdToContentId[_postId];
+        return tokenURI(postIdToTokenId[_postId]);
+    }
+
+    function getOwner(uint256 _tokenId) 
+        public
+        view
+        returns (string memory)
+    {
+        return tokenIdToOwnerId[_tokenId];
     }
 
     function _completeOffer(uint256 _offerId)
         private
-        offerValid(_offerId)
-        offerVerifiedAndIncomplete(_offerId)
     {
         RedditOffer storage offer = postOffers[_offerId];
         offer.isCompleted = true;
@@ -166,7 +157,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         onlySeller(_offerId)
         offerVerifiedAndIncomplete(_offerId)
     {
-        RedditOffer storage offer = postOffers[_offerId];
+        RedditOffer memory offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         (bool sent, bytes memory data) =
             sellerAddress.call{value: (offer.bidAmount / 10) * 9}("");
@@ -175,7 +166,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
             owner().call{value: offer.bidAmount / 10}("");
         require(sent, "Failed to send ether to seller");
         require(sentOwner, "Failed to send ether to owner");
-        uint256 newTokenId = mintNFT(postIdToContentId[offer.postId]);
+        uint256 newTokenId = mintNFT(offer.tokenUri);
         tokenIdToOwnerId[newTokenId] = offer.buyerId;
         emit TokenCreated(newTokenId, offer.buyerId);
     }
@@ -201,7 +192,6 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     // NFT FUNCTIONS
     function mintNFT(string memory _tokenURI) private returns (uint256) {
-        _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _safeMint(owner(), newItemId);
         _setTokenURI(newItemId, _tokenURI);
