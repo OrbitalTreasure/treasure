@@ -146,7 +146,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         emit OfferCompleted(_offerId);
     }
 
-    function success(uint256 _offerId)
+    function accept(uint256 _offerId)
         public
         offerValid(_offerId)
         onlySeller(_offerId)
@@ -155,7 +155,8 @@ contract TreasureTokenFactory is ERC721, Ownable {
         RedditOffer storage offer = postOffers[_offerId];
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         (bool sent, bytes memory data) =
-            sellerAddress.call{value: offer.bidAmount}("");
+            sellerAddress.call{value: (offer.bidAmount / 10) * 9}("");
+        (bool sentOwner, bytes memory dataOwner) = owner().call{value: offer.bidAmount/10}("");
         require(sent, "Failed to send ether");
         _completeOffer(_offerId);
     }
@@ -169,7 +170,10 @@ contract TreasureTokenFactory is ERC721, Ownable {
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         address payable buyerAddress = userIdToAddress[offer.buyerId];
 
-        require(msg.sender == sellerAddress || msg.sender == buyerAddress, "You are not the buyer or the seller of this offer");
+        require(
+            msg.sender == sellerAddress || msg.sender == buyerAddress,
+            "You are not the buyer or the seller of this offer"
+        );
 
         (bool sent, bytes memory data) =
             buyerAddress.call{value: offer.bidAmount}("");
