@@ -1,22 +1,16 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-<<<<<<< Updated upstream
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/contracts/TreasureTokenFactory.sol": {
-      "lastModificationDate": 1623050998984,
-      "contentHash": "011bd3778c10932040237d1fa77383ca",
-=======
     "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\contracts\\TreasureTokenFactory.sol": {
-      "lastModificationDate": 1623090606221,
-      "contentHash": "9b560b63b16e3cebd03684746abdfa57",
->>>>>>> Stashed changes
+      "lastModificationDate": 1623090712290,
+      "contentHash": "9e1e32b7d38a7a571db08b3f824c0c81",
       "sourceName": "contracts/TreasureTokenFactory.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -45,16 +39,16 @@
         "TreasureTokenFactory"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/token/ERC721/ERC721.sol": {
-      "lastModificationDate": 1622700223225,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\ERC721.sol": {
+      "lastModificationDate": 1623051768580,
       "contentHash": "2d9804eb2b6f41ea0a65115e154d90eb",
       "sourceName": "@openzeppelin/contracts/token/ERC721/ERC721.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -91,16 +85,16 @@
         "ERC721"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/utils/Counters.sol": {
-      "lastModificationDate": 1622700222172,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\Counters.sol": {
+      "lastModificationDate": 1623051768479,
       "contentHash": "304a56eb1322144704fb39f8c7e6d722",
       "sourceName": "@openzeppelin/contracts/utils/Counters.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -127,16 +121,16 @@
         "Counters"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/access/Ownable.sol": {
-      "lastModificationDate": 1622700222169,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\access\\Ownable.sol": {
+      "lastModificationDate": 1623051768754,
       "contentHash": "6748815a5b45c4aeeda56819f41190e0",
       "sourceName": "@openzeppelin/contracts/access/Ownable.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -163,16 +157,16 @@
         "Ownable"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/utils/Context.sol": {
-      "lastModificationDate": 1622700222171,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\Context.sol": {
+      "lastModificationDate": 1623051768475,
       "contentHash": "2adbd82f6d055a4751566d4671512b03",
       "sourceName": "@openzeppelin/contracts/utils/Context.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -197,16 +191,16 @@
         "Context"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/token/ERC721/IERC721.sol": {
-      "lastModificationDate": 1622700223225,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721.sol": {
+      "lastModificationDate": 1623051768677,
       "contentHash": "e82621b83943f11c44988c60e83d6ebc",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -233,16 +227,16 @@
         "IERC721"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol": {
-      "lastModificationDate": 1622700223225,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Metadata.sol": {
+      "lastModificationDate": 1623051768699,
       "contentHash": "370e7a48f316401b5063bcb604843e1b",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Metadata.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -269,16 +263,16 @@
         "IERC721Metadata"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol": {
-      "lastModificationDate": 1622700223225,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Enumerable.sol": {
+      "lastModificationDate": 1623051768686,
       "contentHash": "eaebc3874248c26f6ea0b13b9a140a94",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Enumerable.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -305,16 +299,16 @@
         "IERC721Enumerable"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol": {
-      "lastModificationDate": 1622700223225,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\token\\ERC721\\IERC721Receiver.sol": {
+      "lastModificationDate": 1623051768709,
       "contentHash": "fad0b3f4424bdbb4b35467b29ea8d334",
       "sourceName": "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -339,16 +333,16 @@
         "IERC721Receiver"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/introspection/ERC165.sol": {
-      "lastModificationDate": 1622700222169,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\introspection\\ERC165.sol": {
+      "lastModificationDate": 1623051768527,
       "contentHash": "08f854e2dd3c262845bba38c9b48e4e0",
       "sourceName": "@openzeppelin/contracts/introspection/ERC165.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -375,16 +369,16 @@
         "ERC165"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/math/SafeMath.sol": {
-      "lastModificationDate": 1622700222169,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\math\\SafeMath.sol": {
+      "lastModificationDate": 1623051768797,
       "contentHash": "e03e12206057e809eb76c5f681170c32",
       "sourceName": "@openzeppelin/contracts/math/SafeMath.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -409,16 +403,16 @@
         "SafeMath"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/utils/Address.sol": {
-      "lastModificationDate": 1622700222171,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\Address.sol": {
+      "lastModificationDate": 1623051768448,
       "contentHash": "7aa46886ff5abe7515496208a5e2ce5a",
       "sourceName": "@openzeppelin/contracts/utils/Address.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -443,16 +437,16 @@
         "Address"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/utils/EnumerableSet.sol": {
-      "lastModificationDate": 1622700222178,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\EnumerableSet.sol": {
+      "lastModificationDate": 1623051768495,
       "contentHash": "db7b1afdb2c204e1e52100b79f0c847e",
       "sourceName": "@openzeppelin/contracts/utils/EnumerableSet.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -477,16 +471,16 @@
         "EnumerableSet"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/utils/EnumerableMap.sol": {
-      "lastModificationDate": 1622700222180,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\EnumerableMap.sol": {
+      "lastModificationDate": 1623051768491,
       "contentHash": "b1bb8570824c668943149211d74d6c51",
       "sourceName": "@openzeppelin/contracts/utils/EnumerableMap.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -511,16 +505,16 @@
         "EnumerableMap"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/utils/Strings.sol": {
-      "lastModificationDate": 1622700222186,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\utils\\Strings.sol": {
+      "lastModificationDate": 1623051768805,
       "contentHash": "c86a31bacf868d392eda08a0eccc4735",
       "sourceName": "@openzeppelin/contracts/utils/Strings.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {
@@ -545,16 +539,16 @@
         "Strings"
       ]
     },
-    "/Users/richardlidefa/Desktop/Projects/treasure/blockchain/node_modules/@openzeppelin/contracts/introspection/IERC165.sol": {
-      "lastModificationDate": 1622700222170,
+    "C:\\Users\\joelc\\OneDrive\\Documents\\Coding Projects\\treasure\\blockchain\\node_modules\\@openzeppelin\\contracts\\introspection\\IERC165.sol": {
+      "lastModificationDate": 1623051768653,
       "contentHash": "0d62a8380952235f135dae91590f90a3",
       "sourceName": "@openzeppelin/contracts/introspection/IERC165.sol",
       "solcConfig": {
         "version": "0.7.3",
         "settings": {
           "optimizer": {
-            "enabled": false,
-            "runs": 200
+            "enabled": true,
+            "runs": 1000
           },
           "outputSelection": {
             "*": {

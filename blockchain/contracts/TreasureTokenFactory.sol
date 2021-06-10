@@ -31,7 +31,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         uint256 offerId,
         string buyerId,
         string sellerId,
-        string postId,
+        string,
         uint256 bidAmount
     );
 

@@ -4,12 +4,15 @@
 
 require("dotenv").config();
 require("@nomiclabs/hardhat-waffle");
-require("hardhat-contract-sizer")
+require("hardhat-contract-sizer");
 
 const { ALCHEMY_API_URL, METAMASK_PRIVATE_KEY } = process.env;
 
 module.exports = {
-  solidity: "0.7.3",
+  solidity: {
+    version: "0.7.3",
+    settings: { optimizer: { enabled: true, runs: 1000 } },
+  },
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {},
@@ -22,6 +25,6 @@ module.exports = {
   contractSizer: {
     alphaSort: false,
     runOnCompile: true,
-    diambiguatePaths: false
-  }
+    diambiguatePaths: false,
+  },
 };
