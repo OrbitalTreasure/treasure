@@ -8,7 +8,7 @@ function App() {
     <Router>
       <Switch>
         <Route exact path="/" component={Dashboard} />
-        <Route exact path="/tools/loadDb" component={LoadDb}></Route>
+        <Route exact path="/tools/loadDb" component={LoadDb} />
       </Switch>
     </Router>
   );
