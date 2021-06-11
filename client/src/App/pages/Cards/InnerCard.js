@@ -9,13 +9,15 @@ function checkURL(url) {
 const InnerCard = (props) => {
     return (
         <div className="container">
-            <h4 className="title">{props.post.title}</h4>
+            <h4 className="heading">{props.post.title}</h4>
             <div className="subHeading">
                 <p className="subreddit">{props.post.subreddit}</p>
                 <p className="author">Post by u/{props.post.author}</p>
             </div>
-            {props.post?.body && <div className="bodyText">{props.post?.body}</div>}
-            {!props.post?.body && checkURL(props.post?.link) && <img className="bodyImg" src={props.post.link}/>}
+            <div className="content">
+                {props.post?.body && <div className="bodyText">{props.post?.body}</div>}
+                {!props.post?.body && checkURL(props.post?.link) && <img className="bodyImg" src={props.post.link}/>}
+            </div>
             <div className="upvote">
                 <img className="upvoteImg" src={upvoteImg} />
                 <text className="upvoteCount">{props.post.upvoteCount}</text>

@@ -1,30 +1,43 @@
 .container {
   width: 30%;
-  padding: 0px;
+  padding: 5px;
   margin: 10px;
   position: relative;
-  border-style: solid;
   border-radius: 20px;
-  border-width: 5px;
-  border-color: black;
+  border: 2px solid grey;
 }
 
-.title {
-  padding: 0 0;
+.heading {
+  height: 20px;
+  margin: 0 0;
+  text-align: left;
+  padding-left: 1em;
 }
 
 .subHeading {
   display: flex;
   font-size: small;
-  padding-left: 3em;
+  margin: 0em 1em;
+  height: 20px;
 }
 
 .subreddit {
   float: left;
+  font-weight: bold;
 }
 
 .author {
+  padding-left: 2em;
   float: left;
+  color: grey;
+}
+
+.content {
+  position: relative;
+  margin: 1em;
+  padding: 0.5em;
+  border: 2px solid grey;
+  border-radius: 1em;
 }
 
 .bodyText {
