@@ -35,7 +35,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         uint256 bidAmount
     );
 
-    event OfferVerified(uint256 offerId, string tokenUri);
+    event OfferVerified(uint256 offerId, string tokenUri, string sellerid);
 
     event OfferCompleted(uint256 offerId);
 
@@ -131,7 +131,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     {
         RedditOffer storage offer = postOffers[_offerId];
         uint tokenId = postIdToTokenId[offer.postId];
-        if (tokenId == 0) {
+        if (bytes(tokenIdToOwnerId[tokenId]).length == 0) {
             offer.sellerId = _sellerId;
         } else {
             offer.isTokenMinted = true;
@@ -139,7 +139,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         }
         offer.tokenUri = _tokenUri;
         offer.isVerified = true;
-        emit OfferVerified(_offerId, _tokenUri);
+        emit OfferVerified(_offerId, _tokenUri, offer.sellerId);
     }
 
     function getTokenUri(string memory _postId)
@@ -174,17 +174,16 @@ contract TreasureTokenFactory is ERC721, Ownable {
     {
         RedditOffer memory offer = postOffers[_offerId];
         if (offer.isTokenMinted) {
-            _changeTokenOwner(postIdToTokenId[offer.postId], offer.sellerId);
-            emit TokenOwnerChanged(postIdToTokenId[offer.postId], offer.sellerId);
+            _changeTokenOwner(postIdToTokenId[offer.postId], offer.buyerId);
         } else {
             uint256 newTokenId = mintNFT(offer.tokenUri);
             tokenIdToOwnerId[newTokenId] = offer.buyerId;
             emit TokenCreated(newTokenId, offer.buyerId);
         }    
+        _completeOffer(_offerId);
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         (bool sent, bytes memory data) =
             sellerAddress.call{value: (offer.bidAmount / 10) * 9}("");
-        _completeOffer(_offerId);
         (bool sentOwner, bytes memory dataOwner) =
             owner().call{value: offer.bidAmount / 10}("");
         require(sent, "Failed to send ether to seller");
@@ -193,6 +192,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     function _changeTokenOwner(uint tokenId, string memory _newOwner) private {
         tokenIdToOwnerId[tokenId] = _newOwner ;
+        emit TokenOwnerChanged(tokenId, _newOwner);
     }
 
     function reject(uint256 _offerId)
