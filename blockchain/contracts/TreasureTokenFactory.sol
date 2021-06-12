@@ -42,6 +42,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
     event UserLinked(string userId, address userAddress);
 
     event TokenCreated(uint256 tokenId, string ownerId);
+    event TokenOwnerChanged(uint tokenId, string ownerId);
 
     // MODIFIERS
     modifier onlyBuyer(uint256 _offerId) {
@@ -172,6 +173,14 @@ contract TreasureTokenFactory is ERC721, Ownable {
         onlySeller(_offerId)
     {
         RedditOffer memory offer = postOffers[_offerId];
+        if (offer.isTokenMinted) {
+            _changeTokenOwner(postIdToTokenId[offer.postId], offer.sellerId);
+            emit TokenOwnerChanged(postIdToTokenId[offer.postId], offer.sellerId);
+        } else {
+            uint256 newTokenId = mintNFT(offer.tokenUri);
+            tokenIdToOwnerId[newTokenId] = offer.buyerId;
+            emit TokenCreated(newTokenId, offer.buyerId);
+        }    
         address payable sellerAddress = userIdToAddress[offer.sellerId];
         (bool sent, bytes memory data) =
             sellerAddress.call{value: (offer.bidAmount / 10) * 9}("");
@@ -180,9 +189,10 @@ contract TreasureTokenFactory is ERC721, Ownable {
             owner().call{value: offer.bidAmount / 10}("");
         require(sent, "Failed to send ether to seller");
         require(sentOwner, "Failed to send ether to owner");
-        uint256 newTokenId = mintNFT(offer.tokenUri);
-        tokenIdToOwnerId[newTokenId] = offer.buyerId;
-        emit TokenCreated(newTokenId, offer.buyerId);
+    }
+
+    function _changeTokenOwner(uint tokenId, string memory _newOwner) private {
+        tokenIdToOwnerId[tokenId] = _newOwner ;
     }
 
     function reject(uint256 _offerId)
