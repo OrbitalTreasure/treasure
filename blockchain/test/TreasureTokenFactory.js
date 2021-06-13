@@ -1,4 +1,4 @@
-const { expect, assert } = require("chai");
+const { expect } = require("chai");
 const { ethers } = require("hardhat");
 
 let TreasureFactoryContract;
@@ -36,6 +36,7 @@ let resaleOfferStub0 = {
   _postId: "1",
   _bidAmount: ethers.BigNumber.from("9000000000000000000"),
 };
+let provider = ethers.getDefaultProvider();
 
 describe("Unit Tests", function () {
   this.beforeEach(async function () {
@@ -484,8 +485,8 @@ describe("Unit Tests", function () {
       );
       await expect(TreasureFactoryInstance.connect(addr2).accept(0))
         .to.emit(TreasureFactoryInstance, "TokenCreated")
-        .withArgs("0", offerStub0._buyerId);
-      expect(await TreasureFactoryInstance.ownerOf(0)).to.be.equals(
+        .withArgs("1", offerStub0._buyerId);
+      expect(await TreasureFactoryInstance.ownerOf(1)).to.be.equals(
         owner.address
       );
     });
@@ -498,8 +499,8 @@ describe("Unit Tests", function () {
       );
       await expect(TreasureFactoryInstance.connect(addr2).accept(0))
         .to.emit(TreasureFactoryInstance, "TokenCreated")
-        .withArgs("0", offerStub0._buyerId);
-      expect(await TreasureFactoryInstance.getOwner(0)).to.be.equal("1");
+        .withArgs("1", offerStub0._buyerId);
+      expect(await TreasureFactoryInstance.getOwner(1)).to.be.equal("1");
     });
   });
 
@@ -520,7 +521,7 @@ describe("Unit Tests", function () {
 
       await expect(TreasureFactoryInstance.connect(addr2).accept(0))
         .to.emit(TreasureFactoryInstance, "TokenCreated")
-        .withArgs("0", offerStub0._buyerId);
+        .withArgs("1", offerStub0._buyerId);
     });
 
     it("Should be able to make an offer on a minted token", async function () {
@@ -570,7 +571,7 @@ describe("Unit Tests", function () {
 
       await expect(TreasureFactoryInstance.connect(addr1).accept("1"))
         .to.emit(TreasureFactoryInstance, "TokenOwnerChanged")
-        .withArgs("0", "3");
+        .withArgs("1", "3");
     });
 
     it("Should not allow non-token owner to accept offer", async function () {
@@ -604,7 +605,7 @@ describe("Unit Tests", function () {
 
       await TreasureFactoryInstance.connect(addr1).accept("1");
 
-      expect(await TreasureFactoryInstance.ownerOf(0)).to.be.equals(
+      expect(await TreasureFactoryInstance.ownerOf(1)).to.be.equals(
         owner.address
       );
     });
@@ -621,7 +622,66 @@ describe("Unit Tests", function () {
         "does not matter what the seller id is"
       );
 
-      expect(await TreasureFactoryInstance.getOwner(0)).to.be.equal("3");
-    })
+      await TreasureFactoryInstance.connect(addr1).accept("1");
+
+      expect(await TreasureFactoryInstance.getOwner(1)).to.be.equal("3");
+    });
+
+    it("Should deduct bid amount from the contract", async function () {
+      await TreasureFactoryInstance.connect(addr3).createOffer(
+        ...objectToParameters(resaleOfferStub0),
+        { value: resaleOfferStub0._bidAmount }
+      );
+
+      await TreasureFactoryInstance.connect(owner).verifyOffer(
+        "1",
+        "resaleHash0",
+        "does not matter what the seller id is"
+      );
+
+      await expect(() =>
+        TreasureFactoryInstance.connect(addr1).accept("1")
+      ).to.changeEtherBalance(
+        TreasureFactoryInstance,
+        resaleOfferStub0._bidAmount.mul(-1)
+      );
+    });
+
+    it("Should transfer seller's share to seller", async function () {
+      await TreasureFactoryInstance.connect(addr3).createOffer(
+        ...objectToParameters(resaleOfferStub0),
+        { value: resaleOfferStub0._bidAmount }
+      );
+
+      await TreasureFactoryInstance.connect(owner).verifyOffer(
+        "1",
+        "resaleHash0",
+        "does not matter what the seller id is"
+      );
+
+      await expect(() =>
+        TreasureFactoryInstance.connect(addr1).accept("1")
+      ).to.changeEtherBalance(
+        addr1,
+        resaleOfferStub0._bidAmount.mul(9).div(10)
+      );
+    });
+
+    it("Should transfer commission to owner", async function () {
+      await TreasureFactoryInstance.connect(addr3).createOffer(
+        ...objectToParameters(resaleOfferStub0),
+        { value: resaleOfferStub0._bidAmount }
+      );
+
+      await TreasureFactoryInstance.connect(owner).verifyOffer(
+        "1",
+        "resaleHash0",
+        "does not matter what the seller id is"
+      );
+
+      await expect(() =>
+        TreasureFactoryInstance.connect(addr1).accept("1")
+      ).to.changeEtherBalance(owner, resaleOfferStub0._bidAmount.div(10));
+    });
   });
 });

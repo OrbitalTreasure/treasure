@@ -178,6 +178,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
         } else {
             uint256 newTokenId = mintNFT(offer.tokenUri);
             tokenIdToOwnerId[newTokenId] = offer.buyerId;
+            postIdToTokenId[offer.postId] =  newTokenId;
             emit TokenCreated(newTokenId, offer.buyerId);
         }    
         _completeOffer(_offerId);
@@ -216,6 +217,7 @@ contract TreasureTokenFactory is ERC721, Ownable {
 
     // NFT FUNCTIONS
     function mintNFT(string memory _tokenURI) private returns (uint256) {
+        _tokenIds.increment();
         uint256 newItemId = _tokenIds.current();
         _safeMint(owner(), newItemId);
         _setTokenURI(newItemId, _tokenURI);
