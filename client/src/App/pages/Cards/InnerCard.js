@@ -4,12 +4,20 @@ import "../../assets/styles/InnerCard.scss";
 import { Link } from "react-router-dom";
 
 const InnerCard = (props) => {
+  const redirectToPost = (postId) => (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    window.location.href = `/post/${postId}`;
+  };
+
   return (
-    <div className="container">
-      <h4 className="heading">{props.title}</h4>
+    <div className="container" >
+      <h4 className="heading" onClick={redirectToPost(props.id)}>{props.title}</h4>
       <div className="subHeading">
         <p className="subreddit">{"/r/" + props.subreddit}</p>
-        <a href={`/user/${props.authorId}`} className="author">Post by u/{props.author}</a>
+        <a href={`/user/${props.authorId}`} className="author">
+          Post by u/{props.author}
+        </a>
       </div>
       {(props?.selftext || props?.imageUrl) && (
         <div className="content">

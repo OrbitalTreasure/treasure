@@ -72,14 +72,16 @@ router.get("/posts/ipfs/:ipfsHash", (req, res) => {
 
 router.get("/posts", (req, res) => {
   const limit = req.query.limit || 10;
+  res.header("Access-Control-Allow-Origin", "*");
   db.collection("Posts")
     .orderBy("createdAt")
     .limit(limit)
     .get()
     .then((docSnapshot) => {
       if (docSnapshot.size > 0) {
-        const docs = docSnapshot.docs.map(doc => doc.data());
-        res.json(docs)
+        const docs = docSnapshot.docs.map((doc) => doc.data());
+
+        res.json(docs);
       } else {
         res.status(404).json("Document not found");
       }
@@ -91,22 +93,30 @@ router.get("/posts", (req, res) => {
 router.get("/getPosts", (req, res) => {
   get20HotPosts().then((data) => {
     const postIds = [...data];
-    postIds.map((id) => {
+    postIds.map((id, index) => {
       const postDetailsPromise = getPostDetails(id);
       const ipfsDetailsPromise = postDetailsPromise.then((postDetails) =>
         pinJSONToIPFS(postDetails)
       );
       Promise.all([postDetailsPromise, ipfsDetailsPromise]).then(
         ([postDetails, ipfsDetails]) => {
-          const combinedData = {
+          const PostDetails = {
             ...postDetails,
             ipfsHash: ipfsDetails.IpfsHash,
+
+          };
+          const OfferDetails = {
+            user: "Richard" + index,
+            status: ["purchased", "offered"][Math.floor(Math.random() * 2)],
+            price: Math.random() * 15,
+            post: PostDetails,
             createdAt: Date.parse(ipfsDetails.Timestamp),
           };
+
           db.collection("Posts")
             .doc(id)
-            .set(combinedData)
-            .then(() => res.status(200).json(combinedData))
+            .set(OfferDetails)
+            .then(() => res.status(200).json(OfferDetails))
             .catch(console.log);
         }
       );
