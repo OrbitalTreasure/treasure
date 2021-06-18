@@ -9,7 +9,12 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 db = firebase.firestore();
-const { getPostDetails, get20HotPosts } = require("./redditBot.js");
+const {
+  getPostDetails,
+  get20HotPosts,
+  generateAuthUrl,
+  generateAccessToken,
+} = require("./redditBot.js");
 const { pinJSONToIPFS } = require("./ipfs.js");
 
 router.post("/users", (req, res) => {
@@ -72,7 +77,6 @@ router.get("/posts/ipfs/:ipfsHash", (req, res) => {
 
 router.get("/posts", (req, res) => {
   const limit = req.query.limit || 10;
-  res.header("Access-Control-Allow-Origin", "*");
   db.collection("Posts")
     .orderBy("createdAt")
     .limit(limit)
@@ -85,6 +89,31 @@ router.get("/posts", (req, res) => {
       } else {
         res.status(404).json("Document not found");
       }
+    })
+    .catch((e) => res.status(500).json(e));
+});
+
+router.get("/getAuthUrl", (req, res) => {
+  generateAuthUrl("123")
+    .then((url) => {
+      res.status(200).json(url);
+    })
+    .catch((e) => res.status(500).json);
+});
+
+router.get("/generateAccessToken", (req, res) => {
+  const code = req.query.code;
+  const accessPromise = generateAccessToken(code);
+  const userPromise = accessPromise.then((r) => r.getMe());
+  Promise.all([accessPromise, userPromise])
+    .then(([token, userDetails]) => {
+      res
+        .status(200)
+        .json({
+          accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
+          username: userDetails.name,
+        });
     })
     .catch((e) => res.status(500).json(e));
 });
@@ -103,7 +132,6 @@ router.get("/getPosts", (req, res) => {
           const PostDetails = {
             ...postDetails,
             ipfsHash: ipfsDetails.IpfsHash,
-
           };
           const OfferDetails = {
             user: "Richard" + index,

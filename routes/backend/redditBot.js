@@ -34,7 +34,7 @@ const getPostDetails = async (postId) => {
         url,
         permalink,
         author_fullname,
-        subreddit
+        subreddit,
       }) => ({
         title,
         id,
@@ -46,10 +46,30 @@ const getPostDetails = async (postId) => {
         imageUrl: `https://www.reddit.com${permalink}` == url ? null : url,
         url: `https://www.reddit.com${permalink}`,
         authorId: author_fullname.slice(3),
-        subreddit
+        subreddit,
       }))(data);
     })
     .catch((e) => console.log(e));
+};
+
+const generateAuthUrl = async (state) => {
+  return Snoowrap.getAuthUrl({
+    clientId: REDDIT_BOT_CLIENT_ID,
+    scope: ["identity"],
+    redirectUri: "http://localhost:3000/auth-callback",
+    permanent: true,
+    state,
+  });
+};
+
+const generateAccessToken = (authCode) => {
+  return Snoowrap.fromAuthCode({
+    code: authCode,
+    userAgent: "TreasureOrbital v1.0",
+    clientId: REDDIT_BOT_CLIENT_ID,
+    clientSecret: REDDIT_BOT_CLIENT_SECRET,
+    redirectUri: "http://localhost:3000/auth-callback",
+  });
 };
 
 const get20HotPosts = () => {
@@ -59,4 +79,9 @@ const get20HotPosts = () => {
     .then((listOfPosts) => listOfPosts.map((post) => post.id));
 };
 
-module.exports = { getPostDetails, get20HotPosts };
+module.exports = {
+  getPostDetails,
+  get20HotPosts,
+  generateAuthUrl,
+  generateAccessToken,
+};
