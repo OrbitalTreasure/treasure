@@ -1,7 +1,6 @@
-import { useState, useEffect } from "react";
 import upvoteImg from "../../assets/images/upvote.svg";
 import "../../assets/styles/InnerCard.scss";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 const InnerCard = (props) => {
   const redirectToPost = (postId) => (e) => {
@@ -11,13 +10,15 @@ const InnerCard = (props) => {
   };
 
   return (
-    <div className="container" >
-      <h4 className="heading" onClick={redirectToPost(props.id)}>{props.title}</h4>
+    <div className="container">
+      <h4 className="heading" onClick={redirectToPost(props.id)}>
+        {props.title}
+      </h4>
       <div className="subHeading">
         <p className="subreddit">{"/r/" + props.subreddit}</p>
-        <a href={`/user/${props.authorId}`} className="author">
+        <NavLink activeClassName="author" to={`/user/${props.authorId}`}>
           Post by u/{props.author}
-        </a>
+        </NavLink>
       </div>
       {(props?.selftext || props?.imageUrl) && (
         <div className="content">
