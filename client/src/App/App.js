@@ -2,11 +2,13 @@ import "./App.css";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import LoadDb from "./pages/LoadDb/LoadDb";
+import User from "./pages/User/User";
 
 function App() {
   return (
     <Router>
       <Switch>
+        <Route path="/user/:userId" component={User} />
         <Route exact path="/" component={Dashboard} />
         <Route exact path="/tools/loadDb" component={LoadDb} />
       </Switch>
