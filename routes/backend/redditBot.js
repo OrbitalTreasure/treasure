@@ -22,7 +22,7 @@ const getPostDetails = async (postId) => {
   const url = `https://api.reddit.com/api/info/?id=t3_${postId}`;
   return axios({ url: url, method: "get", mode: "cors" })
     .then((body) => {
-      const data = body.data.data.children[0].data; 
+      const data = body.data.data.children[0].data;
       return (({
         title,
         id,
@@ -33,26 +33,55 @@ const getPostDetails = async (postId) => {
         created,
         url,
         permalink,
-        author_fullname
+        author_fullname,
+        subreddit,
       }) => ({
         title,
         id,
         author,
         selftext,
-        ups,
+        upvotes: ups,
         num_comments,
         createdAt: created,
-        imageUrl: `https://www.reddit.com${permalink}` == url ? null: url,
-        url:`https://www.reddit.com${permalink}`,
-        authorId: author_fullname.slice(3)
+        imageUrl: `https://www.reddit.com${permalink}` == url ? null : url,
+        url: `https://www.reddit.com${permalink}`,
+        authorId: author_fullname.slice(3),
+        subreddit,
       }))(data);
     })
     .catch((e) => console.log(e));
 };
 
-const get20HotPosts = () => {
-  const r = makeRequester();
-  return r.getHot({ limit: 20 }).then(listOfPosts => listOfPosts.map(post => post.id));
+const generateAuthUrl = async (state) => {
+  return Snoowrap.getAuthUrl({
+    clientId: REDDIT_BOT_CLIENT_ID,
+    scope: ["identity"],
+    redirectUri: "http://localhost:3000/auth-callback",
+    permanent: true,
+    state,
+  });
 };
 
-module.exports = { getPostDetails , get20HotPosts};
+const generateAccessToken = (authCode) => {
+  return Snoowrap.fromAuthCode({
+    code: authCode,
+    userAgent: "TreasureOrbital v1.0",
+    clientId: REDDIT_BOT_CLIENT_ID,
+    clientSecret: REDDIT_BOT_CLIENT_SECRET,
+    redirectUri: "http://localhost:3000/auth-callback",
+  });
+};
+
+const get20HotPosts = () => {
+  const r = makeRequester();
+  return r
+    .getHot({ limit: 20 })
+    .then((listOfPosts) => listOfPosts.map((post) => post.id));
+};
+
+module.exports = {
+  getPostDetails,
+  get20HotPosts,
+  generateAuthUrl,
+  generateAccessToken,
+};

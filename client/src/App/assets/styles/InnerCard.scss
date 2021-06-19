@@ -1,0 +1,65 @@
+.container {
+  padding: 5px;
+  margin: 0.5em;
+  border-radius: 20px;
+  border: 2px solid grey;
+  background-color: white;
+}
+
+.heading {
+  height: 20px;
+  margin: 0 0;
+  text-align: left;
+  padding-left: 1em;
+}
+
+.subHeading {
+  display: flex;
+  font-size: small;
+  margin: 0em 1em;
+  height: 20px;
+}
+
+.subreddit {
+  float: left;
+  font-weight: bold;
+}
+
+.author {
+  padding-left: 2em;
+  float: left;
+  color: grey;
+}
+
+.content {
+  position: relative;
+  margin: 1em;
+  padding: 0.5em;
+  border: 2px solid grey;
+  border-radius: 1em;
+}
+
+.bodyText {
+  margin: 1em 1em;
+  font-size: small;
+}
+
+.bodyImg {
+  width: 100%;
+}
+
+.upvoteImg {
+  justify-content: left;
+}
+
+.upvoteCount {
+  justify-content: left;
+}
+
+.upvote {
+  position: relative;
+  display: flex;
+  align-items: left;
+  justify-content: left;
+  margin: 5px 5px;
+}

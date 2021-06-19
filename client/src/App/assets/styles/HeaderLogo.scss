@@ -1,0 +1,20 @@
+$logoPadding: 25px;
+
+.logo {
+  padding-top: $logoPadding;
+  padding-bottom: $logoPadding;
+  width: 100%;
+  max-width: 400px;
+}
+
+.logoContainer {
+  border-bottom: 1px solid black;
+  margin:15px;
+  position: relative;
+}
+
+.loginProfile{
+  position: absolute;
+  right: 50px;
+  bottom: 10px;
+}

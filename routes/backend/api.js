@@ -9,7 +9,12 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 db = firebase.firestore();
-const { getPostDetails, get20HotPosts } = require("./redditBot.js");
+const {
+  getPostDetails,
+  get20HotPosts,
+  generateAuthUrl,
+  generateAccessToken,
+} = require("./redditBot.js");
 const { pinJSONToIPFS } = require("./ipfs.js");
 
 router.post("/users", (req, res) => {
@@ -78,11 +83,37 @@ router.get("/posts", (req, res) => {
     .get()
     .then((docSnapshot) => {
       if (docSnapshot.size > 0) {
-        const docs = docSnapshot.docs.map(doc => doc.data());
-        res.json(docs)
+        const docs = docSnapshot.docs.map((doc) => doc.data());
+
+        res.json(docs);
       } else {
         res.status(404).json("Document not found");
       }
+    })
+    .catch((e) => res.status(500).json(e));
+});
+
+router.get("/getAuthUrl", (req, res) => {
+  generateAuthUrl("123")
+    .then((url) => {
+      res.status(200).json(url);
+    })
+    .catch((e) => res.status(500).json);
+});
+
+router.get("/generateAccessToken", (req, res) => {
+  const code = req.query.code;
+  const accessPromise = generateAccessToken(code);
+  const userPromise = accessPromise.then((r) => r.getMe());
+  Promise.all([accessPromise, userPromise])
+    .then(([token, userDetails]) => {
+      res
+        .status(200)
+        .json({
+          accessToken: token.accessToken,
+          refreshToken: token.refreshToken,
+          username: userDetails.name,
+        });
     })
     .catch((e) => res.status(500).json(e));
 });
@@ -91,22 +122,29 @@ router.get("/posts", (req, res) => {
 router.get("/getPosts", (req, res) => {
   get20HotPosts().then((data) => {
     const postIds = [...data];
-    postIds.map((id) => {
+    postIds.map((id, index) => {
       const postDetailsPromise = getPostDetails(id);
       const ipfsDetailsPromise = postDetailsPromise.then((postDetails) =>
         pinJSONToIPFS(postDetails)
       );
       Promise.all([postDetailsPromise, ipfsDetailsPromise]).then(
         ([postDetails, ipfsDetails]) => {
-          const combinedData = {
+          const PostDetails = {
             ...postDetails,
             ipfsHash: ipfsDetails.IpfsHash,
+          };
+          const OfferDetails = {
+            user: "Richard" + index,
+            status: ["purchased", "offered"][Math.floor(Math.random() * 2)],
+            price: Math.random() * 15,
+            post: PostDetails,
             createdAt: Date.parse(ipfsDetails.Timestamp),
           };
+
           db.collection("Posts")
             .doc(id)
-            .set(combinedData)
-            .then(() => res.status(200).json(combinedData))
+            .set(OfferDetails)
+            .then(() => res.status(200).json(OfferDetails))
             .catch(console.log);
         }
       );
