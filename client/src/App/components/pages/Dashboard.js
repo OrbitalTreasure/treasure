@@ -12,9 +12,7 @@ const Dashboard = () => {
       const limit = 12;
       axios
         .get(`/api/v1/posts?limit=${limit}`)
-        .then((newOffers) => {
-          setOffers(newOffers.data);
-        })
+        .then((newOffers) => setOffers(newOffers.data))
         .catch(console.log);
     };
     fetchData();

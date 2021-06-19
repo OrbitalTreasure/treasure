@@ -113,6 +113,7 @@ router.get("/generateAccessToken", (req, res) => {
           accessToken: token.accessToken,
           refreshToken: token.refreshToken,
           username: userDetails.name,
+          userId: userDetails.id
         });
     })
     .catch((e) => res.status(500).json(e));

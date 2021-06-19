@@ -9,8 +9,12 @@ const AuthCallback = () => {
 
   const getAccessToken = (code) => {
     axios
-      .get(`/generateAccessToken?${code}`)
-      .then((data) => setTokens(data))
+      .get(`/api/v1/generateAccessToken?code=${code}`)
+      .then((res) => {
+        const data = res.data;
+        setTokens(data);
+        console.log(res, "tokens set")
+      })
       .catch(console.log);
   };
 
