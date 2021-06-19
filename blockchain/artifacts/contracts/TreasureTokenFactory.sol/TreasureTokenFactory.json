@@ -122,6 +122,12 @@
           "internalType": "string",
           "name": "tokenUri",
           "type": "string"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "sellerid",
+          "type": "string"
         }
       ],
       "name": "OfferVerified",
@@ -163,6 +169,25 @@
         }
       ],
       "name": "TokenCreated",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "uint256",
+          "name": "tokenId",
+          "type": "uint256"
+        },
+        {
+          "indexed": false,
+          "internalType": "string",
+          "name": "ownerId",
+          "type": "string"
+        }
+      ],
+      "name": "TokenOwnerChanged",
       "type": "event"
     },
     {
@@ -277,11 +302,6 @@
         {
           "internalType": "string",
           "name": "_buyerId",
-          "type": "string"
-        },
-        {
-          "internalType": "string",
-          "name": "_sellerId",
           "type": "string"
         },
         {
@@ -686,6 +706,11 @@
         {
           "internalType": "string",
           "name": "_tokenUri",
+          "type": "string"
+        },
+        {
+          "internalType": "string",
+          "name": "_sellerId",
           "type": "string"
         }
       ],
