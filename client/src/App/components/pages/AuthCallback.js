@@ -13,7 +13,7 @@ const AuthCallback = () => {
       .then((res) => {
         const data = res.data;
         setTokens(data);
-        console.log(res, "tokens set")
+        window.localStorage.setItem("tokens", JSON.stringify(data));
       })
       .catch(console.log);
   };

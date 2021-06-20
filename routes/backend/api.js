@@ -84,7 +84,6 @@ router.get("/posts", (req, res) => {
     .then((docSnapshot) => {
       if (docSnapshot.size > 0) {
         const docs = docSnapshot.docs.map((doc) => doc.data());
-
         res.json(docs);
       } else {
         res.status(404).json("Document not found");
