@@ -1,41 +1,51 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
-import OuterCard from "../nested/OuterCard";
-import Masonry from "react-masonry-css";
 import "../../assets/styles/Dashboard.scss";
 import HeaderLogo from "../nested/HeaderLogo";
+import DashboardMasonry from "../nested/DashboardMasonry";
+import {Redirect, useHistory} from "react-router-dom"
 
 const Dashboard = () => {
-  const [offers, setOffers] = useState([]);
-  useEffect(() => {
-    const fetchData = () => {
-      const limit = 12;
-      axios
-        .get(`/api/v1/posts?limit=${limit}`)
-        .then((newOffers) => setOffers(newOffers.data))
-        .catch(console.log);
-    };
-    fetchData();
-  }, []);
-
-  const generatePost = () => {
-    return offers.map((data, index) => (
-      <OuterCard {...data} key={index}></OuterCard>
-    ));
+  const history = useHistory();
+  const buyFormSubmit = (e) => {
+    if (e.key != "Enter"){
+      return;
+    }
+    const value = e.target.value;
+    console.log(value)
+    if (isURL(value)) {
+      const urlObject = new URL(value);
+      history.push(`/post/${urlObject.pathname.split("/")[4]}`)
+    } else {
+      history.push(`/post/${value}`)
+    }
   };
+
+  function isURL(str) {
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    return !!pattern.test(str);
+  }
+
+  const buyForm = (
+    <div>
+      <p>
+        <b>Want to own a RedditPost?</b>
+      </p>
+      <input type="text" className="buyForm" onKeyUp={buyFormSubmit}></input>
+    </div>
+  );
 
   return (
     <div>
       <HeaderLogo />
-      <div id="masonry-container">
-        <Masonry
-          breakpointCols={3}
-          className="my-masonry-grid"
-          columnClassName="my-masonry-grid_column"
-        >
-          {generatePost()}
-        </Masonry>
-      </div>
+      {buyForm}
+      <DashboardMasonry />
     </div>
   );
 };
