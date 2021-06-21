@@ -92,7 +92,6 @@ router.get("/posts", (req, res) => {
     .then((docSnapshot) => {
       if (docSnapshot.size > 0) {
         const docs = docSnapshot.docs.map((doc) => doc.data());
-
         res.json(docs);
       } else {
         res.status(404).json("Document not found");
@@ -102,7 +101,8 @@ router.get("/posts", (req, res) => {
 });
 
 router.get("/getAuthUrl", (req, res) => {
-  generateAuthUrl("123")
+  const state = req.query.state || "/"
+  generateAuthUrl(state)
     .then((url) => {
       res.status(200).json(url);
     })
@@ -121,6 +121,7 @@ router.get("/generateAccessToken", (req, res) => {
           accessToken: token.accessToken,
           refreshToken: token.refreshToken,
           username: userDetails.name,
+          userId: userDetails.id
         });
     })
     .catch((e) => res.status(500).json(e));
