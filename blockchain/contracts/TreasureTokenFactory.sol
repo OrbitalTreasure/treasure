@@ -66,14 +66,13 @@ contract TreasureTokenFactory is ERC721, Ownable {
     }
 
     modifier offerVerifiedAndIncomplete(uint256 _offerId) {
-        _isOfferVerifiedAndIncomplete(_offerId);
+        _isVerifiedAndIncomplete(_offerId);
         _;
-    }
 
-    function _isOfferVerifiedAndIncomplete(uint256 _offerId)  private {
-        RedditOffer memory offer = postOffers[_offerId];
-        require(!offer.isCompleted, "Offer is already completed.");
-        require(offer.isVerified, "Offer is not verified.");
+    }
+    function _isVerifiedAndIncomplete(uint256 _offerId) private view {
+        require(!postOffers[_offerId].isCompleted, "Offer is already completed.");
+        require(postOffers[_offerId].isVerified, "Offer is not verified.");
     }
 
 
@@ -82,9 +81,10 @@ contract TreasureTokenFactory is ERC721, Ownable {
         _;
     }
 
-    function _isOfferValid(uint _offerId) private {
+    function _isOfferValid(uint256 _offerId) private view {
         require(_offerId < postOffers.length, "Offer does not exist");
     }
+
     // USER FUNCTIONS
     function mapUser(string memory _userId, address payable _userAddress)
         public
