@@ -93,7 +93,8 @@ router.get("/posts", (req, res) => {
 });
 
 router.get("/getAuthUrl", (req, res) => {
-  generateAuthUrl("123")
+  const state = req.query.state || "/"
+  generateAuthUrl(state)
     .then((url) => {
       res.status(200).json(url);
     })
