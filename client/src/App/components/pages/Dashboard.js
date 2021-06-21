@@ -1,21 +1,21 @@
 import "../../assets/styles/Dashboard.scss";
 import HeaderLogo from "../nested/HeaderLogo";
 import DashboardMasonry from "../nested/DashboardMasonry";
-import {Redirect, useHistory} from "react-router-dom"
+import { useHistory } from "react-router-dom";
 
 const Dashboard = () => {
   const history = useHistory();
   const buyFormSubmit = (e) => {
-    if (e.key != "Enter"){
+    if (e.key != "Enter") {
       return;
     }
     const value = e.target.value;
-    console.log(value)
+    console.log(value);
     if (isURL(value)) {
       const urlObject = new URL(value);
-      history.push(`/post/${urlObject.pathname.split("/")[4]}`)
+      history.push(`/post/${urlObject.pathname.split("/")[4]}`);
     } else {
-      history.push(`/post/${value}`)
+      history.push(`/post/${value}`);
     }
   };
 

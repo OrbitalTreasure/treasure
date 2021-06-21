@@ -1,10 +1,11 @@
 import axios from "axios";
-const Snoowrap = require("snoowrap");
 
-const Login = () => {
+const Login = (props) => {
   const redirectToLogin = (e) => {
+    const pathname = props?.location?.state?.from?.pathname;
+    const queryAddition = pathname ? `?state=${pathname}` : "";
     axios
-      .get("/api/v1/getAuthUrl")
+      .get(`/api/v1/getAuthUrl${queryAddition}`)
       .then((url) => window.open(url.data))
       .catch(console.log);
   };
