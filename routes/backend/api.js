@@ -48,7 +48,14 @@ router.post("/posts/:postId", (req, res) => {
 
 // Used to get post details from the postId
 router.get("/posts/:postId", (req, res) => {
-  db.collection("Posts")
+  getPostDetails(req.params.postId)
+  .then(post => {
+    console.log("post here")
+    console.log(post)
+    res.json(post).send()
+  }).catch(error => {
+    console.log(error)
+    db.collection("Posts")
     .doc(req.params.postId)
     .get()
     .then((doc) => {
@@ -59,6 +66,7 @@ router.get("/posts/:postId", (req, res) => {
       }
     })
     .catch((error) => console.log(error));
+  })
 });
 
 router.get("/posts/ipfs/:ipfsHash", (req, res) => {

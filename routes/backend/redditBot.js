@@ -49,7 +49,7 @@ const getPostDetails = async (postId) => {
         subreddit,
       }))(data);
     })
-    .catch((e) => console.log(e));
+    .catch(console.log);
 };
 
 const generateAuthUrl = async (state) => {
