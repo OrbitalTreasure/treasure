@@ -16,7 +16,6 @@ const Post = () => {
     axios.get(url)
       .then(res => res.data)
       .then((body) => {
-        console.log(body)
         setRedditPost(body)
       })
       .catch(console.log);
@@ -31,7 +30,7 @@ const Post = () => {
       <HeaderLogo />
       <InnerCard {...redditPost}/>
       <p>Want to own this post? Give u/ an offer!</p>
-      <OfferBar postId={postID}/>
+      <OfferBar postId={postId}/>
       <PreviousOwners />
     </div>
   ); 

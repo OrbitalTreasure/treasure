@@ -3,7 +3,8 @@ import axios from "axios";
 const Login = (props) => {
   const redirectToLogin = (e) => {
     const pathname = props?.location?.state?.from?.pathname;
-    const queryAddition = pathname ? `?state=${pathname}` : "";
+    const search = props?.location?.state?.from?.search
+    const queryAddition = pathname||search ? `?state=${pathname}${search}` : "";
     axios
       .get(`/api/v1/getAuthUrl${queryAddition}`)
       .then((url) => window.open(url.data))

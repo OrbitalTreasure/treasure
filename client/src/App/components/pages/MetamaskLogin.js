@@ -1,26 +1,28 @@
 import HeaderLogo from "../nested/HeaderLogo";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import ABI from "../../assets/TreasureTokenFactory.json";
+import { TokenContext } from "../../contexts/TokenContext";
+import { useHistory } from "react-router-dom";
 const Web3 = require("web3");
 
-const MetamaskLogin = () => {
+
+const MetamaskLogin = (props) => {
   var [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false);
+  const { setMetamaskAccount } = useContext(TokenContext);
+  const history = useHistory();
+  const pathname = props?.location?.state?.from?.pathname;
+  const search = props?.location?.state?.from?.search
+  const redirect = pathname+search ||"/";
 
   const linkMetamask = async () => {
     const accounts = await window.ethereum.request({
       method: "eth_requestAccounts",
     });
-    console.log(accounts);
+    console.log(accounts)
+    setMetamaskAccount(accounts[0]);
+    window.localStorage.setItem("metamask", accounts[0]);
+    history.push(redirect)
   };
-
-//   const testFunction = async () => {
-//     window.web3 = new Web3(window.ethereum);
-//     var contract = await new window.web3.eth.Contract(
-//       ABI.abi,
-//       "0xED54AE9644E20D90c83c1597E6E6Ae112A8E9e75"
-//     );
-//     console.log(contract)
-//   };
 
   useEffect(() => {
     isMetamaskInstalled = setIsMetamaskInstalled(
@@ -47,6 +49,7 @@ const MetamaskLogin = () => {
           <p>Metamask is not installed</p>
         )}
         <p>Click here to learn more about MetaMask and why we use it.</p>
+        <input type="button" value="click" onClick={() => console.log(props)}></input>
       </div>
     </div>
   );

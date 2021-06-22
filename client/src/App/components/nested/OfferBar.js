@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CurrencyInput from 'react-currency-input-field';
+import { useHistory } from "react-router";
 
 import '../../assets/styles/OfferBar.scss'
 
@@ -7,6 +8,7 @@ const OfferBar = (props) => {
     const [offerPrice, setOfferPrice] = useState(0);
     const [className, setClassName] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
+    const history = useHistory();
 
     const prefix = "S$";
 
@@ -34,9 +36,9 @@ const OfferBar = (props) => {
         setOfferPrice(value);
     };
 
-    const makeOffer = () => {
+    const makeOffer = (e) => {
         if (offerPrice <= 0) return
-        // call api to make offer
+        history.push(`/offer/${props.postId}?offer=${offerPrice}`)
     }
 
     return (

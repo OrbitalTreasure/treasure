@@ -50,8 +50,6 @@ router.post("/posts/:postId", (req, res) => {
 router.get("/posts/:postId", (req, res) => {
   getPostDetails(req.params.postId)
   .then(post => {
-    console.log("post here")
-    console.log(post)
     res.json(post).send()
   }).catch(error => {
     console.log(error)

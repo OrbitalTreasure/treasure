@@ -3,17 +3,26 @@ import { TokenContext } from "../../contexts/TokenContext";
 import { useContext } from "react";
 
 const LoginRoute = ({ component: Component, ...rest }) => {
-  const { tokens } = useContext(TokenContext);
+  const { tokens, setTokens } = useContext(TokenContext);
+  const checkLogin = () => {
+    return (
+      Object.keys(tokens).length != 0 ||
+      window.localStorage.getItem("tokens") != undefined
+    );
+  };
+
   return (
     <Route
       {...rest}
       render={(props) => {
-        if (Object.keys(tokens).length != 0) {
+        if (checkLogin()) {
           return <Component {...props} />;
         } else {
-          return <Redirect
-            to={{ pathname: "/login", state: { from: props.location } }}
-          />;
+          return (
+            <Redirect
+              to={{ pathname: "/login", state: { from: props.location } }}
+            />
+          );
         }
       }}
     />
