@@ -3,25 +3,38 @@ import { useEffect, useState, useContext } from "react";
 import ABI from "../../assets/TreasureTokenFactory.json";
 import { TokenContext } from "../../contexts/TokenContext";
 import { useHistory } from "react-router-dom";
+import axios from "axios";
 const Web3 = require("web3");
-
 
 const MetamaskLogin = (props) => {
   var [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false);
-  const { setMetamaskAccount } = useContext(TokenContext);
+  const { setMetamaskAccount, tokens } = useContext(TokenContext);
   const history = useHistory();
   const pathname = props?.location?.state?.from?.pathname;
-  const search = props?.location?.state?.from?.search
-  const redirect = pathname+search ||"/";
+  const search = props?.location?.state?.from?.search;
+  const redirect = pathname + search || "/";
 
   const linkMetamask = async () => {
-    const accounts = await window.ethereum.request({
+    const accounts = window.ethereum.request({
       method: "eth_requestAccounts",
     });
-    console.log(accounts)
-    setMetamaskAccount(accounts[0]);
-    window.localStorage.setItem("metamask", accounts[0]);
-    history.push(redirect)
+    const mapUser = accounts
+      .then((accountList) => {
+        return axios.post("/api/v1/blockchain/mapUser", {
+          userId: tokens.userId,
+          userAddress: accountList[0],
+        });
+      })
+      .catch((e) => Promise.resolve({}));
+
+    Promise.all([accounts, mapUser]).then(
+      ([accountList, transactionDetails]) => {
+        setMetamaskAccount(accountList[0]);
+        window.localStorage.setItem("metamask", accountList[0]);
+        console.log(transactionDetails);
+        history.push(redirect);
+      }
+    );
   };
 
   useEffect(() => {
@@ -49,7 +62,11 @@ const MetamaskLogin = (props) => {
           <p>Metamask is not installed</p>
         )}
         <p>Click here to learn more about MetaMask and why we use it.</p>
-        <input type="button" value="click" onClick={() => console.log(props)}></input>
+        <input
+          type="button"
+          value="click"
+          onClick={() => console.log(props)}
+        ></input>
       </div>
     </div>
   );

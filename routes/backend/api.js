@@ -15,6 +15,7 @@ const {
   generateAuthUrl,
   generateAccessToken,
 } = require("./redditBot.js");
+const { mapUser, getUserAddress, verifyOffer } = require("./blockchain.js");
 const { pinJSONToIPFS } = require("./ipfs.js");
 
 router.post("/users", (req, res) => {
@@ -49,22 +50,23 @@ router.post("/posts/:postId", (req, res) => {
 // Used to get post details from the postId
 router.get("/posts/:postId", (req, res) => {
   getPostDetails(req.params.postId)
-  .then(post => {
-    res.json(post).send()
-  }).catch(error => {
-    console.log(error)
-    db.collection("Posts")
-    .doc(req.params.postId)
-    .get()
-    .then((doc) => {
-      if (doc.exists) {
-        res.json(doc.data());
-      } else {
-        res.status(404);
-      }
+    .then((post) => {
+      res.json(post);
     })
-    .catch((error) => console.log(error));
-  })
+    .catch((error) => {
+      console.log(error);
+      db.collection("Posts")
+        .doc(req.params.postId)
+        .get()
+        .then((doc) => {
+          if (doc.exists) {
+            res.json(doc.data());
+          } else {
+            res.status(404);
+          }
+        })
+        .catch((error) => console.log(error));
+    });
 });
 
 router.get("/posts/ipfs/:ipfsHash", (req, res) => {
@@ -99,7 +101,7 @@ router.get("/posts", (req, res) => {
 });
 
 router.get("/getAuthUrl", (req, res) => {
-  const state = req.query.state || "/"
+  const state = req.query.state || "/";
   generateAuthUrl(state)
     .then((url) => {
       res.status(200).json(url);
@@ -113,16 +115,91 @@ router.get("/generateAccessToken", (req, res) => {
   const userPromise = accessPromise.then((r) => r.getMe());
   Promise.all([accessPromise, userPromise])
     .then(([token, userDetails]) => {
-      res
-        .status(200)
-        .json({
-          accessToken: token.accessToken,
-          refreshToken: token.refreshToken,
-          username: userDetails.name,
-          userId: userDetails.id
-        });
+      res.status(200).json({
+        accessToken: token.accessToken,
+        refreshToken: token.refreshToken,
+        username: userDetails.name,
+        userId: userDetails.id,
+      });
     })
     .catch((e) => res.status(500).json(e));
+});
+
+//Blockchain endpoints
+
+router.post("/blockchain/mapUser", (req, res) => {
+  const data = req.body;
+  mapUser(data.userId, data.userAddress)
+    .then((e) => {
+      res.json(e);
+    })
+    .catch((e) => {
+      res.status(400).json("Failed");
+    });
+});
+
+router.get("/blockchain/getUserAddress/:userId", async (req, res) => {
+  const userId = req.params.userId;
+  getUserAddress(userId)
+    .then((e) => {
+      res.json(e);
+    })
+    .catch(console.log);
+});
+
+router.post("/blockchain/verify", (req, res) => {
+  const body = req.body;
+  const offerId = body.offerId;
+  const postId = body.postId;
+  const offer = body.offer;
+  const username = body.username;
+  const postDetailsPromise = getPostDetails(postId);
+  const ipfsDetailsPromise = postDetailsPromise.then((postDetails) =>
+    pinJSONToIPFS(postDetails)
+  );
+  console.log(offer);
+  Promise.all([postDetailsPromise, ipfsDetailsPromise]).then(
+    ([postDetails, ipfsDetails]) => {
+      const PostDetails = {
+        ...postDetails,
+        ipfsHash: ipfsDetails.IpfsHash,
+      };
+      const OfferDetails = {
+        user: username,
+        status: "offered",
+        price: offer,
+        post: PostDetails,
+        createdAt: Date.parse(ipfsDetails.Timestamp),
+      };
+      console.log(OfferDetails);
+      verifyOffer(offerId, PostDetails.ipfsHash, PostDetails.authorId)
+        .then((e) => {
+          console.log(e);
+
+          res.json(e);
+        })
+        .catch((e) => {
+          console.log(e);
+          res.status(400).json(e);
+        });
+      // db.collection("Offers")
+      //   .doc(postId)
+      //   .set(OfferDetails)
+      //   .then(() => {
+      //     verifyOffer(offerId, PostDetails.ipfsHash, PostDetails.authorId)
+      //       .then((e) => {
+      //         console.log(e);
+
+      //         res.json(e);
+      //       })
+      //       .catch((e) => {
+      //         console.log(e);
+      //         res.status(400).json(e);
+      //       });
+      //   })
+      //   .catch(console.log);
+    }
+  );
 });
 
 // Remove in the future

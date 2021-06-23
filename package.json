@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/OrbitalTreasure/treasure#readme",
   "dependencies": {
+    "@alch/alchemy-web3": "^1.0.3",
     "@pinata/sdk": "^1.1.23",
     "axios": "^0.21.1",
     "dotenv": "^10.0.0",

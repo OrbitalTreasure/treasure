@@ -47,7 +47,7 @@ const getPostDetails = async (postId) => {
         url: `https://www.reddit.com${permalink}`,
         authorId: author_fullname.slice(3),
         subreddit,
-      }))(data);
+      }))(data); 
     })
     .catch(console.log);
 };

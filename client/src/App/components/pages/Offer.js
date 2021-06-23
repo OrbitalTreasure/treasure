@@ -11,7 +11,9 @@ const Offer = () => {
   const { tokens, metamaskAccount } = useContext(TokenContext);
   const { postId } = useParams();
   const [redditPost, setRedditPost] = useState({});
+  var [transactionPending, setTransactionPending] = useState(false);
   const history = useHistory();
+  const contractAddress = "0x055FBE752E37982476B54321D7BbE0DCA959D980";
 
   const url = new URLSearchParams(window.location.search);
   const offer = url.get("offer");
@@ -31,33 +33,34 @@ const Offer = () => {
     fetchRedditPostInfo(postId);
   }, []);
 
-  //   const testFunction = async () => {
-  //     window.web3 = new Web3(window.ethereum);
-  //     var contract = await new window.web3.eth.Contract(
-  //       ABI.abi,
-  //       "0xED54AE9644E20D90c83c1597E6E6Ae112A8E9e75"
-  //     );
-  //     console.log(contract)
-  //   };
-
   const onConfirm = async () => {
     window.web3 = new Web3(window.ethereum);
-    var contract = await new window.web3.eth.Contract(
-      ABI.abi,
-      "0xED54AE9644E20D90c83c1597E6E6Ae112A8E9e75"
-    );
-    // console.log(metamaskAccount)
+    var contract = await new window.web3.eth.Contract(ABI.abi, contractAddress);
     const estimatedGas = await contract.methods
       .createOffer(tokens.userId, postId, offer)
-      .estimateGas({ value: offer });
-    console.log(estimatedGas);
+      .estimateGas({ value: offer, from: metamaskAccount });
+    setTransactionPending(true);
+    console.log(offer)
     contract.methods
       .createOffer(tokens.userId, postId, offer)
-      .send({ from: metamaskAccount, value: offer, gas: 6283230 })
+      .send({ from: metamaskAccount, value: offer, gas: estimatedGas * 3 })
       .then((e) => {
         console.log(e);
+        const offerId = e.events.OfferCreated.returnValues.offerId;
+        const postId = e.events.OfferCreated.returnValues.postId;
+        axios
+          .post(`/api/v1/blockchain/verify/`, {
+            offerId,
+            postId,
+            offer,
+            username: tokens.username,
+          })
+          .then((e) => {
+            history.push("/profile");
+          });
       })
       .catch((e) => {
+        setTransactionPending(false);
         if (e.code == 4001) {
           console.log(e.message);
           console.log("hi");
@@ -75,12 +78,18 @@ const Offer = () => {
         Hello {tokens.username}, are you sure you want to buy this post for{" "}
         {offer}
       </p>
-      <input
-        type="button"
-        value="Back"
-        onClick={() => history.push("/")}
-      ></input>
-      <input type="button" value="Confirm" onClick={onConfirm}></input>
+      {transactionPending ? (
+        <p>Please wait while your transaction is loading</p>
+      ) : (
+        <div>
+          <input
+            type="button"
+            value="Back"
+            onClick={() => history.push("/")}
+          ></input>
+          <input type="button" value="Confirm" onClick={onConfirm}></input>
+        </div>
+      )}
     </div>
   );
 };

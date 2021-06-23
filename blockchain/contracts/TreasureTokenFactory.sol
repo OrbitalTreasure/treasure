@@ -98,6 +98,10 @@ contract TreasureTokenFactory is ERC721, Ownable {
         emit UserLinked(_userId, _userAddress);
     }
 
+    function getAddress(string memory _userId) public view returns(address){
+        return userIdToAddress[_userId];
+    }
+
 
 
     // OFFER FUNCTIONS
