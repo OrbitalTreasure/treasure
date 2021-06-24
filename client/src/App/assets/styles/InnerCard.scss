@@ -7,7 +7,6 @@
 }
 
 .heading {
-  height: 20px;
   margin: 0 0;
   text-align: left;
   padding-left: 1em;
@@ -16,24 +15,26 @@
 .subHeading {
   display: flex;
   font-size: small;
-  margin: 0em 1em;
-  height: 20px;
 }
 
 .subreddit {
   float: left;
   font-weight: bold;
+  margin-top: 5px;
+  margin-bottom: 0px;
+  margin-left: 20px;
 }
 
 .author {
-  padding-left: 2em;
+  padding-left: 8px;
   float: left;
   color: grey;
+  margin-top: 5px;
 }
 
 .content {
   position: relative;
-  margin: 1em;
+  margin: 5px, 1em;
   padding: 0.5em;
   border: 2px solid grey;
   border-radius: 1em;
@@ -50,10 +51,13 @@
 
 .upvoteImg {
   justify-content: left;
+  width: 15px;
+  height: 15px;
 }
 
 .upvoteCount {
   justify-content: left;
+  font-size: 15px;
 }
 
 .upvote {

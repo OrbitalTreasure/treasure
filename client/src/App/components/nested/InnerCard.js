@@ -1,4 +1,4 @@
-import upvoteImg from "../../assets/images/upvote.svg";
+import upvoteImg from "../../assets/images/upvote.png";
 import "../../assets/styles/InnerCard.scss";
 import { NavLink } from "react-router-dom";
 
@@ -16,7 +16,7 @@ const InnerCard = (props) => {
       </h4>
       <div className="subHeading">
         <p className="subreddit">{"/r/" + props.subreddit}</p>
-        <NavLink activeClassName="author" to={`/user/${props.authorId}`}>
+        <NavLink className="author" to={`/user/${props.authorId}`}>
           Post by u/{props.author}
         </NavLink>
       </div>
@@ -30,7 +30,7 @@ const InnerCard = (props) => {
       )}
       <div className="upvote">
         <img className="upvoteImg" src={upvoteImg} />
-        <p className="upvoteCount">{props.upvotes}</p>
+        <text className="upvoteCount">{props.upvotes}</text>
       </div>
     </div>
   );
