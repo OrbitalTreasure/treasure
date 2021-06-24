@@ -40,7 +40,7 @@ const Offer = () => {
       .createOffer(tokens.userId, postId, offer)
       .estimateGas({ value: offer, from: metamaskAccount });
     setTransactionPending(true);
-    console.log(offer)
+    console.log(offer);
     contract.methods
       .createOffer(tokens.userId, postId, offer)
       .send({ from: metamaskAccount, value: offer, gas: estimatedGas * 3 })
@@ -54,6 +54,7 @@ const Offer = () => {
             postId,
             offer,
             username: tokens.username,
+            userId: tokens.userId,
           })
           .then((e) => {
             history.push("/profile");

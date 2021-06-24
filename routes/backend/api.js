@@ -15,8 +15,14 @@ const {
   generateAuthUrl,
   generateAccessToken,
 } = require("./redditBot.js");
-const { mapUser, getUserAddress, verifyOffer } = require("./blockchain.js");
+const {
+  mapUser,
+  getUserAddress,
+  verifyOffer,
+  decodeLogs,
+} = require("./blockchain.js");
 const { pinJSONToIPFS } = require("./ipfs.js");
+const abiData = require("../../src/assets/TreasureTokenFactory.json");
 
 router.post("/users", (req, res) => {
   const data = req.body;
@@ -130,15 +136,37 @@ router.get("/generateAccessToken", (req, res) => {
 router.post("/blockchain/mapUser", (req, res) => {
   const data = req.body;
   mapUser(data.userId, data.userAddress)
-    .then((e) => {
-      res.json(e);
+    .then((receipt) => {
+      const decoded = decodeLogs(
+        [
+          {
+            indexed: false,
+            internalType: "string",
+            name: "userId",
+            type: "string",
+          },
+          {
+            indexed: false,
+            internalType: "address",
+            name: "userAddress",
+            type: "address",
+          },
+        ],
+        receipt.logs[0].data,
+        receipt.logs[0].topics
+      );
+      db.collection("Users")
+        .doc(decoded.userId)
+        .set({ metamaskAddress: decoded.userAddress });
+      res.json({ userId: decoded.userId, userAddress: decoded.userAddress });
     })
     .catch((e) => {
-      res.status(400).json("Failed");
+      console.error(e);
+      res.status(400).json(e.toString());
     });
 });
 
-router.get("/blockchain/getUserAddress/:userId", async (req, res) => {
+router.get("/blockchain/getUserAddress/:userId", (req, res) => {
   const userId = req.params.userId;
   getUserAddress(userId)
     .then((e) => {
@@ -147,17 +175,56 @@ router.get("/blockchain/getUserAddress/:userId", async (req, res) => {
     .catch(console.log);
 });
 
+router.get("/offers/from/:userId", (req, res) => {
+  const userId = req.params.userId;
+  db.collection("Offers")
+    .where("userId", "==", userId)
+    .get()
+    .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
+    .then((offers) => {
+      offers.sort((a, b) => b.createdAt - a.createdAt);
+      res.json(offers);
+    })
+    .catch(console.error);
+});
+
+router.get("/offers/to/:sellerId", (req, res) => {
+  const sellerId = req.params.sellerId;
+  db.collection("Offers")
+    .where("sellerId", "==", sellerId)
+    .get()
+    .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
+    .then((offers) => {
+      offers.sort((a, b) => b.createdAt - a.createdAt);
+      res.json(offers);
+    })
+    .catch(console.error);
+});
+
+router.get("/offers/for/:postId", (req, res) => {
+  const postId = req.params.postId;
+  db.collection("Offers")
+    .where("post.id", "==", postId)
+    .get()
+    .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
+    .then((offers) => {
+      offers.sort((a, b) => b.createdAt - a.createdAt);
+      res.json(offers);
+    })
+    .catch(console.error);
+});
+
 router.post("/blockchain/verify", (req, res) => {
   const body = req.body;
   const offerId = body.offerId;
   const postId = body.postId;
-  const offer = body.offer;
+  const offer = parseInt(body.offer);
+  const userId = body.userId;
   const username = body.username;
   const postDetailsPromise = getPostDetails(postId);
   const ipfsDetailsPromise = postDetailsPromise.then((postDetails) =>
     pinJSONToIPFS(postDetails)
   );
-  console.log(offer);
   Promise.all([postDetailsPromise, ipfsDetailsPromise]).then(
     ([postDetails, ipfsDetails]) => {
       const PostDetails = {
@@ -166,40 +233,68 @@ router.post("/blockchain/verify", (req, res) => {
       };
       const OfferDetails = {
         user: username,
+        userId: userId,
         status: "offered",
         price: offer,
         post: PostDetails,
         createdAt: Date.parse(ipfsDetails.Timestamp),
       };
-      console.log(OfferDetails);
       verifyOffer(offerId, PostDetails.ipfsHash, PostDetails.authorId)
-        .then((e) => {
-          console.log(e);
-
-          res.json(e);
+        .then((receipt) => {
+          const decodedEvent = decodeLogs(
+            [
+              {
+                indexed: false,
+                internalType: "uint256",
+                name: "offerId",
+                type: "uint256",
+              },
+              {
+                indexed: false,
+                internalType: "string",
+                name: "tokenUri",
+                type: "string",
+              },
+              {
+                indexed: false,
+                internalType: "string",
+                name: "sellerid",
+                type: "string",
+              },
+            ],
+            receipt.logs[0].data,
+            receipt.logs[0].topics
+          );
+          const finalOffer = {
+            ...OfferDetails,
+            sellerId: decodedEvent.sellerid,
+            offerId: parseInt(decodedEvent.offerId),
+          };
+          db.collection("Offers")
+            .add(finalOffer)
+            .then((e) => res.json(finalOffer))
+            .catch((e) => res.status(400).json(e));
         })
         .catch((e) => {
           console.log(e);
           res.status(400).json(e);
         });
-      // db.collection("Offers")
-      //   .doc(postId)
-      //   .set(OfferDetails)
-      //   .then(() => {
-      //     verifyOffer(offerId, PostDetails.ipfsHash, PostDetails.authorId)
-      //       .then((e) => {
-      //         console.log(e);
-
-      //         res.json(e);
-      //       })
-      //       .catch((e) => {
-      //         console.log(e);
-      //         res.status(400).json(e);
-      //       });
-      //   })
-      //   .catch(console.log);
     }
   );
+});
+
+router.delete("/offers/:offerId", (req, res) => {
+  const offerId = parseInt(req.params.offerId);
+  db.collection("Offers")
+    .where("offerId", "==", offerId)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+        res.status(200).json("Successfully deleted");
+      });
+    })
+    .catch(console.error);
 });
 
 // Remove in the future
