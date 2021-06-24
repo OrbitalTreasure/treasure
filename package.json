@@ -6,7 +6,9 @@
   "scripts": {
     "client": "cd client && yarn start",
     "server": "nodemon src/index.js",
-    "dev": "concurrently \"yarn server\" \"yarn client\""
+    "dev": "concurrently \"yarn server\" \"yarn client\"", 
+    "start": "node src/index.js",
+    "heroku-postbuild": "cd client && yarn install && yarn build"
   },
   "repository": {
     "type": "git",
