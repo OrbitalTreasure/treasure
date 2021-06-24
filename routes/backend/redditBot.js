@@ -6,6 +6,7 @@ const {
   REDDIT_BOT_CLIENT_SECRET,
   REDDIT_USERNAME,
   REDDIT_PASSWORD,
+  REDDIT_REDIRECT_URL
 } = process.env;
 
 const makeRequester = () => {
@@ -56,7 +57,7 @@ const generateAuthUrl = async (state) => {
   return Snoowrap.getAuthUrl({
     clientId: REDDIT_BOT_CLIENT_ID,
     scope: ["identity"],
-    redirectUri: "http://localhost:3000/auth-callback",
+    redirectUri: REDDIT_REDIRECT_URL,
     permanent: true,
     state,
   });
@@ -68,7 +69,7 @@ const generateAccessToken = (authCode) => {
     userAgent: "TreasureOrbital v1.0",
     clientId: REDDIT_BOT_CLIENT_ID,
     clientSecret: REDDIT_BOT_CLIENT_SECRET,
-    redirectUri: "http://localhost:3000/auth-callback",
+    redirectUri: REDDIT_REDIRECT_URL,
   });
 };
 
