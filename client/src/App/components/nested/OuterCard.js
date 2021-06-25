@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import InnerCard from"./InnerCard";
 
 import "../../assets/styles/OuterCard.scss";
