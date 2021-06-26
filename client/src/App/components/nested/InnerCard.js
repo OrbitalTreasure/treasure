@@ -30,7 +30,7 @@ const InnerCard = (props) => {
       )}
       <div className="upvote">
         <img className="upvoteImg" src={upvoteImg} />
-        <text className="upvoteCount">{props.upvotes}</text>
+        <p className="upvoteCount">{props.upvotes}</p>
       </div>
     </div>
   );

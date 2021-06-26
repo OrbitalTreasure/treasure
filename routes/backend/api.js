@@ -182,10 +182,11 @@ router.get("/offers/from/:userId", (req, res) => {
     .get()
     .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
     .then((offers) => {
+      console.log(userId)
       offers.sort((a, b) => b.createdAt - a.createdAt);
       res.json(offers);
     })
-    .catch(console.error);
+    .catch(console.error); 
 });
 
 router.get("/offers/to/:sellerId", (req, res) => {
@@ -297,6 +298,19 @@ router.delete("/offers/:offerId", (req, res) => {
     .catch(console.error);
 });
 
+router.delete("/offers/post/:postId", (req, res) => {
+  const postId = parseInt(req.params.postId);
+  db.collection("Offers")
+    .where("post.id", "==", `${postId}`)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+        res.status(200).json("Successfully deleted");
+      });
+    })
+    .catch(console.error);
+});
 // Remove in the future
 router.get("/getPosts", (req, res) => {
   get20HotPosts().then((data) => {
