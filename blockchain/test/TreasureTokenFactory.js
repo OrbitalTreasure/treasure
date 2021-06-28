@@ -504,7 +504,7 @@ describe("Unit Tests", function () {
     });
   });
 
-  describe.only("Reselling Tokens", function () {
+  describe("Reselling Tokens", function () {
     this.beforeEach(async function () {
       await mapUser123();
 
