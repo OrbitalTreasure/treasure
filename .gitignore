@@ -1,5 +1,13 @@
+<<<<<<< HEAD
 node_modules
 artifacts
 build
 cache
 *.log
+=======
+/node_modules
+.env
+node_modules
+artifacts
+cache
+>>>>>>> 1eeb6898787210931594737e60eab72c649d5f2c
