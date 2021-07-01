@@ -1,7 +1,8 @@
 .buyForm {
-  width: 400px;
+  width: 90%;
+  max-width: 400px;
   height: 30px;
   border-radius: 15px;
-  margin-bottom:5px;
   border: 2px solid black;
+  box-sizing: border-box;
 }

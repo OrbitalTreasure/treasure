@@ -6,6 +6,7 @@ import InnerCard from "../nested/InnerCard";
 import HeaderLogo from "../nested/HeaderLogo";
 import OfferBar from "../nested/OfferBar";
 import PreviousOwners from "../nested/PreviousOwners";
+import "../../assets/styles/Post.scss";
 
 const Post = () => {
   const [redditPost, setRedditPost] = useState({});
@@ -13,27 +14,32 @@ const Post = () => {
 
   const fetchRedditPostInfo = (postID) => {
     const url = `/api/v1/posts/${postID}`;
-    axios.get(url)
-      .then(res => res.data)
+    axios
+      .get(url)
+      .then((res) => res.data)
       .then((body) => {
-        setRedditPost(body)
+        console.log(body)
+        setRedditPost(body);
       })
       .catch(console.log);
   };
 
   useEffect(() => {
-    fetchRedditPostInfo(postId)
-  }, [])
-  
+    fetchRedditPostInfo(postId);
+  }, []);
+
   return (
     <div>
       <HeaderLogo />
-      <InnerCard {...redditPost}/>
+      <div className="postColumn">
+        <InnerCard {...redditPost} />
+      </div>
+
       <p>Want to own this post? Give u/ an offer!</p>
-      <OfferBar postId={postId}/>
+      <OfferBar postId={postId} />
       <PreviousOwners />
     </div>
-  ); 
+  );
 };
 
 export default Post;

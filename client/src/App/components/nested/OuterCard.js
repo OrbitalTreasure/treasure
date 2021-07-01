@@ -8,7 +8,7 @@ const OuterCard = (props) => {
             <p className="header">
                 u/{props.user} {props.status} for <b>${props.price.toFixed(2)}</b>
             </p>
-            <InnerCard {...props.post} />
+            <InnerCard {...props.post} isTruncate={true}/>
         </div>
     );
 }
