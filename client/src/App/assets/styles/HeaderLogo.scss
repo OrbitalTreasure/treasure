@@ -1,16 +1,16 @@
-$logoPadding: 25px;
+$logoPadding: 30px;
 
 .logo {
   padding-top: $logoPadding;
   padding-bottom: $logoPadding;
-  width: 100%;
-  max-width: 400px;
+  width: 70%;
+  max-width: 400px; 
 }
 
 .logoContainer {
   border-bottom: 1px solid black;
-  margin:15px;
   position: relative;
+  width: 100%;
 }
 
 .loginProfile{

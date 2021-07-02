@@ -19,7 +19,7 @@ const DashboardMasonry = () => {
 
   const generatePost = () => {
     return offers.map((data, index) => (
-      <OuterCard {...data} key={index}></OuterCard>
+      <OuterCard {...data} key={index} isTruncate={true}></OuterCard>
     ));
   };
 
@@ -28,7 +28,11 @@ const DashboardMasonry = () => {
       <h2>Recent Transactions</h2>
       <div id="masonry-container">
         <Masonry
-          breakpointCols={3}
+          breakpointCols={{
+            default: 3,
+            700: 2,
+            500: 1,
+          }}
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"
         >

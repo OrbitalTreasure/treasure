@@ -1,15 +1,16 @@
 .container {
-  padding: 5px;
-  margin: 0.5em;
-  border-radius: 20px;
+  padding: 15px;
+  border-radius: 15px;
   border: 2px solid grey;
+  max-width: 500px;
   background-color: white;
+  margin: auto;
 }
 
 .heading {
   margin: 0 0;
   text-align: left;
-  padding-left: 1em;
+  margin-left: 15px;
 }
 
 .subHeading {
@@ -22,7 +23,8 @@
   font-weight: bold;
   margin-top: 5px;
   margin-bottom: 0px;
-  margin-left: 20px;
+  margin-left: 15px;
+  margin-bottom: 4px;
 }
 
 .author {
@@ -43,6 +45,7 @@
 .bodyText {
   margin: 1em 1em;
   font-size: small;
+  overflow: hidden;
 }
 
 .bodyImg {
@@ -58,12 +61,12 @@
 .upvoteCount {
   justify-content: left;
   font-size: 15px;
+  margin:0px 7px;
 }
 
 .upvote {
-  position: relative;
   display: flex;
   align-items: left;
   justify-content: left;
-  margin: 5px 5px;
+  margin: 10px 15px 0px;
 }

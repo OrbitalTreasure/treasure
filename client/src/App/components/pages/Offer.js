@@ -74,7 +74,9 @@ const Offer = () => {
   return (
     <div>
       <HeaderLogo />
-      <InnerCard {...redditPost} />
+      <div className="postColumn">
+        <InnerCard {...redditPost} />
+      </div>
       <p>
         Hello {tokens.username}, are you sure you want to buy this post for{" "}
         {offer}

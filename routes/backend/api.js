@@ -59,19 +59,18 @@ router.get("/posts/:postId", (req, res) => {
     .then((post) => {
       res.json(post);
     })
-    .catch((error) => {
-      console.log(error);
+    .catch((redditError) => {
       db.collection("Posts")
         .doc(req.params.postId)
         .get()
         .then((doc) => {
           if (doc.exists) {
-            res.json(doc.data());
+            res.json({...doc.data(), live: false});
           } else {
-            res.status(404);
+            throw Error("This post does not exist!")
           }
         })
-        .catch((error) => console.log(error));
+        .catch((mongoError) => console.log(error));
     });
 });
 

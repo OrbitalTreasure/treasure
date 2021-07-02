@@ -9,6 +9,16 @@ const InnerCard = (props) => {
     window.location.href = `/post/${postId}`;
   };
 
+  const truncate = (str, maxLength, isTruncate) => {
+    if (!isTruncate) {
+      return str;
+    }
+    if (str.length > maxLength) {
+      return str.slice(0, maxLength) + "...";
+    }
+    return str;
+  };
+
   return (
     <div className="container">
       <h4 className="heading" onClick={redirectToPost(props.id)}>
@@ -22,7 +32,7 @@ const InnerCard = (props) => {
       </div>
       {(props?.selftext || props?.imageUrl) && (
         <div className="content">
-          {props?.selftext && <div className="bodyText">{props?.selftext}</div>}
+          {props?.selftext && <div className="bodyText">{truncate(props?.selftext, 1000, props.isTruncate)}</div>}
           {!props?.selftext && props?.imageUrl && (
             <img className="bodyImg" src={props.imageUrl} />
           )}
