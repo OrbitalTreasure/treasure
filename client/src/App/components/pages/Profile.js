@@ -36,7 +36,7 @@ const Profile = () => {
   const generateOfferTo = (offers) => {
     return (
       <div className="offerTo">
-        <h2>Offer To</h2>
+        <h2 className="offerTitle">Offer To</h2>
         {offers.map((data, index) => (
           <OfferCard {...data} key={index} toFrom="to"></OfferCard>
         ))}
@@ -46,7 +46,7 @@ const Profile = () => {
   const generateOfferFrom = (offers) => {
     return (
       <div className="offerFrom">
-        <h2>Offer from</h2>
+        <h2 className="offerTitle">Offer from</h2>
         {offers.map((data, index) => (
           <OfferCard {...data} key={index} toFrom="from"></OfferCard>
         ))}

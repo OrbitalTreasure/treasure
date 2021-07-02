@@ -66,12 +66,6 @@ const OfferCard = (props) => {
 
   return (
     <div className="card">
-      <input
-        type="button"
-        onClick={() => {
-          console.log(props.offerId);
-        }}
-      ></input>
       <p className="header">
         u/{props.user} {props.status} for <b>${props.price.toFixed(2)}</b>
       </p>
