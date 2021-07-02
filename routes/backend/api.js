@@ -65,12 +65,16 @@ router.get("/posts/:postId", (req, res) => {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            res.json({...doc.data(), live: false});
+            res.json({ ...doc.data(), live: false });
           } else {
-            throw Error("This post does not exist!")
+            throw Error("This post does not exist!");
           }
         })
-        .catch((mongoError) => console.log(error));
+        .catch((firebaseError) => {
+          res.status(404).json({
+            errors: [redditError, firebaseError].map((e) => e.message),
+          });
+        });
     });
 });
 
@@ -181,11 +185,11 @@ router.get("/offers/from/:userId", (req, res) => {
     .get()
     .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
     .then((offers) => {
-      console.log(userId)
+      console.log(userId);
       offers.sort((a, b) => b.createdAt - a.createdAt);
       res.json(offers);
     })
-    .catch(console.error); 
+    .catch(console.error);
 });
 
 router.get("/offers/to/:sellerId", (req, res) => {

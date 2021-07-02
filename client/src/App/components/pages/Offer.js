@@ -6,17 +6,19 @@ import axios from "axios";
 import InnerCard from "../nested/InnerCard";
 import Web3 from "web3";
 import ABI from "../../assets/TreasureTokenFactory.json";
+import { convert } from "current-currency";
 
 const Offer = () => {
   const { tokens, metamaskAccount } = useContext(TokenContext);
   const { postId } = useParams();
   const [redditPost, setRedditPost] = useState({});
+  const [offer, setOffer] = useState(0);
   var [transactionPending, setTransactionPending] = useState(false);
   const history = useHistory();
   const contractAddress = "0x055FBE752E37982476B54321D7BbE0DCA959D980";
 
   const url = new URLSearchParams(window.location.search);
-  const offer = url.get("offer");
+  const offerSGD = url.get("offer");
 
   const fetchRedditPostInfo = (postID) => {
     const url = `/api/v1/posts/${postID}`;
@@ -29,8 +31,16 @@ const Offer = () => {
       .catch(console.log);
   };
 
+  const convertToWei = () => {
+    convert("SGD", offerSGD, "ETH").then((data) => {
+      const ethValue = data.amount;
+      setOffer(Web3.utils.toWei(ethValue.toFixed(18), "ether"));
+    });
+  };
+
   useEffect(() => {
     fetchRedditPostInfo(postId);
+    convertToWei();
   }, []);
 
   const onConfirm = async () => {
@@ -40,7 +50,6 @@ const Offer = () => {
       .createOffer(tokens.userId, postId, offer)
       .estimateGas({ value: offer, from: metamaskAccount });
     setTransactionPending(true);
-    console.log(offer);
     contract.methods
       .createOffer(tokens.userId, postId, offer)
       .send({ from: metamaskAccount, value: offer, gas: estimatedGas * 3 })
@@ -52,7 +61,7 @@ const Offer = () => {
           .post(`/api/v1/blockchain/verify/`, {
             offerId,
             postId,
-            offer,
+            offer: offerSGD,
             username: tokens.username,
             userId: tokens.userId,
           })
@@ -79,7 +88,7 @@ const Offer = () => {
       </div>
       <p>
         Hello {tokens.username}, are you sure you want to buy this post for{" "}
-        {offer}
+        {<b>SGD {offerSGD}</b>} ({(offer/10**18).toFixed(6)} ethereum)
       </p>
       {transactionPending ? (
         <p>Please wait while your transaction is loading</p>

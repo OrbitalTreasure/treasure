@@ -1254,6 +1254,14 @@ crypto-random-string@^2.0.0:
   resolved "https://registry.yarnpkg.com/crypto-random-string/-/crypto-random-string-2.0.0.tgz#ef2a7a966ec11083388369baa02ebead229b30d5"
   integrity sha512-v1plID3y9r/lPhviJ1wrXpLeyUIGAZ2SHNYTEapm7/8A9nLPoyvVp3RK/EPFqn5kEznyWgYZNsRtYYIWbuG8KA==
 
+current-currency@^1.6.2:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/current-currency/-/current-currency-1.6.2.tgz#37da4c11d93f2aec5065e9accfc1436bb7c499b3"
+  integrity sha512-tH0144+VydaRdml40FuSebsryzuythZLEuqrWxgbjNoJ75dlg8NEVhI63UdxFaCafjmBhO6d3SkLr41+vzDKrQ==
+  dependencies:
+    axios "^0.21.1"
+    tslib "^2.1.0"
+
 d@1, d@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/d/-/d-1.0.1.tgz#8698095372d58dbee346ffd0c7093f99f8f9eb5a"

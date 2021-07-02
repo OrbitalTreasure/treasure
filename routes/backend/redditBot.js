@@ -24,7 +24,7 @@ const getPostDetails = async (postId) => {
   return axios({ url: url, method: "get", mode: "cors" })
     .then((body) => {
       if (!body.data.data.children.length){
-        throw Error("Post ID is invalid!")
+        throw Error("The post ID does not match any post on Reddit")
       }
       console.log(body.data.data.children)
       const data = body.data.data.children[0].data;
@@ -55,7 +55,7 @@ const getPostDetails = async (postId) => {
       }))(data);
     })
     .catch((e) => {
-      throw e;
+      throw Error("It seems like Reddit is down.")
     });
 };
 

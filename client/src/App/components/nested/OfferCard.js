@@ -23,13 +23,17 @@ const OfferCard = (props) => {
 
     estimateGasPromise
       .then((gasEstimate) => {
-        contract.methods
+        return contract.methods
           .accept(props.offerId)
           .send({ from: metamaskAccount, gas: gasEstimate * 3 });
       })
       .then((transactionReceipt) => {
-        axios.delete(`/api/v1/offers/post/${props.post.id}`);
-        setIsDeleted(true);
+        console.log("deleting from db");
+        axios
+          .delete(`/api/v1/offers/post/${props.post.id}`)
+          .then((response) => {
+            setIsDeleted(true);
+          });
       })
       .catch(console.log);
   };
@@ -43,13 +47,15 @@ const OfferCard = (props) => {
 
     estimateGasPromise
       .then((gasEstimate) => {
-        contract.methods
+        return contract.methods
           .reject(props.offerId)
           .send({ from: metamaskAccount, gas: gasEstimate * 3 });
       })
       .then((transactionReceipt) => {
-        axios.delete(`/api/v1/offers/$props.offerId`);
-        setIsDeleted(true);
+        console.log("deleting from db");
+        axios.delete(`/api/v1/offers/${props.offerId}`).then((response) => {
+          setIsDeleted(true);
+        });
       })
       .catch(console.log);
   };
@@ -60,6 +66,12 @@ const OfferCard = (props) => {
 
   return (
     <div className="card">
+      <input
+        type="button"
+        onClick={() => {
+          console.log(props.offerId);
+        }}
+      ></input>
       <p className="header">
         u/{props.user} {props.status} for <b>${props.price.toFixed(2)}</b>
       </p>

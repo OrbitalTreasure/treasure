@@ -61,7 +61,6 @@ const Profile = () => {
         {generateOfferTo(offersTo)}
         {generateOfferFrom(offersFrom)}
       </div>
-      <input type="button" onClick={() => console.log(tokens)}></input>
     </div>
   );
 };
