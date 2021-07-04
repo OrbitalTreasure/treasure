@@ -65,12 +65,16 @@ router.get("/posts/:postId", (req, res) => {
         .get()
         .then((doc) => {
           if (doc.exists) {
-            res.json({...doc.data(), live: false});
+            res.json({ ...doc.data(), live: false });
           } else {
-            throw Error("This post does not exist!")
+            throw Error("This post does not exist!");
           }
         })
-        .catch((mongoError) => console.log(error));
+        .catch((firebaseError) => {
+          res.status(404).json({
+            errors: [redditError, firebaseError].map((e) => e.message),
+          });
+        });
     });
 });
 
@@ -91,6 +95,23 @@ router.get("/posts/ipfs/:ipfsHash", (req, res) => {
 router.get("/posts", (req, res) => {
   const limit = req.query.limit || 10;
   db.collection("Posts")
+    .orderBy("createdAt")
+    .limit(limit)
+    .get()
+    .then((docSnapshot) => {
+      if (docSnapshot.size > 0) {
+        const docs = docSnapshot.docs.map((doc) => doc.data());
+        res.json(docs);
+      } else {
+        res.status(404).json("Document not found");
+      }
+    })
+    .catch((e) => res.status(500).json(e));
+});
+
+router.get("/offers", (req, res) => {
+  const limit = req.query.limit || 10;
+  db.collection("Offers")
     .orderBy("createdAt")
     .limit(limit)
     .get()
@@ -181,11 +202,11 @@ router.get("/offers/from/:userId", (req, res) => {
     .get()
     .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
     .then((offers) => {
-      console.log(userId)
+      console.log(userId);
       offers.sort((a, b) => b.createdAt - a.createdAt);
       res.json(offers);
     })
-    .catch(console.error); 
+    .catch(console.error);
 });
 
 router.get("/offers/to/:sellerId", (req, res) => {
@@ -212,6 +233,53 @@ router.get("/offers/for/:postId", (req, res) => {
       res.json(offers);
     })
     .catch(console.error);
+});
+
+router.post("/tokens/mint/:offerId", (req, res) => {
+  const offerId = req.params.offerId;
+  db.collection("Offers")
+    .where("offerId", "==", parseInt(offerId))
+    .get()
+    .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
+    .then((offers) => {
+      if (offers.length <= 0) {
+        throw Error("No such offer");
+      }
+      const id = offers[0].post.id;
+      const token = {
+        ...offers[0].post,
+        mintedAt: offers[0].createdAt,
+        ownerId: offers[0].userId,
+      };
+      return [db.collection("Tokens").add(token), id];
+    })
+    .then(([docRef, id]) => {
+      return db.collection("Offers").where("post.id", "==", id).get();
+    })
+    .then((querySnapshot) => {
+      querySnapshot.forEach((doc) => {
+        doc.ref.delete();
+        res.status(200).json("Successfully minted");
+      });
+    })
+    .catch((e) => {
+      console.log(e);
+      res.status(404).json(e);
+    });
+});
+
+router.get("/tokens/:userId", (req, res) => {
+  const userId = req.params.userId;
+  db.collection("Tokens")
+    .where("ownerId", "==", userId)
+    .get()
+    .then((docSnapshot) => {
+      return docSnapshot.docs.map((doc) => doc.data());
+    })
+    .then((tokens) => {
+      res.json(tokens);
+    })
+    .catch((e) => res.status(404).json({ error: e }));
 });
 
 router.post("/blockchain/verify", (req, res) => {

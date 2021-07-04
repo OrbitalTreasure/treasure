@@ -7,10 +7,11 @@ const AuthCallback = (props) => {
   const url = new URLSearchParams(window.location.search);
   const { setTokens } = useContext(TokenContext);
   const code = url.get("code");
+  const error = url.get("error");
   const state = url.get("state");
   const history = useHistory();
 
-  const getAccessToken = (code) => {
+  const getAccessToken = (code, state) => {
     axios
       .get(`/api/v1/generateAccessToken?code=${code}`)
       .then((res) => {
@@ -22,7 +23,16 @@ const AuthCallback = (props) => {
       .catch(console.log);
   };
 
-  useEffect(() => getAccessToken(code), []);
+  const handleAuthToken = (authCode, error, state) => {
+    if (error) {
+      return history.push(
+        `/login?error=${error}`
+        );
+    }
+    getAccessToken(authCode, state);
+  };
+
+  useEffect(() => handleAuthToken(code, error, state), []);
 
   return (
     <div>

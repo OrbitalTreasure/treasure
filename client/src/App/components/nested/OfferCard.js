@@ -23,13 +23,17 @@ const OfferCard = (props) => {
 
     estimateGasPromise
       .then((gasEstimate) => {
-        contract.methods
+        return contract.methods
           .accept(props.offerId)
           .send({ from: metamaskAccount, gas: gasEstimate * 3 });
       })
       .then((transactionReceipt) => {
-        axios.delete(`/api/v1/offers/post/${props.post.id}`);
-        setIsDeleted(true);
+        console.log("deleting from db");
+        axios
+          .delete(`/api/v1/offers/post/${props.post.id}`)
+          .then((response) => {
+            setIsDeleted(true);
+          });
       })
       .catch(console.log);
   };
@@ -43,13 +47,15 @@ const OfferCard = (props) => {
 
     estimateGasPromise
       .then((gasEstimate) => {
-        contract.methods
+        return contract.methods
           .reject(props.offerId)
           .send({ from: metamaskAccount, gas: gasEstimate * 3 });
       })
       .then((transactionReceipt) => {
-        axios.delete(`/api/v1/offers/$props.offerId`);
-        setIsDeleted(true);
+        console.log("deleting from db");
+        axios.delete(`/api/v1/offers/${props.offerId}`).then((response) => {
+          setIsDeleted(true);
+        });
       })
       .catch(console.log);
   };
@@ -66,7 +72,7 @@ const OfferCard = (props) => {
       <InnerCard {...props.post} />
       {props.toFrom == "from" ? (
         <div>
-          <input type="button" value="rescind" onClick={onReject}></input>
+          <input type="button" value="Rescind" onClick={onReject}></input>
         </div>
       ) : (
         <div>

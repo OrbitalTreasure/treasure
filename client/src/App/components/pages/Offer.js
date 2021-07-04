@@ -6,17 +6,20 @@ import axios from "axios";
 import InnerCard from "../nested/InnerCard";
 import Web3 from "web3";
 import ABI from "../../assets/TreasureTokenFactory.json";
+import { convert } from "current-currency";
+import "../../assets/styles/Offer.scss";
 
 const Offer = () => {
   const { tokens, metamaskAccount } = useContext(TokenContext);
   const { postId } = useParams();
   const [redditPost, setRedditPost] = useState({});
-  var [transactionPending, setTransactionPending] = useState(false);
+  const [offer, setOffer] = useState(0);
+  var [transactionPending, setTransactionPending] = useState(0);
   const history = useHistory();
   const contractAddress = "0x055FBE752E37982476B54321D7BbE0DCA959D980";
 
   const url = new URLSearchParams(window.location.search);
-  const offer = url.get("offer");
+  const offerSGD = url.get("offer");
 
   const fetchRedditPostInfo = (postID) => {
     const url = `/api/v1/posts/${postID}`;
@@ -29,8 +32,16 @@ const Offer = () => {
       .catch(console.log);
   };
 
+  const convertToWei = () => {
+    convert("SGD", offerSGD, "ETH").then((data) => {
+      const ethValue = data.amount;
+      setOffer(Web3.utils.toWei(ethValue.toFixed(18), "ether"));
+    });
+  };
+
   useEffect(() => {
     fetchRedditPostInfo(postId);
+    convertToWei();
   }, []);
 
   const onConfirm = async () => {
@@ -39,29 +50,32 @@ const Offer = () => {
     const estimatedGas = await contract.methods
       .createOffer(tokens.userId, postId, offer)
       .estimateGas({ value: offer, from: metamaskAccount });
-    setTransactionPending(true);
-    console.log(offer);
+    setTransactionPending(1);
     contract.methods
       .createOffer(tokens.userId, postId, offer)
       .send({ from: metamaskAccount, value: offer, gas: estimatedGas * 3 })
-      .then((e) => {
-        console.log(e);
+      .on("transactionHash", (e) => {
+        setTransactionPending(2);
+      })
+      .on("receipt", (e) => {
+        setTransactionPending(3);
         const offerId = e.events.OfferCreated.returnValues.offerId;
         const postId = e.events.OfferCreated.returnValues.postId;
         axios
           .post(`/api/v1/blockchain/verify/`, {
             offerId,
             postId,
-            offer,
+            offer: offerSGD,
             username: tokens.username,
             userId: tokens.userId,
           })
           .then((e) => {
+            setTransactionPending(4);
             history.push("/profile");
           });
       })
-      .catch((e) => {
-        setTransactionPending(false);
+      .on("error", (e) => {
+        setTransactionPending(0);
         if (e.code == 4001) {
           console.log(e.message);
           console.log("hi");
@@ -71,6 +85,49 @@ const Offer = () => {
       });
   };
 
+  if (transactionPending) {
+    const steps = [
+      {
+        step: "Waiting on your confirmation",
+        info: "A metamask popup should have appeared.",
+      },
+      {
+        step: "Creating the offer on the blockchain",
+        info: "This may take a while. We are uploading the offer data onto the blockchain.",
+      },
+      {
+        step: "Verifying offer",
+        info: "Our servers are checking that the data uploaded is correct.",
+      },
+      { step: "Redirecting you to your profile" },
+    ];
+
+    return (
+      <div className="container" style={{ marginTop: "50px" }}>
+        <h2>Your offer has been sent</h2>
+
+        {steps.map((e, index) => {
+          return (
+            <div>
+              <h3
+                className={
+                  transactionPending == index + 1
+                    ? "loadingStepsActive"
+                    : "loadingStepsInactive"
+                }
+              >
+                Step {index + 1}: {e.step}
+              </h3>
+              {transactionPending == index + 1 && (
+                <p className="info">{e.info}</p>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    );
+  }
+
   return (
     <div>
       <HeaderLogo />
@@ -79,7 +136,7 @@ const Offer = () => {
       </div>
       <p>
         Hello {tokens.username}, are you sure you want to buy this post for{" "}
-        {offer}
+        {<b>SGD {offerSGD}</b>} ({(offer / 10 ** 18).toFixed(6)} ethereum)
       </p>
       {transactionPending ? (
         <p>Please wait while your transaction is loading</p>

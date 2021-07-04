@@ -10,18 +10,42 @@ import "../../assets/styles/Post.scss";
 
 const Post = () => {
   const [redditPost, setRedditPost] = useState({});
+  const [errors, setErrors] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { postId } = useParams();
 
   const fetchRedditPostInfo = (postID) => {
     const url = `/api/v1/posts/${postID}`;
     axios
       .get(url)
-      .then((res) => res.data)
       .then((body) => {
-        console.log(body)
-        setRedditPost(body);
+        setRedditPost(body.data);
+        setLoading(false);
       })
-      .catch(console.log);
+      .catch((error) => {
+        setLoading(false);
+        setErrors(error?.response?.data);
+      });
+  };
+
+  const postFound = () => (
+    <div className="postColumn">
+      <InnerCard {...redditPost} />
+      <p>Want to own this post? Give u/ an offer!</p>
+      <OfferBar postId={postId} />
+      <PreviousOwners />
+    </div>
+  );
+
+  const postNotFound = () => {
+    const requestErrors = errors.errors
+    return <h1>{requestErrors[0]}</h1>
+  };
+
+  const loadingJSX = () => {
+    return <div>
+      <h1>Loading post data...</h1>
+    </div>;
   };
 
   useEffect(() => {
@@ -31,13 +55,7 @@ const Post = () => {
   return (
     <div>
       <HeaderLogo />
-      <div className="postColumn">
-        <InnerCard {...redditPost} />
-      </div>
-
-      <p>Want to own this post? Give u/ an offer!</p>
-      <OfferBar postId={postId} />
-      <PreviousOwners />
+      {loading ? loadingJSX() : errors ? postNotFound() : postFound()}
     </div>
   );
 };
