@@ -10,7 +10,7 @@ const DashboardMasonry = () => {
     const fetchData = () => {
       const limit = 12;
       axios
-        .get(`/api/v1/posts?limit=${limit}`)
+        .get(`/api/v1/offers?limit=${limit}`)
         .then((newOffers) => setOffers(newOffers.data))
         .catch(console.log);
     };
@@ -26,7 +26,7 @@ const DashboardMasonry = () => {
   return (
     <div>
       <h2>Recent Transactions</h2>
-      <div id="masonry-container">
+      <div className="masonry-container">
         <Masonry
           breakpointCols={{
             default: 3,

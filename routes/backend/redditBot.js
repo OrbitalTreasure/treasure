@@ -26,7 +26,6 @@ const getPostDetails = async (postId) => {
       if (!body.data.data.children.length){
         throw Error("The post ID does not match any post on Reddit")
       }
-      console.log(body.data.data.children)
       const data = body.data.data.children[0].data;
       return (({
         title,

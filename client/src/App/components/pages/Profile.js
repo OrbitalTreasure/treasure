@@ -4,11 +4,13 @@ import { useContext, useState } from "react";
 import HeaderLogo from "../nested/HeaderLogo";
 import OfferCard from "../nested/OfferCard";
 import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const Profile = () => {
   const { tokens, setTokens } = useContext(TokenContext);
   const [offersFrom, setOffersFrom] = useState([]);
   const [offersTo, setOffersTo] = useState([]);
+  const history = useHistory();
 
   useEffect(() => {
     const localToken = window.localStorage.getItem("tokens");
@@ -57,6 +59,7 @@ const Profile = () => {
   return (
     <div>
       <HeaderLogo />
+      <p onClick={(e) => history.push(`/user/${tokens.userId}`)}>View your collection</p>
       <div>
         {generateOfferTo(offersTo)}
         {generateOfferFrom(offersFrom)}

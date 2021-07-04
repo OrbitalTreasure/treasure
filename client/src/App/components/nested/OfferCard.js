@@ -72,7 +72,7 @@ const OfferCard = (props) => {
       <InnerCard {...props.post} />
       {props.toFrom == "from" ? (
         <div>
-          <input type="button" value="rescind" onClick={onReject}></input>
+          <input type="button" value="Rescind" onClick={onReject}></input>
         </div>
       ) : (
         <div>
