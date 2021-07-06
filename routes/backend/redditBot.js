@@ -23,8 +23,8 @@ const getPostDetails = async (postId) => {
   const url = `https://api.reddit.com/api/info/?id=t3_${postId}`;
   return axios({ url: url, method: "get", mode: "cors" })
     .then((body) => {
-      if (!body.data.data.children.length){
-        throw Error("The post ID does not match any post on Reddit")
+      if (!body.data.data.children.length) {
+        throw Error("The post ID does not match any post on Reddit");
       }
       const data = body.data.data.children[0].data;
       return (({
@@ -54,7 +54,7 @@ const getPostDetails = async (postId) => {
       }))(data);
     })
     .catch((e) => {
-      throw Error("It seems like Reddit is down.")
+      throw Error("It seems like Reddit is down.");
     });
 };
 
@@ -78,16 +78,13 @@ const generateAccessToken = (authCode) => {
   });
 };
 
-const get20HotPosts = () => {
-  const r = makeRequester();
-  return r
-    .getHot({ limit: 20 })
-    .then((listOfPosts) => listOfPosts.map((post) => post.id));
+const getUser = (username) => {
+  return makeRequester().getUser(username).fetch();
 };
 
 module.exports = {
   getPostDetails,
-  get20HotPosts,
   generateAuthUrl,
   generateAccessToken,
+  getUser,
 };

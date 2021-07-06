@@ -30,8 +30,8 @@ const DashboardMasonry = () => {
         <Masonry
           breakpointCols={{
             default: 3,
-            700: 2,
-            500: 1,
+            850: 2,
+            600: 1,
           }}
           className="my-masonry-grid"
           columnClassName="my-masonry-grid_column"

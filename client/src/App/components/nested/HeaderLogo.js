@@ -3,6 +3,8 @@ import "../../assets/styles/HeaderLogo.scss";
 import { TokenContext } from "../../contexts/TokenContext";
 import { useContext } from "react";
 import { useHistory } from "react-router-dom";
+import ProfileButton from "./ProfileButton";
+
 const HeaderLogo = () => {
   const { tokens } = useContext(TokenContext);
   const history = useHistory();
@@ -21,9 +23,7 @@ const HeaderLogo = () => {
         Login
       </a>
     ) : (
-      <a href="/profile" className="loginProfile">
-        Profile
-      </a>
+      <ProfileButton />
     );
 
   return (

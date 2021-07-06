@@ -26,7 +26,7 @@ const InnerCard = (props) => {
       </h4>
       <div className="subHeading">
         <p className="subreddit">{"/r/" + props.subreddit}</p>
-        <NavLink className="author" to={`/user/${props.authorId}`}>
+        <NavLink className="author" to={`/user/${props.author}`}>
           Post by u/{props.author}
         </NavLink>
       </div>

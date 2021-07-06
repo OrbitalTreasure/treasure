@@ -7,20 +7,31 @@ import Masonry from "react-masonry-css";
 import InnerCard from "../nested/InnerCard";
 
 const User = () => {
-  const { userId } = useParams();
+  const { username } = useParams();
   const [collection, setCollection] = useState([]);
+  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
 
-  const getCollection = (userId) => {
-    const url = `/api/v1/tokens/${userId}`;
+  const getCollection = (username) => {
     axios
-      .get(url)
-      .then((res) => res.data)
-      .then((body) => {
-        setCollection(body);
-        setLoading(false);
+      .get(`/api/v1/reddit/user/${username}`)
+      .then((data) => {
+        const userDetails = data.data;
+        setUserId(userDetails.id);
+        console.log(userDetails.id);
+        return userDetails.id;
       })
-      .catch(console.log);
+      .then((userId) => {
+        const url = `/api/v1/tokens/${userId}`;
+        axios
+          .get(url)
+          .then((res) => res.data)
+          .then((body) => {
+            setCollection(body);
+            setLoading(false);
+          })
+          .catch(console.log);
+      });
   };
 
   const generateCollectionJSX = (collection) => {
@@ -50,24 +61,20 @@ const User = () => {
   };
 
   useState(() => {
-    getCollection(userId);
+    getCollection(username);
   }, []);
 
   return (
     <div>
       <HeaderLogo />
-      <h1>Collection of {userId}</h1>
       {loading ? (
         <h2>Collection is loading ...</h2>
       ) : (
-        generateCollectionJSX(collection)
+        <div>
+          <h1>Collection of u/{username}</h1>
+          {generateCollectionJSX(collection)}
+        </div>
       )}
-      {/* <input
-        type="button"
-        onClick={() => {
-          console.log(collection);
-        }}
-      ></input> */}
     </div>
   );
 };

@@ -28,12 +28,23 @@ const OfferCard = (props) => {
           .send({ from: metamaskAccount, gas: gasEstimate * 3 });
       })
       .then((transactionReceipt) => {
-        console.log("deleting from db");
-        axios
-          .delete(`/api/v1/offers/post/${props.post.id}`)
-          .then((response) => {
-            setIsDeleted(true);
+        // const deleteFromDb = () => {
+        //   axios
+        //     .delete(`/api/v1/offers/post/${props.post.id}`)
+        //     .then((response) => {
+        //       props.DomOnAccept(props.post.id);
+        //     });
+        // };
+        if (transactionReceipt.events.TokenOwnerChanged) {
+          axios.post(`/api/v1/tokens/changeOwner/${props.offerId}`).then((res) => {
+            props.DomOnAccept(props.post.id);
           });
+        }
+        if (transactionReceipt.events.TokenCreated) {
+          axios.post(`/api/v1/tokens/mint/${props.offerId}`).then((res) => {
+            props.DomOnAccept(props.post.id);
+          });
+        }
       })
       .catch(console.log);
   };
