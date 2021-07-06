@@ -16,7 +16,7 @@ const Login = (props) => {
   };
 
   return (
-    <div>
+    <div className="loginColumn">
       <div className="container">
         <h2>
           <b>Please Login to Continue</b>

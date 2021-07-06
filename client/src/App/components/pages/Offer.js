@@ -71,7 +71,7 @@ const Offer = () => {
           })
           .then((e) => {
             setTransactionPending(4);
-            history.push("/profile");
+            history.push("/offers");
           });
       })
       .on("error", (e) => {

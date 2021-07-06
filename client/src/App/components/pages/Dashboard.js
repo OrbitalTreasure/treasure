@@ -37,7 +37,7 @@ const Dashboard = () => {
       <p>
         <b>Want to own a RedditPost?</b>
       </p>
-      <input type="text" className="buyForm" onKeyUp={buyFormSubmit}></input>
+      <input type="text" className="buyForm" onKeyUp={buyFormSubmit} placeholder="https://www.reddit.com/user/El-Ricardo/comments/odf8ru/"></input>
     </div>
   );
 

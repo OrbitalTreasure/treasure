@@ -11,9 +11,9 @@ firebase.initializeApp(firebaseConfig);
 db = firebase.firestore();
 const {
   getPostDetails,
-  get20HotPosts,
   generateAuthUrl,
   generateAccessToken,
+  getUser,
 } = require("./redditBot.js");
 const {
   mapUser,
@@ -22,7 +22,6 @@ const {
   decodeLogs,
 } = require("./blockchain.js");
 const { pinJSONToIPFS } = require("./ipfs.js");
-const abiData = require("../../src/assets/TreasureTokenFactory.json");
 
 router.post("/users", (req, res) => {
   const data = req.body;
@@ -202,7 +201,6 @@ router.get("/offers/from/:userId", (req, res) => {
     .get()
     .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
     .then((offers) => {
-      console.log(userId);
       offers.sort((a, b) => b.createdAt - a.createdAt);
       res.json(offers);
     })
@@ -265,6 +263,54 @@ router.post("/tokens/mint/:offerId", (req, res) => {
     .catch((e) => {
       console.log(e);
       res.status(404).json(e);
+    });
+});
+
+router.post("/tokens/changeOwner/:offerId", (req, res) => {
+  const offerId = req.params.offerId;
+  db.collection("Offers")
+    .where("offerId", "==", parseInt(offerId))
+    .get()
+    .then((documentSnapshot) => documentSnapshot.docs.map((doc) => doc.data()))
+    .then((offers) => {
+      if (offers.length <= 0) {
+        throw Error("No such offer");
+      }
+      const postId = offers[0].post.id;
+      const ownerId = offers[0].userId;
+      const deleteFromDbPromise = db
+        .collection("Offers")
+        .where("post.id", "==", postId)
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            throw Error("Change owner failed: no offer with this post");
+          }
+          querySnapshot.forEach((doc) => {
+            doc.ref.delete();
+            console.log(`Successfull deleted offers with post id of ${postId}`);
+          });
+          return { status: "success" };
+        });
+      const changeTokenOwnerPromise = db
+        .collection("Tokens")
+        .where("id", "==", postId)
+        .get()
+        .then((querySnapshot) => {
+          if (querySnapshot.empty) {
+            throw Error("Change owner failed: this post has no token");
+          }
+          querySnapshot.forEach((doc) => {
+            db.collection("Tokens").doc(doc.id).update({ ownerId: ownerId });
+            res.json({ status: "Successful" });
+          });
+          return { status: "success" };
+        });
+      Promise.all([deleteFromDbPromise, changeTokenOwnerPromise])
+        .then(([succes1, success2]) => {
+          res.json({ status: "success" });
+        })
+        .catch(console.log);
     });
 });
 
@@ -366,9 +412,9 @@ router.delete("/offers/:offerId", (req, res) => {
 });
 
 router.delete("/offers/post/:postId", (req, res) => {
-  const postId = parseInt(req.params.postId);
+  const postId = req.params.postId;
   db.collection("Offers")
-    .where("post.id", "==", `${postId}`)
+    .where("post.id", "==", postId)
     .get()
     .then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
@@ -378,38 +424,15 @@ router.delete("/offers/post/:postId", (req, res) => {
     })
     .catch(console.error);
 });
-// Remove in the future
-router.get("/getPosts", (req, res) => {
-  get20HotPosts().then((data) => {
-    const postIds = [...data];
-    postIds.map((id, index) => {
-      const postDetailsPromise = getPostDetails(id);
-      const ipfsDetailsPromise = postDetailsPromise.then((postDetails) =>
-        pinJSONToIPFS(postDetails)
-      );
-      Promise.all([postDetailsPromise, ipfsDetailsPromise]).then(
-        ([postDetails, ipfsDetails]) => {
-          const PostDetails = {
-            ...postDetails,
-            ipfsHash: ipfsDetails.IpfsHash,
-          };
-          const OfferDetails = {
-            user: "Richard" + index,
-            status: ["purchased", "offered"][Math.floor(Math.random() * 2)],
-            price: Math.random() * 15,
-            post: PostDetails,
-            createdAt: Date.parse(ipfsDetails.Timestamp),
-          };
 
-          db.collection("Posts")
-            .doc(id)
-            .set(OfferDetails)
-            .then(() => res.status(200).json(OfferDetails))
-            .catch(console.log);
-        }
-      );
-    });
-  });
+//Test APIs
+router.get("/reddit/user/:username", (req, res) => {
+  const username = req.params.username;
+  getUser(username)
+    .then((e) => {
+      res.json(e);
+    })
+    .catch(console.log);
 });
 
 module.exports = router;
