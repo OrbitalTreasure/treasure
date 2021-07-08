@@ -8,6 +8,7 @@ import Web3 from "web3";
 import ABI from "../../assets/TreasureTokenFactory.json";
 import { convert } from "current-currency";
 import "../../assets/styles/Offer.scss";
+import TransactionPendingCard from "../nested/TransactionPendingCard";
 
 const Offer = () => {
   const { tokens, metamaskAccount } = useContext(TokenContext);
@@ -103,28 +104,11 @@ const Offer = () => {
     ];
 
     return (
-      <div className="container" style={{ marginTop: "50px" }}>
-        <h2>Your offer has been sent</h2>
-
-        {steps.map((e, index) => {
-          return (
-            <div>
-              <h3
-                className={
-                  transactionPending == index + 1
-                    ? "loadingStepsActive"
-                    : "loadingStepsInactive"
-                }
-              >
-                Step {index + 1}: {e.step}
-              </h3>
-              {transactionPending == index + 1 && (
-                <p className="info">{e.info}</p>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <TransactionPendingCard
+        header="Your offer has been sent"
+        steps={steps}
+        transactionPending={transactionPending}
+      />
     );
   }
 

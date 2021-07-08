@@ -62,7 +62,7 @@
 .upvoteCount {
   justify-content: left;
   font-size: 15px;
-  margin:0px 7px;
+  margin: 0px 7px;
 }
 
 .upvote {
@@ -70,4 +70,13 @@
   align-items: left;
   justify-content: left;
   margin: 10px 15px 0px;
+}
+
+.urlLink {
+  cursor: pointer;
+}
+
+.urlLink:hover {
+  text-decoration: underline;
+  color: darkblue;
 }
