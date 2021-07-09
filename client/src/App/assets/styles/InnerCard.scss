@@ -1,9 +1,14 @@
 .container {
+  color: black;
   padding: 15px;
   border-radius: 15px;
   border: 2px solid grey;
   max-width: 500px;
-  background-color: white;
+  background-image: linear-gradient(
+    to bottom right,
+    rgb(210, 203, 255),
+    rgb(255, 218, 255)
+  );
   margin: auto;
 }
 
@@ -11,6 +16,12 @@
   margin: 0 0;
   text-align: left;
   margin-left: 15px;
+  transition: transform 250ms;
+}
+
+.heading:hover {
+  color: rgb(228, 0, 0);
+  transform: translateY(-2px);
 }
 
 .subHeading {
@@ -30,7 +41,14 @@
 .author {
   padding-left: 8px;
   float: left;
-  color: grey;
+  color: blue;
+  margin-top: 5px;
+}
+
+.author:hover {
+  padding-left: 8px;
+  float: left;
+  color: red;
   margin-top: 5px;
 }
 

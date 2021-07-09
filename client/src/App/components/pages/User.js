@@ -6,6 +6,10 @@ import axios from "axios";
 import Masonry from "react-masonry-css";
 import InnerCard from "../nested/InnerCard";
 
+const tokenCardStyle = {
+  padding: "10px",
+};
+
 const User = () => {
   const { username } = useParams();
   const [collection, setCollection] = useState([]);
@@ -36,9 +40,11 @@ const User = () => {
 
   const generateCollectionJSX = (collection) => {
     if (collection.length == 0) {
-      <h2 className="noToken">
-        It seems like u/{userId} does not own any tokens
-      </h2>;
+      return (
+        <h2 className="noToken">
+          It seems like u/{username} does not own any tokens
+        </h2>
+      );
     }
 
     return (
@@ -53,7 +59,11 @@ const User = () => {
           columnClassName="my-masonry-grid_column"
         >
           {collection.map((token) => {
-            return <InnerCard {...token} />;
+            return (
+              <div className="tokenCard" style={tokenCardStyle}>
+                <InnerCard {...token} />
+              </div>
+            );
           })}
         </Masonry>
       </div>

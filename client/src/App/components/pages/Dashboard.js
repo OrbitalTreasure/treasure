@@ -35,9 +35,14 @@ const Dashboard = () => {
   const buyForm = (
     <div>
       <p>
-        <b>Want to own a RedditPost?</b>
+        <b className="enticingHeader">Want to own a RedditPost?</b>
       </p>
-      <input type="text" className="buyForm" onKeyUp={buyFormSubmit} placeholder="https://www.reddit.com/user/El-Ricardo/comments/odf8ru/"></input>
+      <input
+        type="text"
+        className="buyForm"
+        onKeyUp={buyFormSubmit}
+        placeholder="Paste reddit post url here!"
+      ></input>
     </div>
   );
 

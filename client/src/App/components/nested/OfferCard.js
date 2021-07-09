@@ -103,8 +103,8 @@ const OfferCard = (props) => {
       })
 
       .catch((e) => {
-        resetTransactionState()
-        console.log(e.message)
+        resetTransactionState();
+        console.log(e.message);
       });
   };
 
@@ -120,12 +120,27 @@ const OfferCard = (props) => {
       <InnerCard {...props.post} />
       {props.toFrom == "from" ? (
         <div>
-          <input type="button" value="Rescind" onClick={onReject}></input>
+          <input
+            type="button"
+            value="Rescind"
+            className="option rescind"
+            onClick={onReject}
+          ></input>
         </div>
       ) : (
         <div>
-          <input type="button" value="Accept" onClick={onAccept}></input>
-          <input type="button" value="Reject" onClick={onReject}></input>
+          <input
+            type="button"
+            value="Accept"
+            className="option accept"
+            onClick={onAccept}
+          ></input>
+          <input
+            type="button"
+            value="Reject"
+            className="option reject"
+            onClick={onReject}
+          ></input>
         </div>
       )}
     </div>

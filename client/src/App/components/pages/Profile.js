@@ -43,18 +43,22 @@ const Profile = () => {
     return (
       <div className="offerTo">
         <h2 className="offerTitle">Offer To</h2>
-        {offers.map((data, index) => (
-          <OfferCard
-            {...data}
-            key={index}
-            toFrom="to"
-            DomOnAccept={DomOnAccept}
-            transaction={{
-              state: transactionPending,
-              set: settransactionPending,
-            }}
-          ></OfferCard>
-        ))}
+        {offers.length === 0 ? (
+          <h2>No offers to this user.</h2>
+        ) : (
+          offers.map((data, index) => (
+            <OfferCard
+              {...data}
+              key={index}
+              toFrom="to"
+              DomOnAccept={DomOnAccept}
+              transaction={{
+                state: transactionPending,
+                set: settransactionPending,
+              }}
+            ></OfferCard>
+          ))
+        )}
       </div>
     );
   };
@@ -62,17 +66,21 @@ const Profile = () => {
     return (
       <div className="offerFrom">
         <h2 className="offerTitle">Offer from</h2>
-        {offers.map((data, index) => (
-          <OfferCard
-            {...data}
-            key={index}
-            toFrom="from"
-            transaction={{
-              state: transactionPending,
-              set: settransactionPending,
-            }}
-          ></OfferCard>
-        ))}
+        {offers.length === 0 ? (
+          <h2>No offers to this user.</h2>
+        ) : (
+          offers.map((data, index) => (
+            <OfferCard
+              {...data}
+              key={index}
+              toFrom="from"
+              transaction={{
+                state: transactionPending,
+                set: settransactionPending,
+              }}
+            ></OfferCard>
+          ))
+        )}
       </div>
     );
   };
