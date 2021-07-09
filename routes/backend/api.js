@@ -235,7 +235,7 @@ router.get("/offers/for/:postId", (req, res) => {
 
 router.post("/tokens/mint/:offerId", (req, res) => {
   const offerId = req.params.offerId;
-  console.log(req.body)
+  tokenId = req.body.tokenId;
   db.collection("Offers")
     .where("offerId", "==", parseInt(offerId))
     .get()
@@ -249,6 +249,7 @@ router.post("/tokens/mint/:offerId", (req, res) => {
         ...offers[0].post,
         mintedAt: offers[0].createdAt,
         ownerId: offers[0].userId,
+        tokenId,
       };
       return [db.collection("Tokens").add(token), id];
     })
@@ -354,7 +355,7 @@ router.post("/blockchain/verify", (req, res) => {
         post: PostDetails,
         createdAt: Date.parse(ipfsDetails.Timestamp),
       };
-      console.log("Beginning blockchain verify")
+      console.log("Beginning blockchain verify");
       verifyOffer(offerId, PostDetails.ipfsHash, PostDetails.authorId)
         .then((receipt) => {
           const decodedEvent = decodeLogs(
@@ -386,7 +387,7 @@ router.post("/blockchain/verify", (req, res) => {
             sellerId: decodedEvent.sellerid,
             offerId: parseInt(decodedEvent.offerId),
           };
-          console.log("blockchain verify done")
+          console.log("blockchain verify done");
           db.collection("Offers")
             .add(finalOffer)
             .then((e) => res.json(finalOffer))
