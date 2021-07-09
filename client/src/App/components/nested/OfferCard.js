@@ -13,6 +13,17 @@ const OfferCard = (props) => {
   const web3 = new Web3(window.ethereum);
   const contractAddress = "0x055FBE752E37982476B54321D7BbE0DCA959D980";
   const history = useHistory();
+  const resetTransactionState = () =>
+    props.transaction.set({ stage: 0, header: null });
+  const setAcceptTransaction = (stage) => {
+    props.transaction.set({ header: "You are accepting an offer", stage });
+  };
+  const setRejectTransaction = (stage) => {
+    props.transaction.set({
+      header: "This offer is being removed from the blockchain",
+      stage,
+    });
+  };
 
   const onAccept = async () => {
     const contract = new web3.eth.Contract(ABI.abi, contractAddress);
@@ -21,25 +32,45 @@ const OfferCard = (props) => {
       .accept(props.offerId)
       .estimateGas({ from: metamaskAccount });
 
+    setAcceptTransaction(1);
     estimateGasPromise
       .then((gasEstimate) => {
         return contract.methods
           .accept(props.offerId)
-          .send({ from: metamaskAccount, gas: gasEstimate * 3 });
+          .send({ from: metamaskAccount, gas: gasEstimate * 3 })
+          .on("transactionHash", (e) => {
+            setAcceptTransaction(2);
+          })
+          .on("receipt", (transactionReceipt) => {
+            setAcceptTransaction(3);
+            if (transactionReceipt.events.TokenOwnerChanged) {
+              axios
+                .post(`/api/v1/tokens/changeOwner/${props.offerId}`)
+                .then((res) => {
+                  props.DomOnAccept(props.post.id);
+                  setAcceptTransaction(4);
+                  resetTransactionState();
+                });
+            }
+            if (transactionReceipt.events.TokenCreated) {
+              console.log(transactionReceipt.events.TokenCreated);
+              const tokenId =
+                transactionReceipt.events.TokenCreated?.returnValues?.tokenId;
+              console.log(tokenId);
+              axios
+                .post(`/api/v1/tokens/mint/${props.offerId}`, {
+                  tokenId,
+                })
+                .then((res) => {
+                  props.DomOnAccept(props.post.id);
+                  setAcceptTransaction(4);
+                  resetTransactionState();
+                });
+            }
+          })
+          .on("error", (e) => resetTransactionState);
       })
-      .then((transactionReceipt) => {;
-        if (transactionReceipt.events.TokenOwnerChanged) {
-          axios.post(`/api/v1/tokens/changeOwner/${props.offerId}`).then((res) => {
-            props.DomOnAccept(props.post.id);
-          });
-        }
-        if (transactionReceipt.events.TokenCreated) {
-          axios.post(`/api/v1/tokens/mint/${props.offerId}`).then((res) => {
-            props.DomOnAccept(props.post.id);
-          });
-        }
-      })
-      .catch(console.log);
+      .catch((e) => resetTransactionState);
   };
 
   const onReject = async () => {
@@ -48,20 +79,33 @@ const OfferCard = (props) => {
     const estimateGasPromise = contract.methods
       .reject(props.offerId)
       .estimateGas({ from: metamaskAccount });
-
+    setRejectTransaction(1);
     estimateGasPromise
       .then((gasEstimate) => {
         return contract.methods
           .reject(props.offerId)
-          .send({ from: metamaskAccount, gas: gasEstimate * 3 });
+          .send({ from: metamaskAccount, gas: gasEstimate * 3 })
+          .on("transactionHash", (e) => {
+            setRejectTransaction(2);
+          })
+          .on("receipt", (transactionReceipt) => {
+            console.log("deleting from db");
+            setRejectTransaction(3);
+            axios.delete(`/api/v1/offers/${props.offerId}`).then((response) => {
+              setIsDeleted(true);
+              setRejectTransaction(4);
+              resetTransactionState();
+            });
+          })
+          .on("error", (e) => {
+            resetTransactionState();
+          });
       })
-      .then((transactionReceipt) => {
-        console.log("deleting from db");
-        axios.delete(`/api/v1/offers/${props.offerId}`).then((response) => {
-          setIsDeleted(true);
-        });
-      })
-      .catch(console.log);
+
+      .catch((e) => {
+        resetTransactionState()
+        console.log(e.message)
+      });
   };
 
   if (isDeleted) {

@@ -3,10 +3,15 @@ import { useState } from "react";
 import HeaderLogo from "../nested/HeaderLogo";
 import OfferCard from "../nested/OfferCard";
 import axios from "axios";
+import TransactionPendingCard from "../nested/TransactionPendingCard";
 
 const Profile = () => {
   const [offersFrom, setOffersFrom] = useState([]);
   const [offersTo, setOffersTo] = useState([]);
+  const [transactionPending, settransactionPending] = useState({
+    header: null,
+    stage: 0,
+  });
   useEffect(() => {
     const localToken = window.localStorage.getItem("tokens");
     const userId = JSON.parse(localToken).userId;
@@ -44,6 +49,10 @@ const Profile = () => {
             key={index}
             toFrom="to"
             DomOnAccept={DomOnAccept}
+            transaction={{
+              state: transactionPending,
+              set: settransactionPending,
+            }}
           ></OfferCard>
         ))}
       </div>
@@ -54,20 +63,51 @@ const Profile = () => {
       <div className="offerFrom">
         <h2 className="offerTitle">Offer from</h2>
         {offers.map((data, index) => (
-          <OfferCard {...data} key={index} toFrom="from"></OfferCard>
+          <OfferCard
+            {...data}
+            key={index}
+            toFrom="from"
+            transaction={{
+              state: transactionPending,
+              set: settransactionPending,
+            }}
+          ></OfferCard>
         ))}
       </div>
     );
   };
 
-  return (
-    <div>
-      <HeaderLogo />
+  if (!transactionPending.stage) {
+    return (
       <div>
-        {generateOfferTo(offersTo)}
-        {generateOfferFrom(offersFrom)}
+        <HeaderLogo />
+        <div>
+          {generateOfferTo(offersTo)}
+          {generateOfferFrom(offersFrom)}
+        </div>
       </div>
-    </div>
+    );
+  }
+
+  const steps = [
+    {
+      step: "Waiting on your confirmation",
+      info: "A metamask popup should have appeared.",
+    },
+    {
+      step: "Updating the blockchain",
+      info: "This may take a while. This transaction changes the state on the blockchain.",
+    },
+    { step: "Updating our database to match the blockchain" },
+    { step: "Returning you to your offers page" },
+  ];
+
+  return (
+    <TransactionPendingCard
+      steps={steps}
+      header={transactionPending.header}
+      transactionPending={transactionPending.stage}
+    />
   );
 };
 

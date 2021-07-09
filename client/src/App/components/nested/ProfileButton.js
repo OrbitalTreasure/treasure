@@ -39,10 +39,10 @@ const ProfileButton = (props) => {
     <div class="dropdown" ref={dropdownRef}>
       <img
         src={img}
-        class={`dropbtn profileLogo ${dropdown ? "greyedOut" : ""}`}
+        className={`dropbtn profileLogo ${dropdown ? "greyedOut" : ""}`}
         onClick={dropdownHandler}
       ></img>
-      <div id="myDropdown" class={`dropdown-content ${dropdown ? "show" : ""}`}>
+      <div id="myDropdown" className={`dropdown-content ${dropdown ? "show" : ""}`}>
         <a href="#" onClick={() => history.push(`/user/${tokens.username}`)}>
           Collection
         </a>
