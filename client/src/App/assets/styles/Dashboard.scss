@@ -1,20 +1,19 @@
 .buyForm {
   width: 90%;
-  max-width: 800px;
+  max-width: 500px;
   border-radius: 15px;
   border: 2px solid black;
   box-sizing: border-box;
   padding-left: 10px;
   padding-right: 15px;
-  font-size: x-large;
+  font-size: 17px;
   text-align: center;
 }
 
 .buyForm:focus {
   outline: none;
-  border: 2px solid rgb(0, 181, 0);
 }
 
 .enticingHeader {
-  font-size: xx-large;
+  font-size: 17px;
 }

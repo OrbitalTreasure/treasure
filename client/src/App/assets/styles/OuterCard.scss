@@ -1,8 +1,11 @@
 .card {
   background-color: #fafaf4 !important;
-  border-radius: 15px;
-  border: 2px solid grey;
-  box-shadow: 3px 3px 3px #ddd;
+  border-radius: 10px;
+  border: 1px solid grey;
+  margin: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  // box-shadow: 3px 3px 3px #ddd;  
 }
 .header {
   margin-left: 15px;

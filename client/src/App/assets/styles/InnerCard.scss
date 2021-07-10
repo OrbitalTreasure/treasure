@@ -1,15 +1,13 @@
+$linkBlue :rgb(0, 0, 55);
+$hoverPurple :rgb(0, 0, 0);
+
 .container {
   color: black;
-  padding: 15px;
-  border-radius: 15px;
-  border: 2px solid grey;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid grey;
   max-width: 500px;
-  background-image: linear-gradient(
-    to bottom right,
-    rgb(210, 203, 255),
-    rgb(255, 218, 255)
-  );
-  margin: auto;
+  margin: auto; 
 }
 
 .heading {
@@ -20,8 +18,8 @@
 }
 
 .heading:hover {
-  color: rgb(228, 0, 0);
-  transform: translateY(-2px);
+  color: $hoverPurple;
+  transform: scale(1.01);
 }
 
 .subHeading {
@@ -41,23 +39,24 @@
 .author {
   padding-left: 8px;
   float: left;
-  color: blue;
+  color: $linkBlue;
   margin-top: 5px;
 }
 
 .author:hover {
   padding-left: 8px;
   float: left;
-  color: red;
+  color: $hoverPurple;
   margin-top: 5px;
+  transform: scale(1.01);
 }
 
 .content {
   position: relative;
   margin: 5px, 1em;
   padding: 0.5em;
-  border: 2px solid grey;
-  border-radius: 1em;
+  border: 1px solid grey;
+  border-radius: 10px;
 }
 
 .bodyText {
@@ -96,5 +95,5 @@
 
 .urlLink:hover {
   text-decoration: underline;
-  color: darkblue;
+  color: $linkBlue;
 }
