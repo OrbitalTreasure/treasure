@@ -2,9 +2,12 @@ import "../../assets/styles/Dashboard.scss";
 import HeaderLogo from "../nested/HeaderLogo";
 import DashboardMasonry from "../nested/DashboardMasonry";
 import { useHistory } from "react-router-dom";
+import HomepageLogo from "../nested/HomepageLogo";
+import { useRef } from "react";
 
 const Dashboard = () => {
   const history = useHistory();
+  const myRef = useRef(null);
   const buyFormSubmit = (e) => {
     if (e.key != "Enter") {
       return;
@@ -48,9 +51,14 @@ const Dashboard = () => {
 
   return (
     <div>
-      <HeaderLogo />
-      {buyForm}
-      <DashboardMasonry />
+      <div>
+        <HomepageLogo scrollTo={myRef}/>
+      </div>
+      <div>
+        <HeaderLogo scrollTo={myRef}/>
+        {buyForm}
+        <DashboardMasonry />
+      </div>
     </div>
   );
 };

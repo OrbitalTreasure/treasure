@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 
-const HeaderLogo = () => {
+const HeaderLogo = (props) => {
   const { tokens } = useContext(TokenContext);
   const history = useHistory();
   const logoImg = (
@@ -27,7 +27,7 @@ const HeaderLogo = () => {
     );
 
   return (
-    <div className="logoContainer">
+    <div className="logoContainer" ref={props.scrollTo}>
       {logoImg}
       {loginProfileButton}
     </div>
