@@ -99,15 +99,18 @@ const Profile = () => {
 
   const steps = [
     {
-      step: "Waiting on your confirmation",
-      info: "A metamask popup should have appeared.",
+      step: "Awaiting Confirmation",
+      info: "A metamask popup should have appeared. Please confirm this transaction and pay the gas fee.",
     },
     {
-      step: "Updating the blockchain",
+      step: "Updating Blockchain",
       info: "This may take a while. This transaction changes the state on the blockchain.",
     },
-    { step: "Updating our database to match the blockchain" },
-    { step: "Returning you to your offers page" },
+    {
+      step: "Updating Database",
+      info: "Updating our database to match the blockchain",
+    },
+    { step: "Completed", info: "Returning you to your offers page" },
   ];
 
   return (
