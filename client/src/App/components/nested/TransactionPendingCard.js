@@ -1,5 +1,3 @@
-// import the progress bar
-import StepProgressBar from "react-step-progress";
 // import the stylesheet
 import "react-step-progress/dist/index.css";
 import styles from "../../assets/styles/ProgressSteps.module.scss";

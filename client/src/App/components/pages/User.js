@@ -1,6 +1,5 @@
 import { useParams } from "react-router";
-import { TokenContext } from "../../contexts/TokenContext";
-import { useContext, useState } from "react";
+import { useState } from "react";
 import HeaderLogo from "../nested/HeaderLogo";
 import axios from "axios";
 import Masonry from "react-masonry-css";
@@ -39,7 +38,7 @@ const User = () => {
   };
 
   const generateCollectionJSX = (collection) => {
-    if (collection.length == 0) {
+    if (collection.length === 0) {
       return (
         <h2 className="noToken">
           It seems like u/{username} does not own any tokens

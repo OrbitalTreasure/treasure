@@ -60,7 +60,7 @@ const InnerCard = (props) => {
     if (isImage(props.imageUrl)) {
       return (
         <div className="content">
-          <img className="bodyImg" src={props.imageUrl} />
+          <img className="bodyImg" src={props.imageUrl} alt="postImage" />
         </div>
       );
     }
@@ -84,7 +84,7 @@ const InnerCard = (props) => {
   const upvote = () => {
     return (
       <div className="upvote">
-        <img className="upvoteImg" src={upvoteImg} />
+        <img className="upvoteImg" src={upvoteImg} alt="upvoteIcon" />
         <p className="upvoteCount">{props.upvotes}</p>
       </div>
     );

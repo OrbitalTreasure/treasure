@@ -9,7 +9,7 @@ const Dashboard = () => {
   const history = useHistory();
   const myRef = useRef(null);
   const buyFormSubmit = (e) => {
-    if (e.key != "Enter") {
+    if (e.key !== "Enter") {
       return;
     }
     const value = e.target.value;
@@ -52,10 +52,10 @@ const Dashboard = () => {
   return (
     <div>
       <div>
-        <HomepageLogo scrollTo={myRef}/>
+        <HomepageLogo scrollTo={myRef} />
       </div>
       <div>
-        <HeaderLogo scrollTo={myRef}/>
+        <HeaderLogo scrollTo={myRef} />
         {buyForm}
         <DashboardMasonry />
       </div>

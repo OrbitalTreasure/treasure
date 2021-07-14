@@ -4,7 +4,6 @@ import ABI from "../../assets/TreasureTokenFactory.json";
 import Web3 from "web3";
 import { TokenContext } from "../../contexts/TokenContext";
 import { useContext, useState } from "react";
-import { useHistory } from "react-router";
 import axios from "axios";
 
 const OfferCard = (props) => {
@@ -12,7 +11,6 @@ const OfferCard = (props) => {
   var [isDeleted, setIsDeleted] = useState(false);
   const web3 = new Web3(window.ethereum);
   const contractAddress = "0x055FBE752E37982476B54321D7BbE0DCA959D980";
-  const history = useHistory();
   const resetTransactionState = () =>
     props.transaction.set({ stage: 0, header: null });
   const setAcceptTransaction = (stage) => {
@@ -118,7 +116,7 @@ const OfferCard = (props) => {
         u/{props.user} {props.status} for <b>${props.price.toFixed(2)}</b>
       </p>
       <InnerCard {...props.post} />
-      {props.toFrom == "from" ? (
+      {props.toFrom === "from" ? (
         <div>
           <input
             type="button"
