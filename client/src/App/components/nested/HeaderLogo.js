@@ -15,10 +15,11 @@ const HeaderLogo = (props) => {
       onClick={() => {
         history.push("/");
       }}
-    ></img>
+      alt="treasureLogo"
+    />
   );
   const loginProfileButton =
-    Object.keys(tokens).length == 0 ? (
+    Object.keys(tokens).length === 0 ? (
       <a href="/login" className="loginProfile">
         Login
       </a>

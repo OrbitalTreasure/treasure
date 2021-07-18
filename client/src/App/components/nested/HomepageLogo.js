@@ -5,7 +5,7 @@ const HomepageLogo = (props) => {
   return (
     <div className="homepageLogoContainer">
       <div className="verticallyAlign">
-        <img className="homepageLogo" src={logo}></img>
+        <img className="homepageLogo" src={logo} alt="homepageLogo"></img>
         <div className="homepageTagline">OWN A PIECE OF HISTORY</div>
         <div className="actionButtons">
           <input

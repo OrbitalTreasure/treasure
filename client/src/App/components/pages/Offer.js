@@ -77,9 +77,8 @@ const Offer = () => {
       })
       .on("error", (e) => {
         setTransactionPending(0);
-        if (e.code == 4001) {
+        if (e.code === 4001) {
           console.log(e.message);
-          console.log("hi");
         } else {
           console.log(e);
         }
@@ -89,18 +88,21 @@ const Offer = () => {
   if (transactionPending) {
     const steps = [
       {
-        step: "Waiting on your confirmation",
-        info: "A metamask popup should have appeared.",
+        step: "Awaiting Confirmation",
+        info: "A metamask popup should have appeared. Please confirm this transaction and pay the gas fee.",
       },
       {
-        step: "Creating the offer on the blockchain",
+        step: "Creating Offer",
         info: "This may take a while. We are uploading the offer data onto the blockchain.",
       },
       {
-        step: "Verifying offer",
-        info: "Our servers are checking that the data uploaded is correct.",
+        step: "Verifying Offer",
+        info: "Our servers are checking that the data uploaded is correct. Please hang on.",
       },
-      { step: "Redirecting you to your profile" },
+      {
+        step: "Completed",
+        info: "Redirecting you to your profile...",
+      },
     ];
 
     return (

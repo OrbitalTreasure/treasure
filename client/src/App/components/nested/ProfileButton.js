@@ -41,18 +41,24 @@ const ProfileButton = (props) => {
         src={img}
         className={`dropbtn profileLogo ${dropdown ? "greyedOut" : ""}`}
         onClick={dropdownHandler}
+        alt="profileImg"
       ></img>
-      <div id="myDropdown" className={`dropdown-content ${dropdown ? "show" : ""}`}>
+      <div
+        id="myDropdown"
+        className={`dropdown-content ${dropdown ? "show" : ""}`}
+      >
         <a href="#" onClick={() => history.push(`/user/${tokens.username}`)}>
           Collection
         </a>
-        <a href="#" onClick={() => history.push("/offers")}>Offers</a>
+        <a href="#" onClick={() => history.push("/offers")}>
+          Offers
+        </a>
         <a
           href="#"
           onClick={() => {
             localStorage.clear();
             setTokens({});
-            history.push("/")
+            history.push("/");
           }}
         >
           Logout

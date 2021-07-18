@@ -21,14 +21,14 @@ function App() {
 
   const getLoginFromLocalStorage = () => {
     const localToken = window.localStorage.getItem("tokens");
-    if (localToken != undefined) {
+    if (localToken !== undefined) {
       setTokens(JSON.parse(localToken));
     }
   };
 
   const getMetamaskFromLocalStorage = () => {
     const localMetamask = window.localStorage.getItem("metamask");
-    if (localMetamask != undefined) {
+    if (localMetamask !== undefined) {
       setMetamaskAccount(localMetamask);
     }
   };

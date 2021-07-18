@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { TokenContext } from "../../contexts/TokenContext";
 import axios from "axios";
-import { Redirect, useHistory } from "react-router";
+import { useHistory } from "react-router";
 
 const AuthCallback = (props) => {
   const url = new URLSearchParams(window.location.search);
@@ -25,9 +25,7 @@ const AuthCallback = (props) => {
 
   const handleAuthToken = (authCode, error, state) => {
     if (error) {
-      return history.push(
-        `/login?error=${error}`
-        );
+      return history.push(`/login?error=${error}`);
     }
     getAccessToken(authCode, state);
   };

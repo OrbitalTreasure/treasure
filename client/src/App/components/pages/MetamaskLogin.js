@@ -1,6 +1,5 @@
 import HeaderLogo from "../nested/HeaderLogo";
 import { useEffect, useState, useContext } from "react";
-import ABI from "../../assets/TreasureTokenFactory.json";
 import { TokenContext } from "../../contexts/TokenContext";
 import { useHistory } from "react-router-dom";
 import axios from "axios";

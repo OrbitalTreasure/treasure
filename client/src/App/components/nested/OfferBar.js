@@ -42,7 +42,7 @@ const OfferBar = (props) => {
   };
 
   const keyUpHandler = (e) => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       makeOffer(e);
     }
   };
