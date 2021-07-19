@@ -1,5 +1,5 @@
-$linkBlue :rgb(0, 0, 55);
-$hoverPurple :rgb(0, 0, 0);
+$linkBlue: rgb(0, 0, 55);
+$hoverPurple: rgb(81, 29, 201);
 
 .container {
   color: black;
@@ -7,7 +7,7 @@ $hoverPurple :rgb(0, 0, 0);
   border-radius: 10px;
   border: 1px solid grey;
   max-width: 500px;
-  margin: auto; 
+  margin: auto;
 }
 
 .heading {
@@ -20,6 +20,7 @@ $hoverPurple :rgb(0, 0, 0);
 .heading:hover {
   color: $hoverPurple;
   transform: scale(1.01);
+  transition-duration: 0.2s;
 }
 
 .subHeading {
@@ -41,6 +42,7 @@ $hoverPurple :rgb(0, 0, 0);
   float: left;
   color: $linkBlue;
   margin-top: 5px;
+  font-weight: 200;
 }
 
 .author:hover {
@@ -91,6 +93,7 @@ $hoverPurple :rgb(0, 0, 0);
 
 .urlLink {
   cursor: pointer;
+  text-decoration: none;
 }
 
 .urlLink:hover {

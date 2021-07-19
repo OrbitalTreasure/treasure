@@ -93,7 +93,7 @@ const Offer = () => {
       },
       {
         step: "Creating Offer",
-        info: "This may take a while. We are uploading the offer data onto the blockchain.",
+        info: "This may take a while. We are uploading the offer data onto the blockchain. Depending on the traffic and number of miners, transactions like this could take several minutes. Please be patient",
       },
       {
         step: "Verifying Offer",

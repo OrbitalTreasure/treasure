@@ -2,7 +2,6 @@ import "../../assets/styles/Dashboard.scss";
 import HeaderLogo from "../nested/HeaderLogo";
 import DashboardMasonry from "../nested/DashboardMasonry";
 import { useHistory } from "react-router-dom";
-import HomepageLogo from "../nested/HomepageLogo";
 import { useRef } from "react";
 
 const Dashboard = () => {
@@ -51,9 +50,6 @@ const Dashboard = () => {
 
   return (
     <div>
-      <div>
-        <HomepageLogo scrollTo={myRef} />
-      </div>
       <div>
         <HeaderLogo scrollTo={myRef} />
         {buyForm}
