@@ -26,6 +26,7 @@ $hoverPurple: rgb(81, 29, 201);
 .subHeading {
   display: flex;
   font-size: small;
+  align-items: baseline;
 }
 
 .subreddit {
@@ -86,7 +87,7 @@ $hoverPurple: rgb(81, 29, 201);
 
 .upvote {
   display: flex;
-  align-items: left;
+  align-items: baseline;
   justify-content: left;
   margin: 10px 15px 0px;
 }
