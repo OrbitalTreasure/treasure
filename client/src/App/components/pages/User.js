@@ -1,5 +1,5 @@
 import { useParams } from "react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HeaderLogo from "../nested/HeaderLogo";
 import axios from "axios";
 import Masonry from "react-masonry-css";
@@ -12,7 +12,6 @@ const tokenCardStyle = {
 const User = () => {
   const { username } = useParams();
   const [collection, setCollection] = useState([]);
-  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
 
   const getCollection = (username) => {
@@ -20,8 +19,6 @@ const User = () => {
       .get(`/api/v1/reddit/user/${username}`)
       .then((data) => {
         const userDetails = data.data;
-        setUserId(userDetails.id);
-        console.log(userDetails.id);
         return userDetails.id;
       })
       .then((userId) => {
@@ -69,9 +66,9 @@ const User = () => {
     );
   };
 
-  useState(() => {
+  useEffect(() => {
     getCollection(username);
-  }, []);
+  }, [setCollection, username]);
 
   return (
     <div>
