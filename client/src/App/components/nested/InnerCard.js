@@ -1,22 +1,18 @@
 import upvoteImg from "../../assets/images/upvote.png";
 import "../../assets/styles/InnerCard.scss";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 
 const InnerCard = (props) => {
+  const history = useHistory();
   const redirectToPost = (postId) => (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    window.location.href = `/post/${postId}`;
+    e.stopPropagation()
+    history.push(`/post/${postId}`);
   };
 
-  const truncate = (str, maxLength, isTruncate) => {
-    if (!isTruncate) {
-      return str;
-    }
-    if (str.length > maxLength) {
-      return str.slice(0, maxLength) + "...";
-    }
-    return str;
+  const decodeHTML = (html) => {
+    const text = document.createElement("textarea");
+    text.innerHTML = html.slice(21, html.length -20);
+    return text.value;
   };
 
   const heading = () => (
@@ -51,9 +47,7 @@ const InnerCard = (props) => {
     if (props.selftext) {
       return (
         <div className="content">
-          <div className="bodyText">
-            {truncate(props?.selftext, 1000, props.isTruncate)}
-          </div>
+        <div dangerouslySetInnerHTML={{__html:decodeHTML(props.selftext)}}></div>
         </div>
       );
     }
@@ -96,7 +90,6 @@ const InnerCard = (props) => {
       {subheading()}
       {content()}
       {upvote()}
-      {/* <input type="button" onClick={() => {console.log(props.imageURL)}}></input> */}
     </div>
   );
 };

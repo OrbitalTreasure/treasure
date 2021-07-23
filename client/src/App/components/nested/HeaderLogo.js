@@ -19,7 +19,7 @@ const HeaderLogo = (props) => {
     />
   );
   const loginProfileButton =
-    Object.keys(tokens).length === 0 ? (
+    !tokens || Object.keys(tokens).length === 0 ? (
       <a href="/login" className="loginProfile">
         Login
       </a>
