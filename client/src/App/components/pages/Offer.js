@@ -45,6 +45,29 @@ const Offer = () => {
     convertToWei();
   }, []);
 
+  const handleReceipt = (receiptObject, OfferDetails) => {
+    axios.post("/api/v1/offers/handleReceipt", {receiptObject, OfferDetails});
+  };
+
+  const checkCompletion = (transactionHash, timeout, OfferDetails, foo) => {
+    if (timeout < 0) {
+      throw Error("it took too long bro");
+    }
+
+    setTimeout(() => {
+      axios
+        .get(`/api/v1/blockchain/transactionComplete/${transactionHash}`)
+        .then((res) => res.data)
+        .then((body) => {
+          if (body.status) {
+            handleReceipt(body.receipt, OfferDetails);
+            return foo();
+          }
+          checkCompletion(transactionHash, timeout - 5, OfferDetails,foo);
+        });
+    }, 5000);
+  };
+
   const onConfirm = async () => {
     window.web3 = new Web3(window.ethereum);
     var contract = await new window.web3.eth.Contract(ABI.abi, contractAddress);
@@ -70,9 +93,16 @@ const Offer = () => {
             username: tokens.username,
             userId: tokens.userId,
           })
-          .then((e) => {
-            setTransactionPending(4);
-            history.push("/offers");
+          .then((res) => {
+            // setTransactionPending(4);
+            // history.push("/offers");
+            return res.data;
+          })
+          .then((data) => {
+            checkCompletion(data.hash, 180, data.OfferDetails, () => {
+              setTransactionPending(4);
+              history.push("/offers");
+            });
           });
       })
       .on("error", (e) => {

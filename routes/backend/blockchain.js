@@ -41,7 +41,7 @@ const getUserAddress = (userId) => {
   return address;
 };
 
-const verifyOffer = async (offerId, tokenUri, sellerId) => {
+const verifyOffer = async (offerId, tokenUri, sellerId, foo) => {
   const nonce = await web3.eth.getTransactionCount(
     METAMASK_PUBLIC_KEY,
     "latest"
@@ -66,12 +66,24 @@ const verifyOffer = async (offerId, tokenUri, sellerId) => {
   );
 
   return signPromise.then((signedTx) => {
-    return web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+    return web3.eth
+      .sendSignedTransaction(signedTx.rawTransaction)
+      .on("transactionHash", foo);
   });
+};
+
+const checkTransaction = (hash) => {
+  return web3.eth.getTransactionReceipt(hash);
 };
 
 const decodeLogs = (inputs, hexString, topics) => {
   return web3.eth.abi.decodeLog(inputs, hexString, topics);
 };
 
-module.exports = { mapUser, getUserAddress, verifyOffer, decodeLogs };
+module.exports = {
+  mapUser,
+  getUserAddress,
+  verifyOffer,
+  decodeLogs,
+  checkTransaction,
+};

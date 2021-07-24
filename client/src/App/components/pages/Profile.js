@@ -39,6 +39,11 @@ const Profile = () => {
     setOffersTo(offersTo.filter((e) => e.post.id !== postId));
   };
 
+  const DomOnReject = (offerId) => {
+    setOffersFrom(offersFrom.filter((e) => e.offerId !== offerId));
+    setOffersTo(offersTo.filter((e) => e.offerId !== offerId));
+  };
+
   const generateOfferTo = (offers) => {
     return (
       <div className="offerTo">
@@ -52,6 +57,7 @@ const Profile = () => {
               key={index}
               toFrom="to"
               DomOnAccept={DomOnAccept}
+              DomOnAccept={DomOnReject}
               transaction={{
                 state: transactionPending,
                 set: settransactionPending,
@@ -74,6 +80,7 @@ const Profile = () => {
               {...data}
               key={index}
               toFrom="from"
+              DomOnAccept={DomOnReject}
               transaction={{
                 state: transactionPending,
                 set: settransactionPending,
