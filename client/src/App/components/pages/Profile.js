@@ -57,7 +57,7 @@ const Profile = () => {
               key={index}
               toFrom="to"
               DomOnAccept={DomOnAccept}
-              DomOnAccept={DomOnReject}
+              DomOnReject={DomOnReject}
               transaction={{
                 state: transactionPending,
                 set: settransactionPending,
@@ -80,7 +80,7 @@ const Profile = () => {
               {...data}
               key={index}
               toFrom="from"
-              DomOnAccept={DomOnReject}
+              DomOnReject={DomOnReject}
               transaction={{
                 state: transactionPending,
                 set: settransactionPending,
