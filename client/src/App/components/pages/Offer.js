@@ -43,10 +43,10 @@ const Offer = () => {
   useEffect(() => {
     fetchRedditPostInfo(postId);
     convertToWei();
-  }, []);
+  }, [postId]);
 
   const handleReceipt = (receiptObject, OfferDetails) => {
-    axios.post("/api/v1/offers/handleReceipt", {receiptObject, OfferDetails});
+    axios.post("/api/v1/offers/handleReceipt", { receiptObject, OfferDetails });
   };
 
   const checkCompletion = (transactionHash, timeout, OfferDetails, foo) => {
@@ -63,7 +63,7 @@ const Offer = () => {
             handleReceipt(body.receipt, OfferDetails);
             return foo();
           }
-          checkCompletion(transactionHash, timeout - 5, OfferDetails,foo);
+          checkCompletion(transactionHash, timeout - 5, OfferDetails, foo);
         });
     }, 5000);
   };
@@ -150,20 +150,28 @@ const Offer = () => {
       <div className="postColumn">
         <InnerCard {...redditPost} />
       </div>
-      <p>
+      <p className="confirmationText">
         Hello {tokens.username}, are you sure you want to buy this post for{" "}
         {<b>SGD {offerSGD}</b>} ({(offer / 10 ** 18).toFixed(6)} ethereum)
       </p>
       {transactionPending ? (
-        <p>Please wait while your transaction is loading</p>
+        <p className="confirmationText">
+          Please wait while your transaction is loading
+        </p>
       ) : (
-        <div>
+        <div className="confirmationContainer">
           <input
             type="button"
             value="Back"
             onClick={() => history.push("/")}
+            className="buttons backButton"
           ></input>
-          <input type="button" value="Confirm" onClick={onConfirm}></input>
+          <input
+            type="button"
+            value="Confirm"
+            className="buttons confirmButton"
+            onClick={onConfirm}
+          ></input>
         </div>
       )}
     </div>

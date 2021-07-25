@@ -1,7 +1,12 @@
 import "./App.css";
 import { useState, useEffect } from "react";
 import Dashboard from "./components/pages/Dashboard";
-import { BrowserRouter as Router, Switch, Route , Redirect} from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
 import LoadDb from "./components/pages/LoadDb";
 import User from "./components/pages/User";
 import Post from "./components/pages/Post";
@@ -53,7 +58,7 @@ function App() {
           <Route exact path="/tools/loadDb" component={LoadDb} />
           <Route path="/user/:username" component={User} />
           <Route path="/post/:postId" component={Post} />
-          <Redirect from="/u/:userId" to="/user/:userId"/>
+          <Redirect from="/u/:userId" to="/user/:userId" />
           <Route exact path="*" component={NotFound} />
         </Switch>
       </TokenContext.Provider>

@@ -6,10 +6,13 @@ const OuterCard = (props) => {
   const history = useHistory();
 
   return (
-    <div className="card" onClick ={() => history.push(`post/${props.post.id}`)}>
+    <div className="card" onClick={() => history.push(`post/${props.post.id}`)}>
       <p className="header">
         <span
-          onClick={() => history.push(`/user/${props.user}`)}
+          onClick={(e) => {
+            e.stopPropagation();
+            history.push(`/user/${props.user}`);
+          }}
           className="urlLink"
         >
           u/{props.user}
