@@ -22,7 +22,7 @@ const metamaskAtNetwork = async (networkName) => {
     kovan: 42,
   };
   const chainId = await window.ethereum.request({ method: "eth_chainId" });
-  return chainId == chainNameToId[networkName];
+  return chainId === chainNameToId[networkName];
 };
 
 module.exports = {

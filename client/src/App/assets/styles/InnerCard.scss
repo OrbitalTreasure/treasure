@@ -8,6 +8,7 @@ $hoverPurple: rgb(81, 29, 201);
   border: 1px solid grey;
   max-width: 500px;
   margin: auto;
+  background-color: white;
 }
 
 .heading {
@@ -58,8 +59,7 @@ $hoverPurple: rgb(81, 29, 201);
   position: relative;
   margin: 5px, 1em;
   padding: 0.5em;
-  border: 1px solid grey;
-  border-radius: 10px;
+  border: none;
 }
 
 .bodyText {

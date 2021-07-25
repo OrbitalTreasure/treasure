@@ -91,7 +91,7 @@ const OfferCard = (props) => {
             setRejectTransaction(3);
             axios.delete(`/api/v1/offers/${props.offerId}`).then((response) => {
               resetTransactionState();
-              props.DomOnReject(props.offerId)
+              props.DomOnReject(props.offerId);
             });
           })
           .on("error", (e) => {
@@ -140,12 +140,6 @@ const OfferCard = (props) => {
           ></input>
         </div>
       )}
-      <input
-        type="button"
-        onClick={() => {
-          setIsDeleted(true);
-        }}
-      ></input>
     </div>
   );
 };
