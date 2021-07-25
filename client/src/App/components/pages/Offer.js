@@ -8,6 +8,7 @@ import Web3 from "web3";
 import ABI from "../../assets/TreasureTokenFactory.json";
 import { convert } from "current-currency";
 import "../../assets/styles/Offer.scss";
+import TransactionPendingCard from "../nested/TransactionPendingCard";
 
 const Offer = () => {
   const { tokens, metamaskAccount } = useContext(TokenContext);
@@ -44,6 +45,29 @@ const Offer = () => {
     convertToWei();
   }, []);
 
+  const handleReceipt = (receiptObject, OfferDetails) => {
+    axios.post("/api/v1/offers/handleReceipt", {receiptObject, OfferDetails});
+  };
+
+  const checkCompletion = (transactionHash, timeout, OfferDetails, foo) => {
+    if (timeout < 0) {
+      throw Error("it took too long bro");
+    }
+
+    setTimeout(() => {
+      axios
+        .get(`/api/v1/blockchain/transactionComplete/${transactionHash}`)
+        .then((res) => res.data)
+        .then((body) => {
+          if (body.status) {
+            handleReceipt(body.receipt, OfferDetails);
+            return foo();
+          }
+          checkCompletion(transactionHash, timeout - 5, OfferDetails,foo);
+        });
+    }, 5000);
+  };
+
   const onConfirm = async () => {
     window.web3 = new Web3(window.ethereum);
     var contract = await new window.web3.eth.Contract(ABI.abi, contractAddress);
@@ -69,16 +93,22 @@ const Offer = () => {
             username: tokens.username,
             userId: tokens.userId,
           })
-          .then((e) => {
-            setTransactionPending(4);
-            history.push("/offers");
+          .then((res) => {
+            // setTransactionPending(4);
+            // history.push("/offers");
+            return res.data;
+          })
+          .then((data) => {
+            checkCompletion(data.hash, 180, data.OfferDetails, () => {
+              setTransactionPending(4);
+              history.push("/offers");
+            });
           });
       })
       .on("error", (e) => {
         setTransactionPending(0);
-        if (e.code == 4001) {
+        if (e.code === 4001) {
           console.log(e.message);
-          console.log("hi");
         } else {
           console.log(e);
         }
@@ -88,43 +118,29 @@ const Offer = () => {
   if (transactionPending) {
     const steps = [
       {
-        step: "Waiting on your confirmation",
-        info: "A metamask popup should have appeared.",
+        step: "Awaiting Confirmation",
+        info: "A metamask popup should have appeared. Please confirm this transaction and pay the gas fee.",
       },
       {
-        step: "Creating the offer on the blockchain",
-        info: "This may take a while. We are uploading the offer data onto the blockchain.",
+        step: "Creating Offer",
+        info: "This may take a while. We are uploading the offer data onto the blockchain. Depending on the traffic and number of miners, transactions like this could take several minutes. Please be patient",
       },
       {
-        step: "Verifying offer",
-        info: "Our servers are checking that the data uploaded is correct.",
+        step: "Verifying Offer",
+        info: "Our servers are checking that the data uploaded is correct. Please hang on.",
       },
-      { step: "Redirecting you to your profile" },
+      {
+        step: "Completed",
+        info: "Redirecting you to your profile...",
+      },
     ];
 
     return (
-      <div className="container" style={{ marginTop: "50px" }}>
-        <h2>Your offer has been sent</h2>
-
-        {steps.map((e, index) => {
-          return (
-            <div>
-              <h3
-                className={
-                  transactionPending == index + 1
-                    ? "loadingStepsActive"
-                    : "loadingStepsInactive"
-                }
-              >
-                Step {index + 1}: {e.step}
-              </h3>
-              {transactionPending == index + 1 && (
-                <p className="info">{e.info}</p>
-              )}
-            </div>
-          );
-        })}
-      </div>
+      <TransactionPendingCard
+        header="Your offer has been sent"
+        steps={steps}
+        transactionPending={transactionPending}
+      />
     );
   }
 

@@ -2,11 +2,13 @@ import "../../assets/styles/Dashboard.scss";
 import HeaderLogo from "../nested/HeaderLogo";
 import DashboardMasonry from "../nested/DashboardMasonry";
 import { useHistory } from "react-router-dom";
+import { useRef } from "react";
 
 const Dashboard = () => {
   const history = useHistory();
+  const myRef = useRef(null);
   const buyFormSubmit = (e) => {
-    if (e.key != "Enter") {
+    if (e.key !== "Enter") {
       return;
     }
     const value = e.target.value;
@@ -35,17 +37,24 @@ const Dashboard = () => {
   const buyForm = (
     <div>
       <p>
-        <b>Want to own a RedditPost?</b>
+        <b className="enticingHeader">Want to own a RedditPost?</b>
       </p>
-      <input type="text" className="buyForm" onKeyUp={buyFormSubmit} placeholder="https://www.reddit.com/user/El-Ricardo/comments/odf8ru/"></input>
+      <input
+        type="text"
+        className="buyForm"
+        onKeyUp={buyFormSubmit}
+        placeholder="Paste reddit post url here!"
+      ></input>
     </div>
   );
 
   return (
     <div>
-      <HeaderLogo />
-      {buyForm}
-      <DashboardMasonry />
+      <div>
+        <HeaderLogo scrollTo={myRef} />
+        {buyForm}
+        <DashboardMasonry />
+      </div>
     </div>
   );
 };

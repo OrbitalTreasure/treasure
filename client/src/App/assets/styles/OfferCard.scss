@@ -1,22 +1,39 @@
-.card {
-  background-color: #F0F0F0;
-  border-radius: 20px;
-  border: 2px solid grey;
-  margin: 15px;
-  padding:10px;
-  box-sizing: border-box;
-}
-
 .offerTo {
   max-width: 400px;
-  display:inline-block;
+  display: inline-block;
   vertical-align: top;
 }
 .offerFrom {
   max-width: 400px;
-  display:inline-block;
+  display: inline-block;
 }
 
 .offerTitle {
-  width:400px;
+  width: 400px;
+}
+
+.option {
+  margin-top: 5px;
+  font-size: large;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 3px;
+}
+
+.accept {
+  background: #aaffae;
+  border: 1px solid #15ff1f;
+  padding:7px 20px;
+}
+
+.rescind {
+  background: #ffaaaa;
+  border: 1px solid #ff1515;
+  padding:7px 20px;
+}
+
+.reject {
+  background: #ffaaaa;
+  border: 1px solid #ff1515;
+  padding:7px 20px;
 }

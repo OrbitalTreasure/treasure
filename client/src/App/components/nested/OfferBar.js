@@ -42,7 +42,7 @@ const OfferBar = (props) => {
   };
 
   const keyUpHandler = (e) => {
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       makeOffer(e);
     }
   };
@@ -58,8 +58,11 @@ const OfferBar = (props) => {
         prefix={prefix}
         onValueChange={handleOnValueChange}
         onKeyUp={keyUpHandler}
+        className="dollarForm"
       />
-      <button onClick={makeOffer}>Offer</button>
+      <button onClick={makeOffer} className="offerButton">
+        Offer
+      </button>
       <p>{errorMessage}</p>
     </div>
   );

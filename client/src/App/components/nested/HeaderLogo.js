@@ -5,7 +5,7 @@ import { useContext } from "react";
 import { useHistory } from "react-router-dom";
 import ProfileButton from "./ProfileButton";
 
-const HeaderLogo = () => {
+const HeaderLogo = (props) => {
   const { tokens } = useContext(TokenContext);
   const history = useHistory();
   const logoImg = (
@@ -15,10 +15,11 @@ const HeaderLogo = () => {
       onClick={() => {
         history.push("/");
       }}
-    ></img>
+      alt="treasureLogo"
+    />
   );
   const loginProfileButton =
-    Object.keys(tokens).length == 0 ? (
+    !tokens || Object.keys(tokens).length === 0 ? (
       <a href="/login" className="loginProfile">
         Login
       </a>
@@ -27,7 +28,7 @@ const HeaderLogo = () => {
     );
 
   return (
-    <div className="logoContainer">
+    <div className="logoContainer" ref={props.scrollTo}>
       {logoImg}
       {loginProfileButton}
     </div>

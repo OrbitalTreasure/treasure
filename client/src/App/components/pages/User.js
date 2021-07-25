@@ -1,15 +1,17 @@
 import { useParams } from "react-router";
-import { TokenContext } from "../../contexts/TokenContext";
-import { useContext, useState } from "react";
+import { useState, useEffect } from "react";
 import HeaderLogo from "../nested/HeaderLogo";
 import axios from "axios";
 import Masonry from "react-masonry-css";
 import InnerCard from "../nested/InnerCard";
 
+const tokenCardStyle = {
+  padding: "10px",
+};
+
 const User = () => {
   const { username } = useParams();
   const [collection, setCollection] = useState([]);
-  const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
 
   const getCollection = (username) => {
@@ -17,8 +19,6 @@ const User = () => {
       .get(`/api/v1/reddit/user/${username}`)
       .then((data) => {
         const userDetails = data.data;
-        setUserId(userDetails.id);
-        console.log(userDetails.id);
         return userDetails.id;
       })
       .then((userId) => {
@@ -35,10 +35,12 @@ const User = () => {
   };
 
   const generateCollectionJSX = (collection) => {
-    if (collection.length == 0) {
-      <h2 className="noToken">
-        It seems like u/{userId} does not own any tokens
-      </h2>;
+    if (collection.length === 0) {
+      return (
+        <h2 className="noToken">
+          It seems like u/{username} does not own any tokens
+        </h2>
+      );
     }
 
     return (
@@ -53,16 +55,20 @@ const User = () => {
           columnClassName="my-masonry-grid_column"
         >
           {collection.map((token) => {
-            return <InnerCard {...token} />;
+            return (
+              <div className="tokenCard" style={tokenCardStyle}>
+                <InnerCard {...token} />
+              </div>
+            );
           })}
         </Masonry>
       </div>
     );
   };
 
-  useState(() => {
+  useEffect(() => {
     getCollection(username);
-  }, []);
+  }, [setCollection, username]);
 
   return (
     <div>

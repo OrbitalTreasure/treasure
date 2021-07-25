@@ -20,6 +20,7 @@ const {
   getUserAddress,
   verifyOffer,
   decodeLogs,
+  checkTransaction,
 } = require("./blockchain.js");
 const { pinJSONToIPFS } = require("./ipfs.js");
 
@@ -235,6 +236,7 @@ router.get("/offers/for/:postId", (req, res) => {
 
 router.post("/tokens/mint/:offerId", (req, res) => {
   const offerId = req.params.offerId;
+  tokenId = req.body.tokenId;
   db.collection("Offers")
     .where("offerId", "==", parseInt(offerId))
     .get()
@@ -248,6 +250,7 @@ router.post("/tokens/mint/:offerId", (req, res) => {
         ...offers[0].post,
         mintedAt: offers[0].createdAt,
         ownerId: offers[0].userId,
+        tokenId,
       };
       return [db.collection("Tokens").add(token), id];
     })
@@ -353,48 +356,71 @@ router.post("/blockchain/verify", (req, res) => {
         post: PostDetails,
         createdAt: Date.parse(ipfsDetails.Timestamp),
       };
-      verifyOffer(offerId, PostDetails.ipfsHash, PostDetails.authorId)
-        .then((receipt) => {
-          const decodedEvent = decodeLogs(
-            [
-              {
-                indexed: false,
-                internalType: "uint256",
-                name: "offerId",
-                type: "uint256",
-              },
-              {
-                indexed: false,
-                internalType: "string",
-                name: "tokenUri",
-                type: "string",
-              },
-              {
-                indexed: false,
-                internalType: "string",
-                name: "sellerid",
-                type: "string",
-              },
-            ],
-            receipt.logs[0].data,
-            receipt.logs[0].topics
-          );
-          const finalOffer = {
-            ...OfferDetails,
-            sellerId: decodedEvent.sellerid,
-            offerId: parseInt(decodedEvent.offerId),
-          };
-          db.collection("Offers")
-            .add(finalOffer)
-            .then((e) => res.json(finalOffer))
-            .catch((e) => res.status(400).json(e));
-        })
-        .catch((e) => {
-          console.log(e);
-          res.status(400).json(e);
-        });
+      console.log("Beginning blockchain verify");
+      verifyOffer(
+        offerId,
+        PostDetails.ipfsHash,
+        PostDetails.authorId,
+        (hash) => {
+          res.json({hash, OfferDetails});
+        }
+      ).catch((e) => {
+        console.log(e);
+        res.status(400).json(e);
+      });
     }
   );
+});
+
+router.get("/blockchain/transactionComplete/:hash", (req, res) => {
+  const hash = req.params.hash;
+  checkTransaction(hash)
+    .then((receipt) => {
+      console.log(hash);
+      const status = receipt !== null;
+      res.json({ status, receipt });
+    })
+    .catch((e) => {
+      res.status(400).json(e);
+    });
+});
+
+router.post("/offers/handleReceipt", (req, res) => {
+  const receipt = req.body.receiptObject;
+  const OfferDetails = req.body.OfferDetails;
+  const decodedEvent = decodeLogs(
+    [
+      {
+        indexed: false,
+        internalType: "uint256",
+        name: "offerId",
+        type: "uint256",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "tokenUri",
+        type: "string",
+      },
+      {
+        indexed: false,
+        internalType: "string",
+        name: "sellerid",
+        type: "string",
+      },
+    ],
+    receipt.logs[0].data,
+    receipt.logs[0].topics
+  );
+  const finalOffer = {
+    ...OfferDetails,
+    sellerId: decodedEvent.sellerid,
+    offerId: parseInt(decodedEvent.offerId),
+  };
+  db.collection("Offers")
+    .add(finalOffer)
+    .then((e) => res.json(finalOffer))
+    .catch((e) => res.status(400).json(e));
 });
 
 router.delete("/offers/:offerId", (req, res) => {

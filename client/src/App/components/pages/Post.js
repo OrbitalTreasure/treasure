@@ -31,21 +31,23 @@ const Post = () => {
   const postFound = () => (
     <div className="postColumn">
       <InnerCard {...redditPost} />
-      <p>Want to own this post? Give u/ an offer!</p>
+      <p>Want to own this post? Give an offer!</p>
       <OfferBar postId={postId} />
       <PreviousOwners />
     </div>
   );
 
   const postNotFound = () => {
-    const requestErrors = errors.errors
-    return <h1>{requestErrors[0]}</h1>
+    const requestErrors = errors.errors;
+    return <h1>{requestErrors[0]}</h1>;
   };
 
   const loadingJSX = () => {
-    return <div>
-      <h1>Loading post data...</h1>
-    </div>;
+    return (
+      <div>
+        <h1>Loading post data...</h1>
+      </div>
+    );
   };
 
   useEffect(() => {

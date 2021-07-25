@@ -25,7 +25,7 @@ const DashboardMasonry = () => {
 
   return (
     <div>
-      <h2>Recent Transactions</h2>
+      <h2>Recent Offers</h2>
       <div className="masonry-container">
         <Masonry
           breakpointCols={{

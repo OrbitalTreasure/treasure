@@ -1,10 +1,15 @@
 import HeaderLogo from "../nested/HeaderLogo";
 import { useEffect, useState, useContext } from "react";
-import ABI from "../../assets/TreasureTokenFactory.json";
 import { TokenContext } from "../../contexts/TokenContext";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-const Web3 = require("web3");
+import "../../assets/styles/MetamaskLogin.scss";
+import {
+  hasMetamask,
+  hasMetamaskPermissions,
+  metamaskLoggedIn,
+  metamaskAtNetwork,
+} from "../../assets/utility/metamaskUtil";
 
 const MetamaskLogin = (props) => {
   var [isMetamaskInstalled, setIsMetamaskInstalled] = useState(false);
@@ -46,27 +51,30 @@ const MetamaskLogin = (props) => {
   return (
     <div>
       <HeaderLogo />
-      <div className="container">
-        <h2>Please Connect to your MetaMask</h2>
-        <p>
-          In order to interact with an offer, you need to have a MetaMask wallet
-          attached to your account.
-        </p>
-        {isMetamaskInstalled ? (
-          <input
-            value="Link your Metamask"
-            type="button"
-            onClick={linkMetamask}
-          ></input>
-        ) : (
-          <p>Metamask is not installed</p>
-        )}
-        <p>Click here to learn more about MetaMask and why we use it.</p>
-        <input
-          type="button"
-          value="click"
-          onClick={() => console.log(props)}
-        ></input>
+      <div className="metamaskColumn">
+        <div className="container">
+          <h2>Please Connect to your MetaMask</h2>
+          <p>
+            In order to interact with an offer, you need to have a MetaMask
+            wallet attached to your account.
+          </p>
+          {isMetamaskInstalled ? (
+            <input
+              value="Link your Metamask"
+              type="button"
+              onClick={linkMetamask}
+              className="metamaskButton"
+            ></input>
+          ) : (
+            <p>Metamask is not installed</p>
+          )}
+          <p
+            onClick={() => window.open("https://metamask.io/")}
+            className="urlLink"
+          >
+            Click here to learn more about MetaMask and why we use it.
+          </p>
+        </div>
       </div>
     </div>
   );

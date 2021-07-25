@@ -1,0 +1,19 @@
+.metamaskColumn {
+  margin: 15px;
+}
+
+.metamaskButton {
+  height: 2em;
+  font-size: large;
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-left: 10px;
+  box-sizing: border-box;
+  background-color: #fafaf4;
+  border: 1px solid grey;
+  border-radius: 5px;
+}
+
+.metamaskButton:hover {
+  box-shadow: 1px 1px 1px;
+}

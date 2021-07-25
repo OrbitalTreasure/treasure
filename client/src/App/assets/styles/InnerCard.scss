@@ -1,9 +1,12 @@
+$linkBlue: rgb(0, 0, 55);
+$hoverPurple: rgb(81, 29, 201);
+
 .container {
-  padding: 15px;
-  border-radius: 15px;
-  border: 2px solid grey;
+  color: black;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid grey;
   max-width: 500px;
-  background-color: white;
   margin: auto;
 }
 
@@ -11,11 +14,19 @@
   margin: 0 0;
   text-align: left;
   margin-left: 15px;
+  transition: transform 250ms;
+}
+
+.heading:hover {
+  color: $hoverPurple;
+  transform: scale(1.01);
+  transition-duration: 0.2s;
 }
 
 .subHeading {
   display: flex;
   font-size: small;
+  align-items: baseline;
 }
 
 .subreddit {
@@ -30,16 +41,25 @@
 .author {
   padding-left: 8px;
   float: left;
-  color: grey;
+  color: $linkBlue;
   margin-top: 5px;
+  font-weight: 200;
+}
+
+.author:hover {
+  padding-left: 8px;
+  float: left;
+  color: $hoverPurple;
+  margin-top: 5px;
+  transform: scale(1.01);
 }
 
 .content {
   position: relative;
   margin: 5px, 1em;
   padding: 0.5em;
-  border: 2px solid grey;
-  border-radius: 1em;
+  border: 1px solid grey;
+  border-radius: 10px;
 }
 
 .bodyText {
@@ -62,12 +82,22 @@
 .upvoteCount {
   justify-content: left;
   font-size: 15px;
-  margin:0px 7px;
+  margin: 0px 7px;
 }
 
 .upvote {
   display: flex;
-  align-items: left;
+  align-items: baseline;
   justify-content: left;
   margin: 10px 15px 0px;
+}
+
+.urlLink {
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.urlLink:hover {
+  text-decoration: underline;
+  color: $linkBlue;
 }

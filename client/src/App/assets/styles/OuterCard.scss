@@ -1,12 +1,21 @@
 .card {
-  background-color: #dfdfdf;
-  border-radius: 15px;
-  border: 2px solid grey;
-  box-shadow: 3px 3px 3px #DDD;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid grey;
+  margin: 15px;
+  padding: 10px;
+  box-sizing: border-box;
+  // box-shadow: 3px 3px 3px #ddd;
 }
+
+.card:hover {
+  box-shadow: 1px 1px 0.5px black;
+}
+
 .header {
   margin-left: 15px;
   margin-top: 0px;
   margin-bottom: 15px;
   text-align: left;
+  font-weight: 400;
 }
