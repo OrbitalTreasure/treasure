@@ -7,8 +7,7 @@ const MetamaskRoute = ({ component: Component, ...rest }) => {
 
   const checkLogin = () => {
     return (
-      Object.keys(tokens).length !== 0 ||
-      window.localStorage.getItem("tokens") !== undefined
+      window.localStorage.getItem("tokens") != undefined
     );
   };
 

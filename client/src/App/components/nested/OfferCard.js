@@ -140,12 +140,6 @@ const OfferCard = (props) => {
           ></input>
         </div>
       )}
-      <input
-        type="button"
-        onClick={() => {
-          setIsDeleted(true);
-        }}
-      ></input>
     </div>
   );
 };
