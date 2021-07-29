@@ -15,6 +15,7 @@ const Offer = () => {
   const { postId } = useParams();
   const [redditPost, setRedditPost] = useState({});
   const [offer, setOffer] = useState(0);
+  const [error, setError] = useState("");
   var [transactionPending, setTransactionPending] = useState(0);
   const history = useHistory();
   const contractAddress = "0x055FBE752E37982476B54321D7BbE0DCA959D980";
@@ -46,7 +47,7 @@ const Offer = () => {
   }, []);
 
   const handleReceipt = (receiptObject, OfferDetails) => {
-    axios.post("/api/v1/offers/handleReceipt", {receiptObject, OfferDetails});
+    axios.post("/api/v1/offers/handleReceipt", { receiptObject, OfferDetails });
   };
 
   const checkCompletion = (transactionHash, timeout, OfferDetails, foo) => {
@@ -63,7 +64,7 @@ const Offer = () => {
             handleReceipt(body.receipt, OfferDetails);
             return foo();
           }
-          checkCompletion(transactionHash, timeout - 5, OfferDetails,foo);
+          checkCompletion(transactionHash, timeout - 5, OfferDetails, foo);
         });
     }, 5000);
   };
@@ -71,47 +72,52 @@ const Offer = () => {
   const onConfirm = async () => {
     window.web3 = new Web3(window.ethereum);
     var contract = await new window.web3.eth.Contract(ABI.abi, contractAddress);
-    const estimatedGas = await contract.methods
-      .createOffer(tokens.userId, postId, offer)
-      .estimateGas({ value: offer, from: metamaskAccount });
-    setTransactionPending(1);
     contract.methods
       .createOffer(tokens.userId, postId, offer)
-      .send({ from: metamaskAccount, value: offer, gas: estimatedGas * 3 })
-      .on("transactionHash", (e) => {
-        setTransactionPending(2);
-      })
-      .on("receipt", (e) => {
-        setTransactionPending(3);
-        const offerId = e.events.OfferCreated.returnValues.offerId;
-        const postId = e.events.OfferCreated.returnValues.postId;
-        axios
-          .post(`/api/v1/blockchain/verify/`, {
-            offerId,
-            postId,
-            offer: offerSGD,
-            username: tokens.username,
-            userId: tokens.userId,
+      .estimateGas({ value: offer, from: metamaskAccount })
+      .then((estimatedGas) => {
+        setTransactionPending(1);
+        contract.methods
+          .createOffer(tokens.userId, postId, offer)
+          .send({ from: metamaskAccount, value: offer, gas: estimatedGas * 3 })
+          .on("transactionHash", (e) => {
+            setTransactionPending(2);
           })
-          .then((res) => {
-            // setTransactionPending(4);
-            // history.push("/offers");
-            return res.data;
+          .on("receipt", (e) => {
+            setTransactionPending(3);
+            const offerId = e.events.OfferCreated.returnValues.offerId;
+            const postId = e.events.OfferCreated.returnValues.postId;
+            axios
+              .post(`/api/v1/blockchain/verify/`, {
+                offerId,
+                postId,
+                offer: offerSGD,
+                username: tokens.username,
+                userId: tokens.userId,
+              })
+              .then((res) => {
+                // setTransactionPending(4);
+                // history.push("/offers");
+                return res.data;
+              })
+              .then((data) => {
+                checkCompletion(data.hash, 180, data.OfferDetails, () => {
+                  setTransactionPending(4);
+                  history.push("/offers");
+                });
+              });
           })
-          .then((data) => {
-            checkCompletion(data.hash, 180, data.OfferDetails, () => {
-              setTransactionPending(4);
-              history.push("/offers");
-            });
+          .on("error", (e) => {
+            setTransactionPending(0);
+            if (e.code === 4001) {
+              console.log(e.message);
+            } else {
+              console.log(e);
+            }
           });
       })
-      .on("error", (e) => {
-        setTransactionPending(0);
-        if (e.code === 4001) {
-          console.log(e.message);
-        } else {
-          console.log(e);
-        }
+      .catch((e) => {
+        setError(e.message);
       });
   };
 
@@ -154,18 +160,15 @@ const Offer = () => {
         Hello {tokens.username}, are you sure you want to buy this post for{" "}
         {<b>SGD {offerSGD}</b>} ({(offer / 10 ** 18).toFixed(6)} ethereum)
       </p>
-      {transactionPending ? (
-        <p>Please wait while your transaction is loading</p>
-      ) : (
-        <div>
-          <input
-            type="button"
-            value="Back"
-            onClick={() => history.push("/")}
-          ></input>
-          <input type="button" value="Confirm" onClick={onConfirm}></input>
-        </div>
-      )}
+      <div>
+        <input
+          type="button"
+          value="Back"
+          onClick={() => history.push("/")}
+        ></input>
+        <input type="button" value="Confirm" onClick={onConfirm}></input>
+        <p className="offerError">{error}</p>
+      </div>
     </div>
   );
 };

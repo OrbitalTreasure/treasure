@@ -1,24 +1,36 @@
 import { Route, Redirect } from "react-router";
-import { TokenContext } from "../../contexts/TokenContext";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
+import { checkAllMetamaskConditions } from "../../assets/utility/metamaskUtil";
 
 const MetamaskRoute = ({ component: Component, ...rest }) => {
-  const { tokens, metamaskAccount } = useContext(TokenContext);
+  var [loading, setLoading] = useState(true);
+  var [metamaskSuccessful, setMetamaskSuccessful] = useState(false);
 
   const checkLogin = () => {
-    return (
-      window.localStorage.getItem("tokens") != undefined
-    );
+    return window.localStorage.getItem("tokens") != undefined;
   };
 
   const checkMetamask = () => {
     return (
-      (metamaskAccount ||
-        window.localStorage.getItem("metamask") !== undefined) &&
-      typeof window.ethereum != "undefined" &&
-      window.ethereum.isMetaMask
+      window.localStorage.getItem("metamask") !== undefined &&
+      metamaskSuccessful
     );
   };
+
+  useEffect(() => {
+    checkAllMetamaskConditions("ropsten")
+      .then((state) => {
+        if (state.every(x => x)) {
+          setMetamaskSuccessful(true);
+        }
+        setLoading(false);
+      })
+      .catch(console.log);
+  }, []);
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <Route
