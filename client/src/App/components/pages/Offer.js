@@ -44,7 +44,7 @@ const Offer = () => {
   useEffect(() => {
     fetchRedditPostInfo(postId);
     convertToWei();
-  }, []);
+  }, [postId]);
 
   const handleReceipt = (receiptObject, OfferDetails) => {
     axios.post("/api/v1/offers/handleReceipt", { receiptObject, OfferDetails });
@@ -156,17 +156,23 @@ const Offer = () => {
       <div className="postColumn">
         <InnerCard {...redditPost} />
       </div>
-      <p>
+      <p className="confirmationText">
         Hello {tokens.username}, are you sure you want to buy this post for{" "}
         {<b>SGD {offerSGD}</b>} ({(offer / 10 ** 18).toFixed(6)} ethereum)
       </p>
-      <div>
+      <div className="confirmationContainer">
         <input
           type="button"
           value="Back"
           onClick={() => history.push("/")}
+          className="buttons backButton"
         ></input>
-        <input type="button" value="Confirm" onClick={onConfirm}></input>
+        <input
+          type="button"
+          value="Confirm"
+          className="buttons confirmButton"
+          onClick={onConfirm}
+        ></input>
         <p className="offerError">{error}</p>
       </div>
     </div>
