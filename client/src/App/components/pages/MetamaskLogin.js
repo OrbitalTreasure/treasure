@@ -167,7 +167,7 @@ const MetamaskLogin = (props) => {
   return generateJSX({
     title: "Redirectng...",
     subtext:
-      "Our site currently uses the Ropsten test network. Please change your network. ",
+      "Please wait while we redirect",
     button: (
       <input
         value="Click Here to Redirect Manually"
