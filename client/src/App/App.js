@@ -51,11 +51,10 @@ function App() {
         <Switch>
           <Route exact path="/" component={Dashboard} />
           <Route exact path="/login" component={Login} />
-          <LoginRoute exact path="/offers" component={Profile} />
+          <MetamaskRoute exact path="/offers" component={Profile} />
           <MetamaskRoute exact path="/offer/:postId" component={Offer} />
           <Route exact path="/metamask" component={MetamaskLogin} />
           <Route exact path="/auth-callback" component={AuthCallback} />
-          <Route exact path="/tools/loadDb" component={LoadDb} />
           <Route path="/user/:username" component={User} />
           <Route path="/post/:postId" component={Post} />
           <Redirect from="/u/:userId" to="/user/:userId" />
