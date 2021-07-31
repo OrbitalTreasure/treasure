@@ -31,7 +31,7 @@ const Post = () => {
   const postFound = () => (
     <div className="postColumn">
       <InnerCard {...redditPost} />
-      <p>Want to own this post? Give an offer!</p>
+      <p className="enticingText">Want to own this post? Give an offer!</p>
       <OfferBar postId={postId} />
       <PreviousOwners />
     </div>

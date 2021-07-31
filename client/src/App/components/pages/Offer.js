@@ -175,6 +175,7 @@ const Offer = () => {
         ></input>
         <p className="offerError">{error}</p>
       </div>
+
     </div>
   );
 };

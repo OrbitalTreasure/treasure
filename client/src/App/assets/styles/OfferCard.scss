@@ -14,26 +14,30 @@
 
 .option {
   margin-top: 5px;
+  cursor: pointer;
   font-size: large;
   box-sizing: border-box;
   border-radius: 20px;
-  padding: 3px;
+  padding: 7px 20px;
+  transition: all 1250ms cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.option:hover {
+  transform: scale(1.1);
+  box-shadow: 1px 1px 2px black;
 }
 
 .accept {
   background: #aaffae;
   border: 1px solid #15ff1f;
-  padding:7px 20px;
 }
 
 .rescind {
   background: #ffaaaa;
   border: 1px solid #ff1515;
-  padding:7px 20px;
 }
 
 .reject {
   background: #ffaaaa;
   border: 1px solid #ff1515;
-  padding:7px 20px;
 }
