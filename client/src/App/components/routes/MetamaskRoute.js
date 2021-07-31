@@ -12,7 +12,7 @@ const MetamaskRoute = ({ component: Component, ...rest }) => {
 
   const checkMetamask = () => {
     return (
-      window.localStorage.getItem("metamask") !== undefined &&
+      window.localStorage.getItem("metamask") != undefined &&
       metamaskSuccessful
     );
   };

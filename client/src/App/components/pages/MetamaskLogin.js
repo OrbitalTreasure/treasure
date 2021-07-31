@@ -73,9 +73,13 @@ const MetamaskLogin = (props) => {
 
   const checkMetamaskState = () => {
     checkAllMetamaskConditions("ropsten").then((state) => {
+      var newState = state
+      if (window.localStorage.getItem("metamask") == undefined) {
+        newState[2] = false;
+      }
       setMetamaskState(state);
       setLoading(false);
-      if (metamaskState.every((x) => x)) {
+      if (newState.every((x) => x)) {
         history.push(redirect)
       }
     });
